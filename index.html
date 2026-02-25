@@ -188,16 +188,24 @@ Returner JSON i dette format:
 
     const text = await resp.text();
     let json;
+    // Forsøg at parse JSON fra svaret
+    let raw = text.replace(/```json|```/g,'').trim();
     try {
-      json = JSON.parse(text.replace(/```json|```/g,'').trim());
+      json = JSON.parse(raw);
     } catch(e) {
-      const m = text.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error('Kunne ikke parse AI-svar');
-      json = JSON.parse(m[0]);
+      // Prøv at finde JSON-objekt i teksten
+      const m = raw.match(/\{[\s\S]*\}/);
+      if (m) {
+        try { json = JSON.parse(m[0]); } catch(e2) {
+          throw new Error('AI svarede men JSON kunne ikke parses. Svar: ' + raw.slice(0,120));
+        }
+      } else {
+        throw new Error('Uventet svar fra AI: ' + raw.slice(0,120));
+      }
     }
 
-    if (!json.recommendations || json.recommendations.length < 3)
-      throw new Error('For faa anbefalinger — prøv igen');
+    if (!json.recommendations || json.recommendations.length === 0)
+      throw new Error('Ingen anbefalinger i svaret — prøv igen');
 
     json.recommendations.sort((a,b) => (a.priority||99) - (b.priority||99));
     showResults(json.recommendations.slice(0,10), b1, b2, b3);
