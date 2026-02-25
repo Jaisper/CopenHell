@@ -2,6 +2,7 @@
 """
 Copenhell Artist Monitor Agent
 Checker dagligt for nye kunstnere og sender mail ved nye tilføjelser.
+Bruger Wikipedia til kunstnerbeskrivelser (gratis).
 Alle hemmeligheder hentes fra environment variables / GitHub Secrets.
 """
 
@@ -29,7 +30,6 @@ CONFIG = {
     "spotify_client_id":     os.getenv("SPOTIFY_CLIENT_ID"),
     "spotify_client_secret": os.getenv("SPOTIFY_CLIENT_SECRET"),
     "state_file":            Path(__file__).parent / "known_artists.json",
-    # Copenhell annoncerer nye bands via nyhedsposter på denne kategori-side
     "copenhell_url":         "https://copenhell.dk/en/category/copenhell-2026-en/",
 }
 
@@ -41,19 +41,12 @@ def now():
 # ─── SCRAPING ─────────────────────────────────────────────────────────────────
 
 def fetch_artists() -> set[str]:
-    """
-    Henter kunstnernavne fra Copenhell's nyhedsposter om nye bands.
-    Nye bands annonceres i titler som "13 NEW BANDS FOR COPENHELL 2026"
-    og listes med STORE BOGSTAVER i brødteksten.
-    """
     headers = {"User-Agent": "Mozilla/5.0 (compatible; CopenhellBot/1.0)"}
     resp = requests.get(CONFIG["copenhell_url"], headers=headers, timeout=15)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
 
     artists = set()
-
-    # Hent links til alle band-annonceringsposter
     band_posts = []
     for a in soup.find_all("a", href=True):
         href = a["href"]
@@ -61,9 +54,8 @@ def fetch_artists() -> set[str]:
         if ("band" in title or "artist" in title or "lineup" in title) and "copenhell.dk" in href:
             band_posts.append(href)
 
-    # Besøg hver post og udtræk kunstnernavne (STORE BOGSTAVER = band)
     visited = set()
-    for url in band_posts[:10]:  # Max 10 poster
+    for url in band_posts[:10]:
         if url in visited:
             continue
         visited.add(url)
@@ -78,13 +70,12 @@ def fetch_artists() -> set[str]:
                 name = match.strip()
                 if name not in {"COPENHELL", "JUNE", "IRON", "NEW", "BANDS",
                                 "THE", "AND", "FOR", "WITH", "FROM", "MORE",
-                                "ALL", "STAGE", "TICKETS", "FESTIVAL", "BANDS"}:
+                                "ALL", "STAGE", "TICKETS", "FESTIVAL"}:
                     artists.add(name)
             time.sleep(0.5)
         except Exception as e:
             print(f"[{now()}] Kunne ikke hente {url}: {e}")
 
-    # Fallback: udtræk direkte fra forsiden
     if not artists:
         text = soup.get_text(separator="\n")
         matches = re.findall(r'\b([A-Z][A-Z0-9 &\.\-\']{1,40}[A-Z0-9])\b', text)
@@ -106,6 +97,60 @@ def load_known_artists() -> set[str]:
 def save_known_artists(artists: set[str]):
     with open(CONFIG["state_file"], "w") as f:
         json.dump(sorted(artists), f, ensure_ascii=False, indent=2)
+
+# ─── WIKIPEDIA BESKRIVELSE ────────────────────────────────────────────────────
+
+def get_wikipedia_description(artist_name: str) -> str:
+    """Henter de første afsnit fra Wikipedia om kunstneren (gratis)."""
+    try:
+        # Søg efter artiklen
+        search_resp = requests.get(
+            "https://en.wikipedia.org/w/api.php",
+            params={
+                "action": "query",
+                "list": "search",
+                "srsearch": artist_name + " band",
+                "format": "json",
+                "srlimit": 1,
+            },
+            timeout=10,
+        )
+        search_resp.raise_for_status()
+        results = search_resp.json().get("query", {}).get("search", [])
+        if not results:
+            return ""
+
+        title = results[0]["title"]
+
+        # Hent de første afsnit af artiklen
+        extract_resp = requests.get(
+            "https://en.wikipedia.org/w/api.php",
+            params={
+                "action": "query",
+                "titles": title,
+                "prop": "extracts",
+                "exintro": True,        # Kun intro-sektionen
+                "explaintext": True,    # Ren tekst, ingen HTML
+                "format": "json",
+            },
+            timeout=10,
+        )
+        extract_resp.raise_for_status()
+        pages = extract_resp.json().get("query", {}).get("pages", {})
+        for page in pages.values():
+            extract = page.get("extract", "").strip()
+            if extract:
+                # Begræns til ca. 10-15 linjer (1200 tegn)
+                if len(extract) > 1200:
+                    # Klip ved et punktum så teksten ikke stopper midt i en sætning
+                    extract = extract[:1200]
+                    last_period = extract.rfind(".")
+                    if last_period > 800:
+                        extract = extract[:last_period + 1]
+                return extract
+    except Exception as e:
+        print(f"[{now()}] Wikipedia fejl for {artist_name}: {e}")
+    return ""
 
 # ─── SPOTIFY ──────────────────────────────────────────────────────────────────
 
@@ -148,7 +193,7 @@ def get_spotify_info(artist_name: str, token: str) -> dict:
 
 # ─── EMAIL ────────────────────────────────────────────────────────────────────
 
-def send_email(new_artists: list[str], spotify_data: dict):
+def send_email(new_artists: list[str], spotify_data: dict, descriptions: dict):
     msg = MIMEMultipart("alternative")
     msg["Subject"] = f"Copenhell: {len(new_artists)} ny(e) kunstner(e) annonceret!"
     msg["From"]    = CONFIG["smtp_user"]
@@ -157,37 +202,74 @@ def send_email(new_artists: list[str], spotify_data: dict):
     rows = ""
     for name in sorted(new_artists):
         info = spotify_data.get(name, {})
-        img = (f'<img src="{info["image"]}" width="80" '
-               f'style="border-radius:50%;margin-right:12px;" />'
+        description = descriptions.get(name, "")
+
+        img = (f'<img src="{info["image"]}" width="90" '
+               f'style="border-radius:8px;display:block;" />'
                if info.get("image") else "")
+
         btn = (f'<a href="{info["spotify_url"]}" '
-               f'style="background:#1DB954;color:#fff;padding:6px 14px;'
-               f'border-radius:20px;text-decoration:none;font-size:13px;">'
+               f'style="background:#1DB954;color:#fff;padding:7px 16px;'
+               f'border-radius:20px;text-decoration:none;font-size:13px;display:inline-block;">'
                f'Abn i Spotify</a>'
                if info.get("spotify_url") else "")
-        rows += (
-            f'<tr style="border-bottom:1px solid #eee;">'
-            f'<td style="padding:16px;vertical-align:top;width:80px;">{img}</td>'
-            f'<td style="padding:16px;vertical-align:top;">'
-            f'<strong style="font-size:18px;">{name}</strong><br/>'
-            f'<span style="color:#666;font-size:13px;">Genre: {info.get("genres", "?")}</span><br/>'
-            f'<span style="color:#666;font-size:13px;">'
-            f'Followers: {info.get("followers", "?")} | '
-            f'Popularitet: {info.get("popularity", "?")}/100</span><br/>'
-            f'<div style="margin-top:10px;">{btn}</div>'
-            f'</td></tr>'
-        )
 
-    html = (
-        '<html><body style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;">'
-        '<h1 style="color:#c0392b;">Nye Copenhell kunstnere!</h1>'
-        '<p style="color:#555;">Folgende er netop annonceret til <strong>Copenhell</strong>:</p>'
-        f'<table style="width:100%;border-collapse:collapse;">{rows}</table>'
-        '<hr style="margin-top:30px;"/>'
-        f'<p style="color:#aaa;font-size:12px;">Tjek lineup: '
-        f'<a href="{CONFIG["copenhell_url"]}">{CONFIG["copenhell_url"]}</a></p>'
-        '</body></html>'
-    )
+        meta = ""
+        if info:
+            meta = (
+                f'<p style="margin:4px 0 10px 0;color:#888;font-size:12px;">'
+                f'Genre: {info.get("genres","?")} &nbsp;|&nbsp; '
+                f'Followers: {info.get("followers","?")} &nbsp;|&nbsp; '
+                f'Popularitet: {info.get("popularity","?")}/100</p>'
+            )
+
+        desc_html = ""
+        if description:
+            paragraphs = [p.strip() for p in description.split("\n") if p.strip()]
+            desc_html = "".join(
+                f'<p style="margin:6px 0;color:#333;font-size:14px;line-height:1.6;">{p}</p>'
+                for p in paragraphs
+            )
+        else:
+            desc_html = '<p style="color:#aaa;font-size:13px;font-style:italic;">Ingen Wikipedia-beskrivelse fundet.</p>'
+
+        rows += f"""
+        <tr>
+          <td style="padding:24px 0;border-bottom:2px solid #f0f0f0;vertical-align:top;">
+            <table style="width:100%;border-collapse:collapse;">
+              <tr>
+                <td style="width:106px;vertical-align:top;padding-right:16px;">{img}</td>
+                <td style="vertical-align:top;">
+                  <h2 style="margin:0 0 2px 0;font-size:22px;color:#c0392b;">{name}</h2>
+                  {meta}
+                  {desc_html}
+                  <div style="margin-top:14px;">{btn}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        """
+
+    html = f"""
+    <html>
+    <body style="font-family:Arial,sans-serif;max-width:640px;margin:auto;padding:24px;background:#fff;">
+      <h1 style="color:#c0392b;border-bottom:3px solid #c0392b;padding-bottom:10px;">
+        Nye Copenhell 2026 kunstnere!
+      </h1>
+      <p style="color:#555;font-size:15px;">
+        {len(new_artists)} ny(e) kunstner(e) er netop annonceret til <strong>Copenhell 2026</strong>:
+      </p>
+      <table style="width:100%;border-collapse:collapse;">
+        {rows}
+      </table>
+      <p style="color:#aaa;font-size:12px;margin-top:24px;">
+        Beskrivelser fra Wikipedia &nbsp;|&nbsp;
+        <a href="{CONFIG['copenhell_url']}">Se alle nyheder pa Copenhell.dk</a>
+      </p>
+    </body>
+    </html>
+    """
 
     msg.attach(MIMEText(html, "html"))
     with smtplib.SMTP(CONFIG["smtp_host"], CONFIG["smtp_port"]) as server:
@@ -222,6 +304,7 @@ def main():
 
     print(f"[{now()}] {len(new_artists)} ny(e): {new_artists}")
 
+    # Hent Spotify-info
     spotify_data = {}
     token = get_spotify_token()
     if token:
@@ -229,8 +312,15 @@ def main():
             spotify_data[name] = get_spotify_info(name, token)
             time.sleep(0.3)
 
+    # Hent Wikipedia-beskrivelser
+    descriptions = {}
+    for name in new_artists:
+        print(f"[{now()}] Henter Wikipedia-beskrivelse for {name}...")
+        descriptions[name] = get_wikipedia_description(name)
+        time.sleep(0.5)
+
     try:
-        send_email(list(new_artists), spotify_data)
+        send_email(list(new_artists), spotify_data, descriptions)
     except Exception as e:
         print(f"[{now()}] FEJL ved mail: {e}")
         return
