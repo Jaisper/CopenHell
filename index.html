@@ -188,19 +188,47 @@ Returner JSON i dette format:
 
     const text = await resp.text();
     let json;
-    // Forsøg at parse JSON fra svaret
-    let raw = text.replace(/```json|```/g,'').trim();
+    // Parse svaret - Pollinations kan returnere flere formater
+    let raw = text.trim();
+    let extracted = '';
     try {
-      json = JSON.parse(raw);
-    } catch(e) {
-      // Prøv at finde JSON-objekt i teksten
-      const m = raw.match(/\{[\s\S]*\}/);
-      if (m) {
-        try { json = JSON.parse(m[0]); } catch(e2) {
-          throw new Error('AI svarede men JSON kunne ikke parses. Svar: ' + raw.slice(0,120));
+      const parsed = JSON.parse(raw);
+      // Format 1: OpenAI choices-array
+      if (parsed.choices && parsed.choices[0]) {
+        extracted = parsed.choices[0].message?.content || '';
+      }
+      // Format 2: Direkte message-objekt { role, content, reasoning_content }
+      else if (parsed.role === 'assistant') {
+        extracted = parsed.content || parsed.reasoning_content || '';
+        // Hvis content er tomt, kan hele recommendations-arrayet være i parsed direkte
+        if (!extracted && parsed.recommendations) {
+          json = parsed;
         }
-      } else {
-        throw new Error('Uventet svar fra AI: ' + raw.slice(0,120));
+      }
+      // Format 3: Direkte JSON med recommendations
+      else if (parsed.recommendations) {
+        json = parsed;
+      }
+      else {
+        extracted = raw;
+      }
+    } catch(e) {
+      extracted = raw;
+    }
+
+    if (!json && extracted) {
+      extracted = extracted.replace(/```json|```/g,'').trim();
+      try {
+        json = JSON.parse(extracted);
+      } catch(e) {
+        const m = extracted.match(/\{[\s\S]*\}/);
+        if (m) {
+          try { json = JSON.parse(m[0]); } catch(e2) {
+            throw new Error('Parse fejl. Svar: ' + extracted.slice(0,150));
+          }
+        } else {
+          throw new Error('Intet JSON fundet. Svar: ' + extracted.slice(0,150));
+        }
       }
     }
 
