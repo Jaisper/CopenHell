@@ -1,0 +1,41 @@
+name: Copenhell Artist Monitor
+
+on:
+  schedule:
+    # Kører hver dag kl. 08:00 UTC (= 09:00 dansk tid / 10:00 sommertid)
+    - cron: '0 8 * * *'
+  workflow_dispatch:  # Gør det muligt at køre manuelt fra GitHub UI
+
+jobs:
+  check-artists:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sæt Python op
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installer afhængigheder
+        run: pip install requests beautifulsoup4
+
+      - name: Hent tidligere known_artists.json fra cache
+        uses: actions/cache@v4
+        with:
+          path: known_artists.json
+          key: known-artists-${{ runner.os }}
+          restore-keys: |
+            known-artists-
+
+      - name: Kør Copenhell agent
+        env:
+          SMTP_HOST: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+        run: python copenhell_agent.py
