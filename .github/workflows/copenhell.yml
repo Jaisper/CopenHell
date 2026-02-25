@@ -29,7 +29,7 @@ jobs:
           key: known-artists-${{ runner.os }}
           restore-keys: |
             known-artists-
-
+            
       - name: Kør Copenhell agent
         env:
           SMTP_HOST: smtp.gmail.com
@@ -38,4 +38,5 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
         run: python copenhell_agent.py
