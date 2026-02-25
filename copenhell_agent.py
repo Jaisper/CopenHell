@@ -7,6 +7,7 @@ Alle hemmeligheder hentes fra environment variables / GitHub Secrets.
 
 import json
 import os
+import re
 import smtplib
 import time
 from datetime import datetime
@@ -28,7 +29,8 @@ CONFIG = {
     "spotify_client_id":     os.getenv("SPOTIFY_CLIENT_ID"),
     "spotify_client_secret": os.getenv("SPOTIFY_CLIENT_SECRET"),
     "state_file":            Path(__file__).parent / "known_artists.json",
-    "copenhell_url":         "https://www.copenhell.dk/lineup/",
+    # Copenhell annoncerer nye bands via nyhedsposter på denne kategori-side
+    "copenhell_url":         "https://copenhell.dk/en/category/copenhell-2026-en/",
 }
 
 # ─── HJÆLPEFUNKTIONER ─────────────────────────────────────────────────────────
@@ -39,33 +41,57 @@ def now():
 # ─── SCRAPING ─────────────────────────────────────────────────────────────────
 
 def fetch_artists() -> set[str]:
+    """
+    Henter kunstnernavne fra Copenhell's nyhedsposter om nye bands.
+    Nye bands annonceres i titler som "13 NEW BANDS FOR COPENHELL 2026"
+    og listes med STORE BOGSTAVER i brødteksten.
+    """
     headers = {"User-Agent": "Mozilla/5.0 (compatible; CopenhellBot/1.0)"}
     resp = requests.get(CONFIG["copenhell_url"], headers=headers, timeout=15)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
+
     artists = set()
 
-    # Strategi 1: heading-tags med 'artist' i class
-    for tag in soup.find_all(["h2", "h3", "h4"],
-                              class_=lambda c: c and "artist" in c.lower()):
-        name = tag.get_text(strip=True)
-        if name:
-            artists.add(name)
+    # Hent links til alle band-annonceringsposter
+    band_posts = []
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        title = a.get_text(strip=True).lower()
+        if ("band" in title or "artist" in title or "lineup" in title) and "copenhell.dk" in href:
+            band_posts.append(href)
 
-    # Strategi 2: links der peger på /artist/
-    if not artists:
-        for a in soup.find_all("a", href=True):
-            if "/artist/" in a["href"] or "/lineup/" in a["href"]:
-                name = a.get_text(strip=True)
-                if name and len(name) > 1:
+    # Besøg hver post og udtræk kunstnernavne (STORE BOGSTAVER = band)
+    visited = set()
+    for url in band_posts[:10]:  # Max 10 poster
+        if url in visited:
+            continue
+        visited.add(url)
+        try:
+            r = requests.get(url, headers=headers, timeout=10)
+            r.raise_for_status()
+            post_soup = BeautifulSoup(r.text, "html.parser")
+            content = post_soup.find("article") or post_soup.find("main") or post_soup
+            text = content.get_text(separator="\n")
+            matches = re.findall(r'\b([A-Z][A-Z0-9 &\.\-\']{1,40}[A-Z0-9])\b', text)
+            for match in matches:
+                name = match.strip()
+                if name not in {"COPENHELL", "JUNE", "IRON", "NEW", "BANDS",
+                                "THE", "AND", "FOR", "WITH", "FROM", "MORE",
+                                "ALL", "STAGE", "TICKETS", "FESTIVAL", "BANDS"}:
                     artists.add(name)
+            time.sleep(0.5)
+        except Exception as e:
+            print(f"[{now()}] Kunne ikke hente {url}: {e}")
 
-    # Strategi 3: div/article med artist-class
+    # Fallback: udtræk direkte fra forsiden
     if not artists:
-        for el in soup.select(
-                "div.artist, article.artist, .lineup-artist, .artist-name"):
-            name = el.get_text(strip=True)
-            if name and len(name) > 1:
+        text = soup.get_text(separator="\n")
+        matches = re.findall(r'\b([A-Z][A-Z0-9 &\.\-\']{1,40}[A-Z0-9])\b', text)
+        for match in matches:
+            name = match.strip()
+            if len(name) > 2 and name not in {"COPENHELL", "JUNE", "NEW", "THE",
+                                               "AND", "FOR", "TICKETS", "FESTIVAL"}:
                 artists.add(name)
 
     print(f"[{now()}] Fandt {len(artists)} kunstnere.")
@@ -85,7 +111,7 @@ def save_known_artists(artists: set[str]):
 
 def get_spotify_token() -> str | None:
     if not CONFIG["spotify_client_id"] or not CONFIG["spotify_client_secret"]:
-        print(f"[{now()}] Spotify secrets ikke sat – springer over.")
+        print(f"[{now()}] Spotify secrets ikke sat - springer over.")
         return None
     resp = requests.post(
         "https://accounts.spotify.com/api/token",
@@ -124,7 +150,7 @@ def get_spotify_info(artist_name: str, token: str) -> dict:
 
 def send_email(new_artists: list[str], spotify_data: dict):
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"🤘 Copenhell: {len(new_artists)} ny(e) kunstner(e) annonceret!"
+    msg["Subject"] = f"Copenhell: {len(new_artists)} ny(e) kunstner(e) annonceret!"
     msg["From"]    = CONFIG["smtp_user"]
     msg["To"]      = CONFIG["recipient_email"]
 
@@ -137,7 +163,7 @@ def send_email(new_artists: list[str], spotify_data: dict):
         btn = (f'<a href="{info["spotify_url"]}" '
                f'style="background:#1DB954;color:#fff;padding:6px 14px;'
                f'border-radius:20px;text-decoration:none;font-size:13px;">'
-               f'🎧 Åbn i Spotify</a>'
+               f'Abn i Spotify</a>'
                if info.get("spotify_url") else "")
         rows += (
             f'<tr style="border-bottom:1px solid #eee;">'
@@ -146,7 +172,7 @@ def send_email(new_artists: list[str], spotify_data: dict):
             f'<strong style="font-size:18px;">{name}</strong><br/>'
             f'<span style="color:#666;font-size:13px;">Genre: {info.get("genres", "?")}</span><br/>'
             f'<span style="color:#666;font-size:13px;">'
-            f'Followers: {info.get("followers", "?")} &nbsp;|&nbsp; '
+            f'Followers: {info.get("followers", "?")} | '
             f'Popularitet: {info.get("popularity", "?")}/100</span><br/>'
             f'<div style="margin-top:10px;">{btn}</div>'
             f'</td></tr>'
@@ -154,8 +180,8 @@ def send_email(new_artists: list[str], spotify_data: dict):
 
     html = (
         '<html><body style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:20px;">'
-        '<h1 style="color:#c0392b;">🤘 Nye Copenhell kunstnere!</h1>'
-        '<p style="color:#555;">Følgende er netop annonceret til <strong>Copenhell</strong>:</p>'
+        '<h1 style="color:#c0392b;">Nye Copenhell kunstnere!</h1>'
+        '<p style="color:#555;">Folgende er netop annonceret til <strong>Copenhell</strong>:</p>'
         f'<table style="width:100%;border-collapse:collapse;">{rows}</table>'
         '<hr style="margin-top:30px;"/>'
         f'<p style="color:#aaa;font-size:12px;">Tjek lineup: '
@@ -183,7 +209,7 @@ def main():
         return
 
     if not current:
-        print(f"[{now()}] Ingen kunstnere fundet – tjek fetch_artists()")
+        print(f"[{now()}] Ingen kunstnere fundet - tjek fetch_artists()")
         return
 
     known = load_known_artists()
@@ -210,7 +236,7 @@ def main():
         return
 
     save_known_artists(current)
-    print(f"[{now()}] Færdig. State opdateret.")
+    print(f"[{now()}] Faerdig. State opdateret.")
 
 if __name__ == "__main__":
     main()
