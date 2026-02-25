@@ -41,9 +41,9 @@
   .res-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:#444;margin-bottom:20px;}
   .band-card{background:var(--dark);border:1px solid #1e1e1e;border-left:3px solid var(--red);padding:22px;margin-bottom:10px;opacity:0;transform:translateX(-16px);transition:opacity .4s,transform .4s;position:relative;}
   .band-card.show{opacity:1;transform:translateX(0);}
-  .prio-badge{position:absolute;top:16px;right:16px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#333;letter-spacing:1px;}
+  .prio-badge{position:absolute;top:16px;right:16px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#333;}
   .prio-badge span{color:var(--red);}
-  .band-name{font-size:22px;font-weight:700;color:var(--red);letter-spacing:2px;margin-bottom:4px;}
+  .band-name{font-size:22px;font-weight:700;color:var(--red);letter-spacing:2px;margin-bottom:4px;padding-right:40px;}
   .band-hype{font-size:13px;color:#ddd;font-style:italic;border-left:2px solid var(--red);padding-left:10px;margin-bottom:10px;}
   .band-reason{font-size:14px;font-weight:300;color:#bbb;line-height:1.7;margin-bottom:14px;}
   .spotify-btn{display:inline-block;background:var(--green);color:#000;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;padding:6px 16px;border-radius:20px;text-decoration:none;transition:opacity .2s;}
@@ -51,8 +51,8 @@
   .btn-reset{margin-top:24px;background:transparent;border:1px solid #2a2a2a;color:var(--muted);font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;padding:10px 24px;cursor:pointer;text-transform:uppercase;transition:border-color .2s,color .2s;}
   .btn-reset:hover{border-color:var(--red);color:var(--text);}
   .lineup-status{font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;text-align:center;margin-bottom:16px;letter-spacing:1px;}
-  .powered{font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;text-align:center;margin-top:40px;letter-spacing:2px;}
-  .powered a{color:#444;}
+  .powered{font-family:'Share Tech Mono',monospace;font-size:10px;color:#2a2a2a;text-align:center;margin-top:40px;letter-spacing:2px;}
+  .powered a{color:#333;}
 </style>
 </head>
 <body>
@@ -63,7 +63,7 @@
     <div class="rule"></div>
   </header>
 
-  <div class="lineup-status" id="lineupStatus">// Henter lineup fra Copenhell...</div>
+  <div class="lineup-status" id="lineupStatus">// Henter lineup...</div>
 
   <div class="card" id="inputCard">
     <div class="card-label">// Dine 3 favoritbands</div>
@@ -90,11 +90,10 @@
     <button class="btn-reset" onclick="reset()">← Prøv igen</button>
   </div>
 
-  <div class="powered">Powered by <a href="https://pollinations.ai" target="_blank">Pollinations.ai</a> · Lineup fra <a href="https://copenhell.dk" target="_blank">Copenhell.dk</a></div>
+  <div class="powered">Powered by <a href="https://pollinations.ai" target="_blank">Pollinations.ai</a></div>
 </div>
 
 <script>
-// Fallback lineup hvis scraping fejler
 const FALLBACK_LINEUP = [
   "Iron Maiden","Bring Me The Horizon","Volbeat","Twisted Sister","Alice Cooper",
   "Papa Roach","A Perfect Circle","Trivium","Anthrax","Sepultura","The Pretty Reckless",
@@ -110,41 +109,33 @@ const FALLBACK_LINEUP = [
   "End It","Malevolence","Inhuman Nature","Vexed","Powerplant","Psycho Mosher"
 ];
 
-let currentLineup = [];
+let currentLineup = [...FALLBACK_LINEUP];
 
-// Hent lineup via allorigins proxy (omgår CORS)
 async function fetchLineup() {
   const statusEl = document.getElementById('lineupStatus');
   try {
-    const url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://copenhell.dk/en/category/copenhell-2026-en/');
-    const resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://copenhell.dk/en/category/copenhell-2026-en/');
+    const resp = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
     const data = await resp.json();
-    const html = data.contents;
-
-    // Udtræk bandnavne skrevet med STORE BOGSTAVER fra nyhedsposter
+    const html = data.contents || '';
+    const SKIP = new Set(['COPENHELL','NEW','BANDS','THE','AND','FOR','WITH','FROM',
+      'MORE','ALL','STAGE','TICKETS','FESTIVAL','READ','JUNE','JULY','AUGUST',
+      'HTTP','HTML','MENU','SKIP','MAIN','HERE','THIS','THEIR','THEY','WHEN',
+      'WHAT','HAVE','BEEN','WILL','YOUR','ALSO','THAT','THESE','THOSE','IRON']);
     const matches = [...html.matchAll(/\b([A-Z][A-Z0-9 &.\-']{1,35}[A-Z0-9])\b/g)]
-      .map(m => m[1].trim())
-      .filter(name => !['COPENHELL','JUNE','NEW','BANDS','THE','AND','FOR',
-        'WITH','FROM','MORE','ALL','STAGE','TICKETS','FESTIVAL','READ','MORE',
-        'JUNE','JULY','AUGUST','HTTP','HTML','MENU','SKIP','MAIN'].includes(name));
-
-    const unique = [...new Set(matches)].filter(n => n.length > 2);
-
-    if (unique.length > 10) {
+      .map(m => m[1].trim()).filter(n => n.length > 2 && !SKIP.has(n));
+    const unique = [...new Set(matches)];
+    if (unique.length > 15) {
       currentLineup = unique;
       statusEl.textContent = '// Lineup hentet live: ' + unique.length + ' bands';
       statusEl.style.color = '#1DB954';
-    } else {
-      throw new Error('For få bands fundet');
-    }
+    } else { throw new Error('too few'); }
   } catch(e) {
     currentLineup = FALLBACK_LINEUP;
-    statusEl.textContent = '// Bruger cached lineup: ' + FALLBACK_LINEUP.length + ' bands';
+    statusEl.textContent = '// Cached lineup: ' + FALLBACK_LINEUP.length + ' bands';
     statusEl.style.color = '#555';
   }
 }
-
-// Hent lineup ved sideload
 fetchLineup();
 
 function showErr(msg) {
@@ -159,50 +150,62 @@ async function getRecommendations() {
   const b3 = document.getElementById('b3').value.trim();
   if (!b1 || !b2 || !b3) { showErr('Udfyld alle 3 favoritbands.'); return; }
 
-  const lineup = currentLineup.length > 0 ? currentLineup : FALLBACK_LINEUP;
-
   document.getElementById('inputCard').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
   document.getElementById('errBox').style.display = 'none';
-  document.getElementById('loadSub').textContent = 'Analyserer ' + lineup.length + ' bands...';
+  document.getElementById('loadSub').textContent = 'Analyserer ' + currentLineup.length + ' bands...';
 
-  const prompt = `Du er en metal-ekspert. En bruger elsker disse bands: "${b1}", "${b2}", "${b3}".
+  const systemMsg = 'Du er en metal-ekspert. Svar KUN med valid JSON uden markdown eller forklaring udenfor JSON.';
+  const userMsg = `En bruger elsker: "${b1}", "${b2}", "${b3}".
 
-Copenhell 2026 lineup (${lineup.length} bands): ${lineup.join(', ')}
+Copenhell 2026 lineup: ${currentLineup.join(', ')}
 
-Vaelg de 10 bedste bands fra lineuppet baseret paa brugerens musiksmag og sorter dem i prioriteret raekkefoelge (bedste match foerst).
+Vaelg de 10 bedste bands fra lineuppet baseret paa brugerens musiksmag. Sorter i prioriteret raekkefoelge, bedste match foerst (priority 1 = bedste).
 
-Svar KUN med valid JSON uden markdown:
-{"recommendations":[{"name":"praecist bandnavn fra lineup","hype":"fed saelgende saetning paa dansk max 10 ord","reason":"2-3 saetninger paa dansk om hvorfor bandet matcher brugerens smag - vaer specifik med referencer til de 3 favoritbands","priority":1}]}
-
-Husk: priority 1 = bedste match, priority 10 = 10. bedste match. Alle 10 skal med.`;
+Returner JSON i dette format:
+{"recommendations":[{"name":"praecist bandnavn fra lineup","hype":"fed saelgende saetning paa dansk max 10 ord","reason":"2-3 saetninger paa dansk om hvorfor bandet matcher smagen med specifikke referencer til de 3 favoritbands","priority":1}]}`;
 
   try {
-    const url = 'https://text.pollinations.ai/' + encodeURIComponent(prompt) + '?model=openai&json=true&seed=' + Date.now();
-    const resp = await fetch(url, { signal: AbortSignal.timeout(30000) });
-    if (!resp.ok) throw new Error('API svarede med ' + resp.status);
-    const text = await resp.text();
+    // Brug den korrekte POST endpoint med json=true som query parameter
+    const resp = await fetch('https://text.pollinations.ai/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'openai',
+        json: true,
+        messages: [
+          { role: 'system', content: systemMsg },
+          { role: 'user',   content: userMsg }
+        ]
+      }),
+      signal: AbortSignal.timeout(30000)
+    });
 
-    let json;
-    try {
-      json = JSON.parse(text);
-    } catch(e) {
-      const match = text.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error('Kunne ikke parse AI-svar');
-      json = JSON.parse(match[0]);
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('API fejl ' + resp.status + ': ' + errText.slice(0,100));
     }
 
-    if (!json.recommendations || json.recommendations.length < 3) throw new Error('For faa anbefalinger i svaret');
+    const text = await resp.text();
+    let json;
+    try {
+      json = JSON.parse(text.replace(/```json|```/g,'').trim());
+    } catch(e) {
+      const m = text.match(/\{[\s\S]*\}/);
+      if (!m) throw new Error('Kunne ikke parse AI-svar');
+      json = JSON.parse(m[0]);
+    }
 
-    // Sorter efter priority
-    json.recommendations.sort((a, b) => (a.priority || 0) - (b.priority || 0));
+    if (!json.recommendations || json.recommendations.length < 3)
+      throw new Error('For faa anbefalinger — prøv igen');
 
-    showResults(json.recommendations, b1, b2, b3);
+    json.recommendations.sort((a,b) => (a.priority||99) - (b.priority||99));
+    showResults(json.recommendations.slice(0,10), b1, b2, b3);
 
   } catch(e) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('inputCard').style.display = 'block';
-    showErr('Fejl: ' + e.message + ' — prøv igen om lidt.');
+    showErr(e.message);
   }
 }
 
@@ -211,16 +214,13 @@ function showResults(recs, b1, b2, b3) {
   document.getElementById('results').style.display = 'block';
   document.getElementById('resSub').textContent =
     'Baseret paa: ' + b1.toUpperCase() + ' · ' + b2.toUpperCase() + ' · ' + b3.toUpperCase();
-
   const container = document.getElementById('cardContainer');
   container.innerHTML = '';
-
   recs.forEach((rec, i) => {
-    const prio = rec.priority || (i + 1);
     const card = document.createElement('div');
     card.className = 'band-card';
     card.innerHTML =
-      '<div class="prio-badge">#<span>' + prio + '</span></div>' +
+      '<div class="prio-badge">#<span>' + (rec.priority||i+1) + '</span></div>' +
       '<div class="band-name">' + rec.name.toUpperCase() + '</div>' +
       '<div class="band-hype">' + rec.hype + '</div>' +
       '<div class="band-reason">' + rec.reason + '</div>' +
@@ -236,7 +236,6 @@ function reset() {
   document.getElementById('cardContainer').innerHTML = '';
   ['b1','b2','b3'].forEach(id => document.getElementById(id).value = '');
 }
-
 document.addEventListener('keydown', e => { if (e.key === 'Enter') getRecommendations(); });
 </script>
 </body>
