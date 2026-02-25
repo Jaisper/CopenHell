@@ -171,7 +171,7 @@ Returner JSON i dette format:
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'mistral',
+        model: 'openai-fast',
         json: true,
         messages: [
           { role: 'system', content: systemMsg },
@@ -199,8 +199,16 @@ Returner JSON i dette format:
       }
       // Format 2: Direkte message-objekt { role, content, reasoning_content }
       else if (parsed.role === 'assistant') {
-        extracted = parsed.content || parsed.reasoning_content || '';
-        // Hvis content er tomt, kan hele recommendations-arrayet være i parsed direkte
+        // content kan være array af objekter eller string
+        if (Array.isArray(parsed.content)) {
+          extracted = parsed.content.map(c => c.text || c.content || '').join('');
+        } else {
+          extracted = parsed.content || '';
+        }
+        // Fallback: reasoning_content indeholder tankeprocessen - JSON kan gemme sig i den
+        if (!extracted) {
+          extracted = parsed.reasoning_content || '';
+        }
         if (!extracted && parsed.recommendations) {
           json = parsed;
         }
@@ -216,18 +224,24 @@ Returner JSON i dette format:
       extracted = raw;
     }
 
-    if (!json && extracted) {
-      extracted = extracted.replace(/```json|```/g,'').trim();
-      try {
-        json = JSON.parse(extracted);
-      } catch(e) {
-        const m = extracted.match(/\{[\s\S]*\}/);
-        if (m) {
-          try { json = JSON.parse(m[0]); } catch(e2) {
-            throw new Error('Parse fejl. Svar: ' + extracted.slice(0,150));
-          }
-        } else {
-          throw new Error('Intet JSON fundet. Svar: ' + extracted.slice(0,150));
+    if (!json) {
+      // Søg JSON i extracted tekst (inkl. reasoning_content)
+      let searchIn = extracted.replace(/```json|```/g,'').trim();
+      // Find det SIDSTE forekomst af { da reasoning typisk slutter med det endelige svar
+      const allMatches = [...searchIn.matchAll(/\{[\s\S]*?"recommendations"[\s\S]*?\}/g)];
+      if (allMatches.length > 0) {
+        const lastMatch = allMatches[allMatches.length - 1][0];
+        try {
+          json = JSON.parse(lastMatch);
+        } catch(e) {
+          throw new Error('JSON parse fejl: ' + e.message);
+        }
+      } else {
+        // Prøv hele teksten
+        try {
+          json = JSON.parse(searchIn);
+        } catch(e) {
+          throw new Error('Intet JSON med recommendations fundet. Svar: ' + searchIn.slice(0,200));
         }
       }
     }
