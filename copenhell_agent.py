@@ -2,7 +2,7 @@
 """
 Copenhell Artist Monitor Agent
 Checker dagligt for nye kunstnere og sender mail ved nye tilføjelser.
-Bruger Wikipedia til kunstnerbeskrivelser (gratis).
+Bruger Last.fm til kunstnerbeskrivelser (gratis).
 Alle hemmeligheder hentes fra environment variables / GitHub Secrets.
 """
 
@@ -29,6 +29,7 @@ CONFIG = {
     "smtp_password":         os.getenv("SMTP_PASSWORD"),
     "spotify_client_id":     os.getenv("SPOTIFY_CLIENT_ID"),
     "spotify_client_secret": os.getenv("SPOTIFY_CLIENT_SECRET"),
+    "lastfm_api_key":        os.getenv("LASTFM_API_KEY"),
     "state_file":            Path(__file__).parent / "known_artists.json",
     "copenhell_url":         "https://copenhell.dk/en/category/copenhell-2026-en/",
 }
@@ -98,58 +99,43 @@ def save_known_artists(artists: set[str]):
     with open(CONFIG["state_file"], "w") as f:
         json.dump(sorted(artists), f, ensure_ascii=False, indent=2)
 
-# ─── WIKIPEDIA BESKRIVELSE ────────────────────────────────────────────────────
+# ─── LAST.FM BESKRIVELSE ─────────────────────────────────────────────────────
 
-def get_wikipedia_description(artist_name: str) -> str:
-    """Henter de første afsnit fra Wikipedia om kunstneren (gratis)."""
+def get_lastfm_description(artist_name: str) -> str:
+    """Henter kunstnerbeskrivelse fra Last.fm (gratis API)."""
+    if not CONFIG.get("lastfm_api_key"):
+        print(f"[{now()}] LASTFM_API_KEY ikke sat - springer over.")
+        return ""
     try:
-        # Søg efter artiklen
-        search_resp = requests.get(
-            "https://en.wikipedia.org/w/api.php",
+        search_name = artist_name.title()
+        resp = requests.get(
+            "https://ws.audioscrobbler.com/2.0/",
             params={
-                "action": "query",
-                "list": "search",
-                "srsearch": artist_name + " band",
-                "format": "json",
-                "srlimit": 1,
+                "method":  "artist.getinfo",
+                "artist":  search_name,
+                "api_key": CONFIG["lastfm_api_key"],
+                "format":  "json",
+                "lang":    "en",
             },
             timeout=10,
         )
-        search_resp.raise_for_status()
-        results = search_resp.json().get("query", {}).get("search", [])
-        if not results:
-            return ""
-
-        title = results[0]["title"]
-
-        # Hent de første afsnit af artiklen
-        extract_resp = requests.get(
-            "https://en.wikipedia.org/w/api.php",
-            params={
-                "action": "query",
-                "titles": title,
-                "prop": "extracts",
-                "exintro": True,        # Kun intro-sektionen
-                "explaintext": True,    # Ren tekst, ingen HTML
-                "format": "json",
-            },
-            timeout=10,
-        )
-        extract_resp.raise_for_status()
-        pages = extract_resp.json().get("query", {}).get("pages", {})
-        for page in pages.values():
-            extract = page.get("extract", "").strip()
-            if extract:
-                # Begræns til ca. 10-15 linjer (1200 tegn)
-                if len(extract) > 1200:
-                    # Klip ved et punktum så teksten ikke stopper midt i en sætning
-                    extract = extract[:1200]
-                    last_period = extract.rfind(".")
-                    if last_period > 800:
-                        extract = extract[:last_period + 1]
-                return extract
+        resp.raise_for_status()
+        data = resp.json()
+        bio = data.get("artist", {}).get("bio", {}).get("content", "")
+        if not bio:
+            bio = data.get("artist", {}).get("bio", {}).get("summary", "")
+        if bio:
+            # Fjern Last.fm "Read more"-link i slutningen
+            bio = bio.split("<a href")[0].strip()
+            # Begræns til ~1200 tegn og klip ved punktum
+            if len(bio) > 1200:
+                bio = bio[:1200]
+                last_period = bio.rfind(".")
+                if last_period > 800:
+                    bio = bio[:last_period + 1]
+        return bio.strip()
     except Exception as e:
-        print(f"[{now()}] Wikipedia fejl for {artist_name}: {e}")
+        print(f"[{now()}] Last.fm fejl for {artist_name}: {e}")
     return ""
 
 # ─── SPOTIFY ──────────────────────────────────────────────────────────────────
@@ -173,7 +159,7 @@ def get_spotify_info(artist_name: str, token: str) -> dict:
     headers = {"Authorization": f"Bearer {token}"}
     resp = requests.get(
         "https://api.spotify.com/v1/search",
-        params={"q": artist_name, "type": "artist", "limit": 1},
+        params={"q": artist_name.title(), "type": "artist", "limit": 1},
         headers=headers,
         timeout=10,
     )
@@ -231,7 +217,7 @@ def send_email(new_artists: list[str], spotify_data: dict, descriptions: dict):
                 for p in paragraphs
             )
         else:
-            desc_html = '<p style="color:#aaa;font-size:13px;font-style:italic;">Ingen Wikipedia-beskrivelse fundet.</p>'
+            desc_html = '<p style="color:#aaa;font-size:13px;font-style:italic;">Ingen Last.fm-beskrivelse fundet.</p>'
 
         rows += f"""
         <tr>
@@ -264,7 +250,7 @@ def send_email(new_artists: list[str], spotify_data: dict, descriptions: dict):
         {rows}
       </table>
       <p style="color:#aaa;font-size:12px;margin-top:24px;">
-        Beskrivelser fra Wikipedia &nbsp;|&nbsp;
+        Beskrivelser fra Last.fm &nbsp;|&nbsp;
         <a href="{CONFIG['copenhell_url']}">Se alle nyheder pa Copenhell.dk</a>
       </p>
     </body>
@@ -312,11 +298,11 @@ def main():
             spotify_data[name] = get_spotify_info(name, token)
             time.sleep(0.3)
 
-    # Hent Wikipedia-beskrivelser
+    # Hent Last.fm-beskrivelser
     descriptions = {}
     for name in new_artists:
-        print(f"[{now()}] Henter Wikipedia-beskrivelse for {name}...")
-        descriptions[name] = get_wikipedia_description(name)
+        print(f"[{now()}] Henter Last.fm-beskrivelse for {name}...")
+        descriptions[name] = get_lastfm_description(name)
         time.sleep(0.5)
 
     try:
