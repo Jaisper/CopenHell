@@ -20,7 +20,7 @@ from bs4 import BeautifulSoup
 # ─── KONFIGURATION ────────────────────────────────────────────────────────────
 
 CONFIG = {
-    "recipient_email":       "jesper_lippert@hottmail.com",
+    "recipient_email":       "jesper_lippert@hotmail.com",
     "smtp_host":             os.getenv("SMTP_HOST", "smtp.gmail.com"),
     "smtp_port":             int(os.getenv("SMTP_PORT", 587)),
     "smtp_user":             os.getenv("SMTP_USER"),
