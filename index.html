@@ -121,7 +121,7 @@ const FALLBACK_LINEUP = [
 
 let currentLineup = [...FALLBACK_LINEUP];
 
-async window.addEventListener('load', () => {
+window.addEventListener('load', () => {
   const saved = localStorage.getItem('groq_key');
   if (saved) {
     document.getElementById('groqKeyInput').value = saved;
@@ -142,7 +142,7 @@ function saveGroqKey() {
   document.getElementById('apiStatus').style.color = '#1DB954';
 }
 
-function fetchLineup() {
+async function fetchLineup() {
   const statusEl = document.getElementById('lineupStatus');
   try {
     const proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://copenhell.dk/en/category/copenhell-2026-en/');
