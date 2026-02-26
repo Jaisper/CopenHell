@@ -171,7 +171,7 @@ Returner JSON i dette format:
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'openai-fast',
+        model: 'gemini',
         json: true,
         messages: [
           { role: 'system', content: systemMsg },
@@ -188,61 +188,40 @@ Returner JSON i dette format:
 
     const text = await resp.text();
     let json;
-    // Parse svaret - Pollinations kan returnere flere formater
-    let raw = text.trim();
-    let extracted = '';
+    // Udtræk tekst-indhold fra alle kendte Pollinations response-formater
+    let extracted = text.trim();
     try {
-      const parsed = JSON.parse(raw);
-      // Format 1: OpenAI choices-array
-      if (parsed.choices && parsed.choices[0]) {
-        extracted = parsed.choices[0].message?.content || '';
-      }
-      // Format 2: Direkte message-objekt { role, content, reasoning_content }
-      else if (parsed.role === 'assistant') {
-        // content kan være array af objekter eller string
+      const parsed = JSON.parse(text.trim());
+      if (parsed.choices?.[0]?.message?.content) {
+        // Standard OpenAI format
+        extracted = parsed.choices[0].message.content;
+      } else if (parsed.role === 'assistant') {
+        // Direkte message-objekt - prøv content først, så reasoning
         if (Array.isArray(parsed.content)) {
-          extracted = parsed.content.map(c => c.text || c.content || '').join('');
+          extracted = parsed.content.map(c => c.text || '').join('');
+        } else if (typeof parsed.content === 'string' && parsed.content.trim()) {
+          extracted = parsed.content;
         } else {
-          extracted = parsed.content || '';
+          // reasoning_content indeholder alt AI'et "tænkte" - JSON er der
+          extracted = parsed.reasoning_content || text;
         }
-        // Fallback: reasoning_content indeholder tankeprocessen - JSON kan gemme sig i den
-        if (!extracted) {
-          extracted = parsed.reasoning_content || '';
-        }
-        if (!extracted && parsed.recommendations) {
-          json = parsed;
-        }
-      }
-      // Format 3: Direkte JSON med recommendations
-      else if (parsed.recommendations) {
+      } else if (parsed.recommendations) {
         json = parsed;
       }
-      else {
-        extracted = raw;
-      }
     } catch(e) {
-      extracted = raw;
+      // Ikke JSON på øverste niveau - søg direkte i rå tekst
     }
 
     if (!json) {
-      // Søg JSON i extracted tekst (inkl. reasoning_content)
-      let searchIn = extracted.replace(/```json|```/g,'').trim();
-      // Find det SIDSTE forekomst af { da reasoning typisk slutter med det endelige svar
-      const allMatches = [...searchIn.matchAll(/\{[\s\S]*?"recommendations"[\s\S]*?\}/g)];
+      // Find JSON-blok med "recommendations" i teksten
+      const clean = extracted.replace(/```json|```/g, '').trim();
+      const allMatches = [...clean.matchAll(/\{[\s\S]*?"recommendations"\s*:\s*\[[\s\S]*?\]\s*\}/g)];
       if (allMatches.length > 0) {
-        const lastMatch = allMatches[allMatches.length - 1][0];
-        try {
-          json = JSON.parse(lastMatch);
-        } catch(e) {
-          throw new Error('JSON parse fejl: ' + e.message);
-        }
+        try { json = JSON.parse(allMatches[allMatches.length - 1][0]); }
+        catch(e) { throw new Error('JSON parse fejl: ' + e.message); }
       } else {
-        // Prøv hele teksten
-        try {
-          json = JSON.parse(searchIn);
-        } catch(e) {
-          throw new Error('Intet JSON med recommendations fundet. Svar: ' + searchIn.slice(0,200));
-        }
+        try { json = JSON.parse(clean); }
+        catch(e) { throw new Error('Intet JSON fundet. Svar: ' + clean.slice(0, 200)); }
       }
     }
 
