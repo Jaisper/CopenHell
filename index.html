@@ -167,16 +167,21 @@ Returner JSON i dette format:
 
   try {
     // Brug den korrekte POST endpoint med json=true som query parameter
-    const resp = await fetch('https://text.pollinations.ai/', {
+    // OpenRouter - gratis modeller med korrekt content response
+    const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.href,
+        'X-Title': 'Copenhell Band Anbefaler'
+      },
       body: JSON.stringify({
-        model: 'openai-fast',
-        json: true,
+        model: 'meta-llama/llama-3.3-8b-instruct:free',
         messages: [
           { role: 'system', content: systemMsg },
           { role: 'user',   content: userMsg }
-        ]
+        ],
+        response_format: { type: 'json_object' }
       }),
       signal: AbortSignal.timeout(30000)
     });
@@ -188,39 +193,25 @@ Returner JSON i dette format:
 
     const text = await resp.text();
     let json;
-    // Eneste tilgængelige model er openai-fast (reasoning)
-    // Den returnerer { role, reasoning_content, content:[] }
-    // JSON-svaret ligger ALTID i reasoning_content
-    let searchText = text;
+    // Parse standard OpenAI/OpenRouter format
+    let searchText = '';
     try {
       const parsed = JSON.parse(text.trim());
       if (parsed.choices?.[0]?.message?.content) {
         searchText = parsed.choices[0].message.content;
-      } else if (parsed.role === 'assistant') {
-        // Prøv content først
-        const c = parsed.content;
-        if (typeof c === 'string' && c.trim()) searchText = c;
-        else if (Array.isArray(c) && c.length > 0) searchText = c.map(x => x.text||'').join('');
-        // reasoning_content er tankeprocessen - JSON gemmer sig sidst i den
-        if ((!searchText || searchText === text) && parsed.reasoning_content) {
-          searchText = parsed.reasoning_content;
-        }
       } else if (parsed.recommendations) {
         json = parsed;
       }
-    } catch(e) { /* søg i rå tekst */ }
+    } catch(e) { searchText = text; }
 
     if (!json) {
       const clean = searchText.replace(/```json|```/g, '').trim();
-      // Find ALLE JSON-blokke med recommendations og tag den sidste (det endelige svar)
-      const rx = /\{[^{}]*"recommendations"\s*:\s*\[[\s\S]*?\]\s*\}/g;
-      const hits = [...clean.matchAll(rx)];
-      if (hits.length > 0) {
-        try { json = JSON.parse(hits[hits.length-1][0]); }
-        catch(e) { throw new Error('JSON parse fejl: ' + e.message); }
-      } else {
-        try { json = JSON.parse(clean); }
-        catch(e) { throw new Error('Svar modtaget men JSON ikke fundet. Uddrag: ' + clean.slice(0,200)); }
+      try {
+        json = JSON.parse(clean);
+      } catch(e) {
+        const m = clean.match(/\{[\s\S]*\}/);
+        if (m) { try { json = JSON.parse(m[0]); } catch(e2) { throw new Error('Parse fejl: ' + e2.message); } }
+        else { throw new Error('Intet JSON i svar: ' + clean.slice(0,200)); }
       }
     }
 
