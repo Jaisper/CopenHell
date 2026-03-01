@@ -196,7 +196,7 @@
     vertical-align: middle;
   }
 
-  .day-container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  .day-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
   .day-section { margin-bottom: 2.5rem; }
   .day-header {
     display: flex;
@@ -225,6 +225,30 @@
   .day-count { margin-left: auto; font-size: 0.6rem; color: var(--text-dim); }
   .day-count span { color: var(--gold); }
 
+  /* ── SCENE COLUMNS ── */
+  .scene-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .scene-column { display: flex; flex-direction: column; gap: 2px; }
+  .scene-header {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .scene-header.main-stage { color: var(--accent); border-color: rgba(194,60,44,0.3); }
+
+  /* ── BAND GRID (for unassigned) ── */
   .band-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -233,11 +257,11 @@
   .band-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    padding: 0.55rem 0.7rem;
+    padding: 0.4rem 0.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     transition: all 0.15s ease;
     user-select: none;
   }
@@ -310,7 +334,7 @@
   }
 
   .recommend-section {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1.5rem;
     text-align: center;
@@ -369,7 +393,7 @@
   .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
 
   .results-section {
-    max-width: 800px;
+    max-width: 900px;
     margin: 2rem auto;
     padding: 0 1.5rem 4rem;
   }
@@ -443,15 +467,15 @@
   .footer a { color: var(--text-dim); text-decoration: none; }
   .footer a:hover { color: var(--text); }
 
-  @media (max-width: 600px) {
-    .band-grid { grid-template-columns: 1fr 1fr; }
-    .band-card { padding: 0.45rem 0.5rem; }
-    .band-name { font-size: 0.62rem; }
-    .band-stage { display: none; }
+  @media (max-width: 800px) {
+    .scene-grid { grid-template-columns: repeat(2, 1fr); }
+    .band-name { font-size: 0.6rem; }
     .header { padding: 2rem 1rem 1.5rem; }
   }
-  @media (max-width: 380px) {
-    .band-grid { grid-template-columns: 1fr; }
+  @media (max-width: 480px) {
+    .scene-grid { grid-template-columns: 1fr; }
+    .band-card { padding: 0.45rem 0.5rem; }
+    .band-name { font-size: 0.62rem; }
   }
   .hidden { display: none !important; }
 </style>
@@ -737,40 +761,88 @@ async function fetchLiveLineup() {
 // ═══════════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════════
-function getBandsByDay(dayKey) {
+const STAGES_ORDER = ['Helvíti', 'Hades', 'Pandæmonium', 'Gehenna'];
+
+function getBandsForDayStage(dayKey, stage) {
   return Object.entries(LINEUP)
-    .filter(([_, info]) => info.day === dayKey)
-    .map(([name, info]) => ({ name, stage: info.stage }))
-    .sort((a, b) => a.name.replace(/^[\(\)0-9\s]+/, '').localeCompare(
-                     b.name.replace(/^[\(\)0-9\s]+/, ''), 'da'));
+    .filter(([_, info]) => info.day === dayKey && info.stage === stage)
+    .map(([name]) => name)
+    .sort((a, b) => a.replace(/^[\(\)0-9\s]+/, '').localeCompare(
+                     b.replace(/^[\(\)0-9\s]+/, ''), 'da'));
 }
 
 function renderDays() {
   const container = document.getElementById('dayContainer');
   container.innerHTML = '';
 
-  // First render bands with assigned days
   DAYS_CONFIG.forEach(day => {
-    const bands = getBandsByDay(day.key);
-    if (bands.length === 0) return;
+    // Check if this day has any bands
+    const dayBands = Object.entries(LINEUP).filter(([_, info]) => info.day === day.key);
+    if (dayBands.length === 0) return;
 
     const section = document.createElement('div');
     section.className = `day-section day-${day.key}`;
+
     section.innerHTML = `
       <div class="day-header">
         <div class="day-dot"></div>
         <div class="day-name">${day.name}</div>
         <div class="day-date">${day.date}</div>
-        <div class="day-count"><span>${bands.length}</span> bands</div>
+        <div class="day-count"><span>${dayBands.length}</span> bands</div>
       </div>
-      <div class="band-grid"></div>
+      <div class="scene-grid"></div>
     `;
     container.appendChild(section);
-    const grid = section.querySelector('.band-grid');
-    bands.forEach(band => renderBandCard(band, grid));
+
+    const sceneGrid = section.querySelector('.scene-grid');
+
+    STAGES_ORDER.forEach((stage, i) => {
+      const col = document.createElement('div');
+      col.className = 'scene-column';
+
+      const header = document.createElement('div');
+      header.className = `scene-header${i === 0 ? ' main-stage' : ''}`;
+      header.textContent = stage;
+      col.appendChild(header);
+
+      const bands = getBandsForDayStage(day.key, stage);
+      bands.forEach(bandName => {
+        renderBandCard({ name: bandName, stage: stage }, col);
+      });
+
+      // If no bands on this stage this day, show empty placeholder
+      if (bands.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'padding:0.5rem;text-align:center;font-size:0.55rem;color:#333;';
+        empty.textContent = '—';
+        col.appendChild(empty);
+      }
+
+      sceneGrid.appendChild(col);
+    });
+
+    // Any bands on this day without a known stage (stage === '')
+    const unstagedBands = Object.entries(LINEUP)
+      .filter(([_, info]) => info.day === day.key && !STAGES_ORDER.includes(info.stage) && info.stage !== '')
+      .map(([name, info]) => ({ name, stage: info.stage }));
+
+    const noStageBands = Object.entries(LINEUP)
+      .filter(([_, info]) => info.day === day.key && info.stage === '')
+      .map(([name]) => ({ name, stage: '' }));
+
+    const extraBands = [...unstagedBands, ...noStageBands]
+      .sort((a, b) => a.name.localeCompare(b.name, 'da'));
+
+    if (extraBands.length > 0) {
+      const extraGrid = document.createElement('div');
+      extraGrid.className = 'band-grid';
+      extraGrid.style.marginTop = '4px';
+      extraBands.forEach(band => renderBandCard(band, extraGrid));
+      section.appendChild(extraGrid);
+    }
   });
 
-  // Then render any bands without a day assignment
+  // Bands without any day assignment
   const unassigned = Object.entries(LINEUP)
     .filter(([_, info]) => !info.day)
     .map(([name, info]) => ({ name, stage: info.stage }))
@@ -823,7 +895,6 @@ function renderBandCard(band, grid) {
     <div class="band-info">
       <div class="band-text">
         <div class="band-name" title="${band.name}">${band.name}</div>
-        ${band.stage ? `<div class="band-stage">${band.stage}</div>` : ''}
       </div>
       <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
          title="Åbn på Spotify" onclick="event.stopPropagation();">${SPOTIFY_SVG}</a>
