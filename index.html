@@ -301,16 +301,20 @@
   .band-text { flex: 1; min-width: 0; }
   .spotify-link {
     flex-shrink: 0;
-    width: 16px;
-    height: 16px;
+    width: 28px;
+    height: 28px;
     opacity: 0.3;
     transition: opacity 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 5;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
-  .spotify-link:hover { opacity: 1; }
-  .spotify-link svg { width: 14px; height: 14px; fill: #1DB954; }
+  .spotify-link:hover, .spotify-link:active { opacity: 1; }
+  .spotify-link svg { width: 16px; height: 16px; fill: #1DB954; pointer-events: none; }
   .rec-badge {
     display: none;
     align-items: center;
@@ -897,13 +901,15 @@ function renderBandCard(band, grid) {
         <div class="band-name" title="${band.name}">${band.name}</div>
       </div>
       <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
-         title="Åbn på Spotify" onclick="event.stopPropagation();">${SPOTIFY_SVG}</a>
+         title="Åbn på Spotify">${SPOTIFY_SVG}</a>
     </div>
     ${isHL ? '<span class="headliner-tag">HEADLINER</span>' : ''}
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
   card.addEventListener('click', (e) => {
-    if (e.target.closest('.spotify-link')) return;
+    // Let Spotify links work on all devices including iPad
+    const link = e.target.closest('a');
+    if (link) return;
     toggleBand(band.name, card);
   });
   grid.appendChild(card);
