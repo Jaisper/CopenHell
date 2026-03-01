@@ -879,8 +879,8 @@ const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 // ═══════════════════════════════════════════════════════
 function getSpotifyUrl(bandName) {
   const clean = bandName.replace(/[()]/g, '').trim();
-  // Use artist: prefix in Spotify search to go straight to artist results
-  return `https://open.spotify.com/search/${encodeURIComponent(clean)}/artists`;
+  // Standard web URL — works in browser and app universal links
+  return `https://open.spotify.com/search/${encodeURIComponent(clean)}`;
 }
 
 function renderBandCard(band, grid) {
