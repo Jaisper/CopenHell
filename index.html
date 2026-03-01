@@ -44,6 +44,16 @@
     padding: 3rem 1.5rem 2rem;
     border-bottom: 1px solid var(--border);
     position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 220'%3E%3Cpath d='M100 10C55 10 25 50 25 90c0 30 15 55 35 70v25c0 8 6 15 15 15h50c9 0 15-7 15-15v-25c20-15 35-40 35-70 0-40-30-80-75-80zm-25 95c-10 0-18-8-18-18s8-18 18-18 18 8 18 18-8 18-18 18zm50 0c-10 0-18-8-18-18s8-18 18-18 18 8 18 18-8 18-18 18zm-40 35h30v-8H85v8zm0 12h30v-8H85v8z' fill='%23c23c2c' fill-opacity='0.04'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 120px;
+    pointer-events: none;
   }
   .header::after {
     content: '';
@@ -246,7 +256,7 @@
     text-align: center;
   }
   .band-card:hover .band-skull { opacity: 0.4; transform: scale(0.9); }
-  .band-info { flex: 1; min-width: 0; }
+  .band-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.4rem; }
   .band-name {
     font-size: 0.7rem;
     color: var(--text-dim);
@@ -263,6 +273,19 @@
     text-transform: uppercase;
     margin-top: 1px;
   }
+  .band-text { flex: 1; min-width: 0; }
+  .spotify-link {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .spotify-link:hover { opacity: 1; }
+  .spotify-link svg { width: 14px; height: 14px; fill: #1DB954; }
   .rec-badge {
     display: none;
     align-items: center;
@@ -513,7 +536,7 @@ const DAY_MAP = { 'Wed': 'ons', 'Thu': 'tor', 'Fri': 'fre', 'Sat': 'lor',
                   'Ons': 'ons', 'Tor': 'tor', 'Fre': 'fre', 'Lør': 'lor' };
 
 // Known headliners (for HL badge)
-const HEADLINER_NAMES = ["IRON MAIDEN", "BRING ME THE HORIZON", "TWISTED SISTER", "VOLBEAT"];
+const HEADLINER_NAMES = ["IRON MAIDEN", "BRING ME THE HORIZON", "VOLBEAT"];
 
 // ═══════════════════════════════════════════════════════
 // CACHED FALLBACK — snapshot marts 2026
@@ -556,7 +579,6 @@ const CACHED_LINEUP = {
   "END IT":{ day:"tor", stage:"Gehenna" },
   "GRIDIRON":{ day:"tor", stage:"Gehenna" },
   "RAP MARTIN RAP":{ day:"tor", stage:"Gehenna" },
-  "TWISTED SISTER":{ day:"fre", stage:"Helvíti" },
   "A PERFECT CIRCLE":{ day:"fre", stage:"Helvíti" },
   "TRIVIUM":{ day:"fre", stage:"Helvíti" },
   "JAKOB STEGELMANN AND AARHUS SYMFONIORKESTER":{ day:"fre", stage:"Helvíti" },
@@ -595,6 +617,15 @@ const CACHED_LINEUP = {
   "CHOPPER":{ day:"lor", stage:"Gehenna" },
   "INHUMAN NATURE":{ day:"lor", stage:"Gehenna" },
   "PSYCHOMOSHER":{ day:"lor", stage:"Gehenna" },
+  // ─── BONEYARD (dag/tid TBA) ───
+  "BRAINDEAD":{ day:"", stage:"Boneyard" },
+  "GOING FOR THE ONE":{ day:"", stage:"Boneyard" },
+  "MITE":{ day:"", stage:"Boneyard" },
+  "PERMANOIA":{ day:"", stage:"Boneyard" },
+  "PRESIDENT FETCH":{ day:"", stage:"Boneyard" },
+  "THE ROTTEN LEPRECHAUNS":{ day:"", stage:"Boneyard" },
+  "S.T.A.B.":{ day:"", stage:"Boneyard" },
+  "SLYTTER":{ day:"", stage:"Boneyard" },
 };
 
 // ═══════════════════════════════════════════════════════
@@ -760,6 +791,37 @@ function renderDays() {
   }
 }
 
+const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`;
+
+// Spotify URL cache
+const spotifyCache = {};
+
+async function lookupSpotify(bandName) {
+  if (spotifyCache[bandName] !== undefined) return spotifyCache[bandName];
+
+  // Search via Spotify oEmbed — no API key needed
+  // We use the Spotify search URL pattern
+  const searchName = bandName.replace(/[()]/g, '').trim();
+  const searchUrl = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
+
+  // Try Spotify oEmbed to verify artist exists
+  try {
+    // Use Spotify's internal search-to-artist approach
+    // We construct a likely artist URL and check via oEmbed
+    const resp = await fetchWithTimeout(
+      `https://open.spotify.com/oembed?url=https://open.spotify.com/search/${encodeURIComponent(searchName)}`,
+      3000
+    );
+    // oEmbed won't work for search URLs, so we just link to search
+    spotifyCache[bandName] = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
+    return spotifyCache[bandName];
+  } catch {
+    // Fallback: always link to Spotify search — it works even if oEmbed fails
+    spotifyCache[bandName] = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
+    return spotifyCache[bandName];
+  }
+}
+
 function renderBandCard(band, grid) {
   const card = document.createElement('div');
   card.className = 'band-card';
@@ -768,16 +830,27 @@ function renderBandCard(band, grid) {
   if (recommended.has(band.name)) card.classList.add('recommended');
 
   const isHL = HEADLINER_NAMES.includes(band.name);
+  const searchName = band.name.replace(/[()]/g, '').trim();
+  const spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
+
   card.innerHTML = `
     <div class="band-skull">💀</div>
     <div class="band-info">
-      <div class="band-name" title="${band.name}">${band.name}</div>
-      ${band.stage ? `<div class="band-stage">${band.stage}</div>` : ''}
+      <div class="band-text">
+        <div class="band-name" title="${band.name}">${band.name}</div>
+        ${band.stage ? `<div class="band-stage">${band.stage}</div>` : ''}
+      </div>
+      <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link"
+         title="Søg på Spotify" onclick="event.stopPropagation();">${SPOTIFY_SVG}</a>
     </div>
     ${isHL ? '<span class="headliner-tag">HL</span>' : ''}
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
-  card.addEventListener('click', () => toggleBand(band.name, card));
+  card.addEventListener('click', (e) => {
+    // Don't toggle if clicking the Spotify link
+    if (e.target.closest('.spotify-link')) return;
+    toggleBand(band.name, card);
+  });
   grid.appendChild(card);
 }
 
@@ -964,7 +1037,12 @@ function displayRecommendations(recs) {
     item.innerHTML = `
       <div class="result-rank">${r.rank}</div>
       <div class="result-content">
-        <div class="result-name">${r.band}</div>
+        <div class="result-name">
+          ${r.band}
+          <a href="https://open.spotify.com/search/${encodeURIComponent(r.band.replace(/[()]/g, '').trim())}" 
+             target="_blank" rel="noopener" class="spotify-link" style="display:inline-flex;vertical-align:middle;margin-left:0.4rem;"
+             title="Søg på Spotify">${SPOTIFY_SVG}</a>
+        </div>
         ${dayObj ? `<div class="result-day-stage">
           <span class="day-label day-${info.day}">${dayObj.name}</span>
           ${info.stage ? ` · ${info.stage}` : ''}
