@@ -405,6 +405,8 @@
   }
   .result-content { flex: 1; }
   .result-name { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .result-name a { color: #fff; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); transition: border-color 0.2s; }
+  .result-name a:hover { border-color: var(--accent); color: var(--accent); }
   .result-day-stage {
     font-size: 0.6rem;
     color: var(--text-dim);
@@ -795,76 +797,14 @@ function renderDays() {
 const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`;
 
 // ═══════════════════════════════════════════════════════
-// SPOTIFY DIRECT ARTIST LINKS (hardcoded — no API needed)
+// SPOTIFY LINKS
+// Uses Spotify search with artist filter — reliable, no API needed
+// Opens Spotify with a pre-filtered artist search for each band
 // ═══════════════════════════════════════════════════════
-const SPOTIFY_URLS = {
-  "A PERFECT CIRCLE": "https://open.spotify.com/artist/4MvhMwPMBnGEoLmTHPSspB",
-  "ALESTORM": "https://open.spotify.com/artist/3ABOW1HYIkJmL57CrIl7yO",
-  "ALICE COOPER": "https://open.spotify.com/artist/3EhbVgyfGd3ReeVC4gt3Eg",
-  "ALL THEM WITCHES": "https://open.spotify.com/artist/3iFfBGbSsGSUwPGt6jKjtk",
-  "ANTHRAX": "https://open.spotify.com/artist/5WEuRMelSjRELyOFD2CVJH",
-  "BABYMETAL": "https://open.spotify.com/artist/4zN29Oan75B23ALNyoVkFH",
-  "BLACK LABEL SOCIETY": "https://open.spotify.com/artist/1KlMJb5JNTM5lzQFCMKfnL",
-  "BLACK OAK COUNTY": "https://open.spotify.com/artist/7d95w7CnHl7dTiEYU4Q0OQ",
-  "BRING ME THE HORIZON": "https://open.spotify.com/artist/1Ffb6ejR6Fe5IamqA5oRUF",
-  "BURY TOMORROW": "https://open.spotify.com/artist/5O96BghkHINTzYVMLRjn0y",
-  "CALVA LOUISE": "https://open.spotify.com/artist/6KZBaE4kEjB4NfayK2jZyI",
-  "DEFECTO": "https://open.spotify.com/artist/66OPDSbHTjRivV3EH5GRWQ",
-  "DIE SPITZ": "https://open.spotify.com/artist/0X5kqVkrwgia5cLOun0ZpG",
-  "DJERV": "https://open.spotify.com/artist/1L5K3Gy1yP36tzZNKQZjBR",
-  "DOGMA": "https://open.spotify.com/artist/0OhAEPOuYnSqJPafLxHjuO",
-  "END IT": "https://open.spotify.com/artist/01HCB5BcEFVaQp9WbqxR0J",
-  "EYEHATEGOD": "https://open.spotify.com/artist/7A8fezOfaWeWGLLd1noRc1",
-  "FAETOOTH": "https://open.spotify.com/artist/4TLpB3A40jNB9FHRMro1Cx",
-  "GAEREA": "https://open.spotify.com/artist/7D8WxEgdUj5gdJCFnzbJfm",
-  "GRIDIRON": "https://open.spotify.com/artist/79uyDi23UiRXZnChxniNWH",
-  "HENRET": "https://open.spotify.com/artist/5LH1rh6tNkHJrqsYVqaF8K",
-  "ICE NINE KILLS": "https://open.spotify.com/artist/2YqBjJEjkiJjwGE3oIYrDJ",
-  "IMMINENCE": "https://open.spotify.com/artist/4jFnYJFmFpDm0JbOKxucNq",
-  "INHUMAN NATURE": "https://open.spotify.com/artist/5GRXS5pUOiQvCUOjkV8gRj",
-  "IOTUNN": "https://open.spotify.com/artist/3bPGxXeMCr3NUc6RjRDOhR",
-  "IRON MAIDEN": "https://open.spotify.com/artist/6mdiAmATAx73kdxrNrnlao",
-  "KATLA": "https://open.spotify.com/artist/5SJJywFigHdlKm6wNNdIpe",
-  "KONVENT": "https://open.spotify.com/artist/50m98oBxMhNlcRFLATcbjm",
-  "KUBLAI KHAN TX": "https://open.spotify.com/artist/7FZ3Dx5lVHJfzhlw1n1jyP",
-  "LIGHTCHAPTER": "https://open.spotify.com/artist/2vVXh2yjPHLJCKvCyUONBV",
-  "LOATHE": "https://open.spotify.com/artist/3RNNXWI0QA7kFLKlzMi85q",
-  "MACERATION": "https://open.spotify.com/artist/5ioJz3heGLCnBjxOcVJntH",
-  "MALEVOLENCE": "https://open.spotify.com/artist/7wAdpJyahByVw4t29QTPr4",
-  "MAMMOTH": "https://open.spotify.com/artist/2FSGQZ9GmhQJPESP8JMbBo",
-  "MASTODON": "https://open.spotify.com/artist/1Dvfqq39HxvCJ3GvfeIFuT",
-  "NECKBREAKKER": "https://open.spotify.com/artist/3M6FKKrUiWluIqcJCfGi3Y",
-  "OMSORG": "https://open.spotify.com/artist/51eXwuDYcfHJXJBG6MYHJ9",
-  "P.O.D.": "https://open.spotify.com/artist/0M4JFB1AOecCUfLRttaPfK",
-  "PALEFACE SWISS": "https://open.spotify.com/artist/2vRB1AHPZo6n8HqzJfaav6",
-  "PAPA ROACH": "https://open.spotify.com/artist/4RBpiMKCMlECGSWMDDEEwl",
-  "PERMANOIA": "https://open.spotify.com/artist/6Kj9u1BIxp8JnIbGRLPpnE",
-  "POWERPLANT": "https://open.spotify.com/artist/3X3P8SqTlMKOh5Gvj1n3Xd",
-  "PRESIDENT": "https://open.spotify.com/artist/3SQDUBHn3v2aXGk9fscWs5",
-  "QUEENSRŸCHE": "https://open.spotify.com/artist/61eGJnniMOOvKwjJIxFykB",
-  "SCIMITAR": "https://open.spotify.com/artist/6ZZHnHqhbsFMDKzy59XmyU",
-  "SEPULTURA": "https://open.spotify.com/artist/09iGHpdTMSsXbOVMFtvbmZ",
-  "SIX FEET UNDER": "https://open.spotify.com/artist/5lF0MoAzz6DigkfJhPGNkA",
-  "SOCIAL DISTORTION": "https://open.spotify.com/artist/7vk0PmmurQiY80m1GrLmt6",
-  "SOILWORK": "https://open.spotify.com/artist/41Q0HrwWBFRTAVaGAyYMEo",
-  "STATIC-X": "https://open.spotify.com/artist/2Y01uS2LCMv9Jbbm6vIQAP",
-  "SUICIDAL TENDENCIES": "https://open.spotify.com/artist/3Is3VVCMGXpmByuGCxlHzK",
-  "THE BROWNING": "https://open.spotify.com/artist/0EAicreTZxJFTD6GlsJFKs",
-  "THE PRETTY RECKLESS": "https://open.spotify.com/artist/1lYT0A0LV5DUfxr6doRP3d",
-  "THROWN": "https://open.spotify.com/artist/5Jv5ji5LTMCagbVZV3BnxM",
-  "TOM MORELLO": "https://open.spotify.com/artist/2Ton5elvis1aRkQSiYBOuA",
-  "TRIVIUM": "https://open.spotify.com/artist/1sBkRIssrMs1l5KRVpVkri",
-  "TROLLFEST": "https://open.spotify.com/artist/77Z2MZ9gqNYQn7Hqpyj4xC",
-  "UNPEOPLE": "https://open.spotify.com/artist/4PGTu7f6pCp8mNMabdvjmg",
-  "VEXED": "https://open.spotify.com/artist/5aEYT1Dw4Ty19cUJFNO8Q4",
-  "VIOLENT MAGIC ORCHESTRA": "https://open.spotify.com/artist/3xFJtbWLFwmlWJm3M2yLNc",
-  "VOICE OF BACEPROT": "https://open.spotify.com/artist/6JgPnBCFDjjFbCKjMJOB31",
-  "VOLBEAT": "https://open.spotify.com/artist/1mZiCG8OPxsAdqFkNhKiSZ",
-  "WARKINGS": "https://open.spotify.com/artist/2J0lzTJuTRqbfHs9DPQbTF",
-};
-
 function getSpotifyUrl(bandName) {
-  return SPOTIFY_URLS[bandName] || `https://open.spotify.com/search/${encodeURIComponent(bandName.replace(/[()]/g, '').trim())}`;
+  const clean = bandName.replace(/[()]/g, '').trim();
+  // Use artist: prefix in Spotify search to go straight to artist results
+  return `https://open.spotify.com/search/${encodeURIComponent(clean)}/artists`;
 }
 
 function renderBandCard(band, grid) {
@@ -980,12 +920,12 @@ ${favorites.map(b => `• ${b}`).join('\n')}
 Her er de ØVRIGE bands på Copenhell 2026 (med dag og scene):
 ${remainingWithDays}
 
-Anbefal de 10 bedste bands fra den øvrige liste baseret på brugerens musiksmag. Sortér efter match-kvalitet. Giv en kort begrundelse (1-2 sætninger på dansk) for hvert band.
+Anbefal de 10 bedste bands fra den øvrige liste baseret på brugerens musiksmag. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
 
 SVAR KUN med denne JSON-struktur, ingen anden tekst:
 [
-  {"rank": 1, "band": "BANDNAVN", "reason": "Kort begrundelse på dansk", "match": "95%"},
-  {"rank": 2, "band": "BANDNAVN", "reason": "Kort begrundelse", "match": "90%"}
+  {"rank": 1, "band": "BANDNAVN", "reason": "3-5 sætninger på dansk der beskriver bandet, deres genre/lyd, og hvorfor brugeren vil kunne lide dem.", "match": "95%"},
+  {"rank": 2, "band": "BANDNAVN", "reason": "3-5 sætninger beskrivelse", "match": "90%"}
 ]
 
 VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med valid JSON, max 10 bands.`;
@@ -1001,7 +941,7 @@ VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med 
         model: 'llama-3.1-8b-instant',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
-        max_tokens: 2000
+        max_tokens: 4000
       })
     });
 
@@ -1075,6 +1015,13 @@ function displayRecommendations(recs) {
     const info = bandKey ? LINEUP[bandKey] : null;
     const dayObj = info ? DAYS_CONFIG.find(d => d.key === info.day) : null;
 
+    // Build copenhell artist URL from band name
+    const chSlug = r.band.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove accents
+      .replace(/[^a-z0-9]+/g, '-')                       // non-alphanum → dash
+      .replace(/^-|-$/g, '');                             // trim dashes
+    const copenhellUrl = `https://copenhell.dk/artist/${chSlug}/`;
+
     const item = document.createElement('div');
     item.className = 'result-item';
     item.style.animationDelay = `${i * 0.05}s`;
@@ -1082,10 +1029,10 @@ function displayRecommendations(recs) {
       <div class="result-rank">${r.rank}</div>
       <div class="result-content">
         <div class="result-name">
-          ${r.band}
+          <a href="${copenhellUrl}" target="_blank" rel="noopener" title="Læs mere på copenhell.dk">${r.band}</a>
           <a href="${getSpotifyUrl(r.band)}" 
              target="_blank" rel="noopener" class="spotify-link" style="display:inline-flex;vertical-align:middle;margin-left:0.4rem;"
-             title="Søg på Spotify">${SPOTIFY_SVG}</a>
+             title="Find på Spotify">${SPOTIFY_SVG}</a>
         </div>
         ${dayObj ? `<div class="result-day-stage">
           <span class="day-label day-${info.day}">${dayObj.name}</span>
