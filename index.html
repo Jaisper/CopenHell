@@ -4,291 +4,987 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Copenhell 2026 — Band Anbefaler</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--red:#c0392b;--black:#0a0a0a;--dark:#111;--mid:#1a1a1a;--text:#e8e8e8;--muted:#666;--green:#1DB954;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--black);color:var(--text);font-family:'Oswald',sans-serif;min-height:100vh;padding:40px 16px 80px;}
-  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(192,57,43,0.02) 2px,rgba(192,57,43,0.02) 4px);pointer-events:none;z-index:0;}
-  .wrap{max-width:700px;margin:0 auto;position:relative;z-index:1;}
-  header{text-align:center;margin-bottom:40px;}
-  .logo{font-size:clamp(40px,10vw,64px);font-weight:700;color:var(--red);letter-spacing:6px;text-shadow:0 0 40px rgba(192,57,43,0.4);animation:flicker 6s infinite;}
-  @keyframes flicker{0%,94%,100%{opacity:1}95%{opacity:.7}96%{opacity:1}97%{opacity:.5}98%{opacity:1}}
-  .tagline{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:4px;margin-top:6px;text-transform:uppercase;}
-  .rule{height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);margin:20px auto;max-width:500px;}
-  .card{background:var(--dark);border:1px solid #1e1e1e;border-top:2px solid var(--red);padding:28px;margin-bottom:16px;}
-  .card-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;}
-  .desc{font-size:15px;font-weight:300;color:#bbb;line-height:1.6;margin-bottom:22px;}
-  .inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;}
-  @media(max-width:500px){.inputs{grid-template-columns:1fr;}}
-  .inp-wrap{position:relative;}
-  .inp-num{position:absolute;top:10px;left:10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);pointer-events:none;}
-  .band-input{width:100%;background:var(--mid);border:1px solid #333;border-bottom:2px solid #333;color:var(--text);font-family:'Oswald',sans-serif;font-size:16px;padding:10px 10px 10px 30px;outline:none;transition:border-color .2s;}
-  .band-input:focus{border-color:var(--red);border-bottom-color:var(--red);}
-  .band-input::placeholder{color:#3a3a3a;}
-  .btn-submit{width:100%;background:var(--red);border:none;color:#fff;font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:16px;cursor:pointer;transition:background .2s;}
-  .btn-submit:hover{background:#a93226;}
-  .btn-submit:disabled{background:#333;cursor:not-allowed;}
-  .err-box{display:none;margin-top:12px;padding:12px 16px;background:rgba(192,57,43,.1);border:1px solid var(--red);font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--red);}
-  #loading{display:none;text-align:center;padding:60px 0;}
-  .skull{font-size:56px;display:inline-block;animation:bang .25s ease-in-out infinite alternate;}
-  @keyframes bang{from{transform:rotate(-12deg) translateY(0);}to{transform:rotate(12deg) translateY(-10px);}}
-  .load-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;margin-top:18px;animation:blink 1.4s ease-in-out infinite;}
-  .load-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;letter-spacing:1px;margin-top:8px;}
-  @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
-  #results{display:none;}
-  .res-header{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
-  .res-sub{font-family:'Share Tech Mono',monospace;font-size:11px;color:#444;margin-bottom:20px;}
-  .band-card{background:var(--dark);border:1px solid #1e1e1e;border-left:3px solid var(--red);padding:22px;margin-bottom:10px;opacity:0;transform:translateX(-16px);transition:opacity .4s,transform .4s;position:relative;}
-  .band-card.show{opacity:1;transform:translateX(0);}
-  .prio-badge{position:absolute;top:16px;right:16px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#333;}
-  .prio-badge span{color:var(--red);}
-  .band-name{font-size:22px;font-weight:700;color:var(--red);letter-spacing:2px;margin-bottom:4px;padding-right:40px;}
-  .band-hype{font-size:13px;color:#ddd;font-style:italic;border-left:2px solid var(--red);padding-left:10px;margin-bottom:10px;}
-  .band-reason{font-size:14px;font-weight:300;color:#bbb;line-height:1.7;margin-bottom:14px;}
-  .spotify-btn{display:inline-block;background:var(--green);color:#000;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;padding:6px 16px;border-radius:20px;text-decoration:none;transition:opacity .2s;}
-  .spotify-btn:hover{opacity:.85;}
-  .btn-reset{margin-top:24px;background:transparent;border:1px solid #2a2a2a;color:var(--muted);font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:2px;padding:10px 24px;cursor:pointer;text-transform:uppercase;transition:border-color .2s,color .2s;}
-  .btn-reset:hover{border-color:var(--red);color:var(--text);}
-  .lineup-status{font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;text-align:center;margin-bottom:16px;letter-spacing:1px;}
-  .powered{font-family:'Share Tech Mono',monospace;font-size:10px;color:#2a2a2a;text-align:center;margin-top:40px;letter-spacing:2px;}
-  .powered a{color:#333;}
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222;
+    --text: #e8e4de;
+    --text-dim: #777;
+    --accent: #c23c2c;
+    --accent-glow: #ff4433;
+    --gold: #d4a843;
+    --green: #3ddc84;
+    --ons: #8b5cf6;
+    --tor: #3b82f6;
+    --fre: #ef4444;
+    --lor: #f59e0b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .header {
+    text-align: center;
+    padding: 3rem 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .logo span { color: var(--accent); }
+  .subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: 0.75rem;
+  }
+  .year-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.25rem 1rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .data-source {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+  .data-source.live { color: var(--green); }
+  .data-source.cached { color: var(--gold); }
+
+  .api-section { max-width: 600px; margin: 2rem auto; padding: 0 1.5rem; }
+  .api-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+  }
+  .api-box summary {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .api-box summary::before { content: '⚙'; }
+  .api-box summary::-webkit-details-marker { display: none; }
+  .api-box[open] summary { margin-bottom: 1rem; color: var(--text); }
+  .api-hint {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  .api-hint a { color: var(--gold); text-decoration: none; }
+  .api-hint a:hover { text-decoration: underline; }
+  .api-row { display: flex; gap: 0.5rem; }
+  .api-row input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+  }
+  .api-row input:focus { outline: none; border-color: var(--accent); }
+  .btn-small {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-small:hover { background: var(--accent-glow); }
+  .api-status { font-size: 0.65rem; margin-top: 0.5rem; }
+
+  .instructions {
+    max-width: 800px;
+    margin: 1.5rem auto;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+  .instructions p {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .instructions strong { color: var(--text); }
+  .fav-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.5rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+  .fav-counter .skull { color: var(--accent); font-size: 1.1rem; }
+  .fav-counter .count { color: var(--gold); font-weight: 700; }
+
+  .loading-indicator {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+  }
+  .loading-indicator::after {
+    content: '';
+    display: inline-block;
+    width: 1em; height: 1em;
+    border: 2px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    margin-left: 0.5rem;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+
+  .day-container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+  .day-section { margin-bottom: 2.5rem; }
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .day-ons .day-dot { background: var(--ons); }
+  .day-tor .day-dot { background: var(--tor); }
+  .day-fre .day-dot { background: var(--fre); }
+  .day-lor .day-dot { background: var(--lor); }
+  .day-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.4rem;
+    color: var(--text);
+  }
+  .day-date {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .day-count { margin-left: auto; font-size: 0.6rem; color: var(--text-dim); }
+  .day-count span { color: var(--gold); }
+
+  .band-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2px;
+  }
+  .band-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .band-card:hover { background: var(--surface2); border-color: #333; }
+  .band-card.selected { background: rgba(194,60,44,0.08); border-color: var(--accent); }
+  .band-card.selected .band-skull { opacity: 1; transform: scale(1); }
+  .band-card.selected .band-name { color: #fff; }
+  .band-card.recommended { background: rgba(212,168,67,0.06); border-color: var(--gold); }
+  .band-card.recommended .rec-badge { display: flex; }
+  .band-skull {
+    font-size: 0.95rem;
+    opacity: 0.15;
+    transform: scale(0.8);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    width: 1.1rem;
+    text-align: center;
+  }
+  .band-card:hover .band-skull { opacity: 0.4; transform: scale(0.9); }
+  .band-info { flex: 1; min-width: 0; }
+  .band-name {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    transition: color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .band-card:hover .band-name { color: var(--text); }
+  .band-stage {
+    font-size: 0.5rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .rec-badge {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--gold);
+    color: var(--bg);
+    font-size: 0.5rem;
+    font-weight: 700;
+    padding: 0.1rem 0.35rem;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .headliner-tag {
+    font-size: 0.45rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    flex-shrink: 0;
+    border: 1px solid rgba(194,60,44,0.3);
+    padding: 0.1rem 0.3rem;
+  }
+
+  .recommend-section {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+  .btn-recommend {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    padding: 0.8rem 2.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-recommend:hover:not(:disabled) {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 30px rgba(194,60,44,0.3);
+  }
+  .btn-recommend:disabled { opacity: 0.3; cursor: not-allowed; }
+  .btn-recommend.loading { pointer-events: none; opacity: 0.6; }
+  .btn-recommend.loading::after {
+    content: '';
+    display: inline-block;
+    width: 1em; height: 1em;
+    border: 2px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    margin-left: 0.75rem;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .action-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .btn-ghost {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.4rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .results-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1.5rem 4rem;
+  }
+  .results-header {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(212,168,67,0.2);
+    text-align: center;
+  }
+  .result-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-rank {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.5rem;
+    color: var(--accent);
+    min-width: 2rem;
+    text-align: right;
+    line-height: 1.2;
+  }
+  .result-content { flex: 1; }
+  .result-name { font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .result-day-stage {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+  .result-day-stage .day-label {
+    padding: 0.1rem 0.3rem;
+    font-weight: 700;
+    border-radius: 2px;
+    font-size: 0.55rem;
+  }
+  .result-day-stage .day-ons { background: rgba(139,92,246,0.2); color: var(--ons); }
+  .result-day-stage .day-tor { background: rgba(59,130,246,0.2); color: var(--tor); }
+  .result-day-stage .day-fre { background: rgba(239,68,68,0.2); color: var(--fre); }
+  .result-day-stage .day-lor { background: rgba(245,158,11,0.2); color: var(--lor); }
+  .result-reason { font-size: 0.7rem; color: var(--text-dim); line-height: 1.6; }
+  .result-match {
+    font-size: 0.6rem;
+    color: var(--gold);
+    margin-top: 0.25rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .footer a { color: var(--text-dim); text-decoration: none; }
+  .footer a:hover { color: var(--text); }
+
+  @media (max-width: 600px) {
+    .band-grid { grid-template-columns: 1fr 1fr; }
+    .band-card { padding: 0.45rem 0.5rem; }
+    .band-name { font-size: 0.62rem; }
+    .band-stage { display: none; }
+    .header { padding: 2rem 1rem 1.5rem; }
+  }
+  @media (max-width: 380px) {
+    .band-grid { grid-template-columns: 1fr; }
+  }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="logo">COPENHELL</div>
-    <div class="tagline">2026 · AI Band Anbefaler</div>
-    <div class="rule"></div>
-  </header>
 
-  <div class="lineup-status" id="lineupStatus">// Henter lineup...</div>
+<div class="header">
+  <div class="logo">COPEN<span>HELL</span></div>
+  <div class="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
+  <div class="year-badge">AI Band Anbefaler</div>
+  <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
+</div>
 
-  <div class="card" id="apiCard">
-    <div class="card-label">// Groq API Nøgle — gratis</div>
-    <p class="desc" style="margin-bottom:14px;">Appen bruger Groq's gratis AI. Opret en nøgle på <a href="https://console.groq.com" target="_blank" style="color:var(--red);">console.groq.com</a> (log ind med Google → API Keys → Create). Nøglen gemmes kun i din browser.</p>
-    <div style="display:flex;gap:10px;">
-      <input type="password" id="groqKeyInput" placeholder="gsk_..." style="flex:1;background:var(--mid);border:1px solid #333;border-bottom:2px solid #333;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;padding:10px 12px;outline:none;" />
-      <button onclick="saveGroqKey()" style="background:#222;border:1px solid #444;color:#ccc;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;padding:10px 18px;cursor:pointer;text-transform:uppercase;white-space:nowrap;">GEM</button>
+<div class="api-section">
+  <details class="api-box" id="apiBox">
+    <summary>Groq API Nøgle</summary>
+    <p class="api-hint">
+      Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
+      log ind → API Keys → Create. Nøglen gemmes kun i din browser.
+    </p>
+    <div class="api-row">
+      <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
+      <button class="btn-small" onclick="saveApiKey()">Gem</button>
     </div>
-    <div id="apiStatus" style="font-family:'Share Tech Mono',monospace;font-size:11px;margin-top:8px;"></div>
-  </div>
+    <div class="api-status" id="apiStatus"></div>
+  </details>
+</div>
 
-  <div class="card" id="inputCard">
-    <div class="card-label">// Dine 3 favoritbands</div>
-    <p class="desc">Indtast dine absolutte yndlingsbands — AI'en finder de 10 bedste match fra det aktuelle Copenhell 2026 lineup i prioriteret rækkefølge. Gratis, ingen konto krævet.</p>
-    <div class="inputs">
-      <div class="inp-wrap"><span class="inp-num">01</span><input class="band-input" id="b1" type="text" placeholder="fx Metallica" /></div>
-      <div class="inp-wrap"><span class="inp-num">02</span><input class="band-input" id="b2" type="text" placeholder="fx AC/DC" /></div>
-      <div class="inp-wrap"><span class="inp-num">03</span><input class="band-input" id="b3" type="text" placeholder="fx Slipknot" /></div>
-    </div>
-    <button class="btn-submit" id="submitBtn" onclick="getRecommendations()">🤘 Find mine Copenhell-bands</button>
-    <div class="err-box" id="errBox"></div>
+<div class="instructions">
+  <p>
+    Tryk <strong>💀</strong> på de bands du kender og kan lide — vælg så mange du vil.<br>
+    AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
+  </p>
+  <div class="fav-counter">
+    <span class="skull">💀</span>
+    <span>Valgte favoritter: <span class="count" id="favCount">0</span></span>
   </div>
+</div>
 
-  <div id="loading">
-    <div class="skull">💀</div>
-    <div class="load-txt">AI analyserer din musiksmag...</div>
-    <div class="load-sub" id="loadSub"></div>
+<div class="day-container" id="dayContainer">
+  <div class="loading-indicator" id="loadingIndicator">Henter lineup fra copenhell.dk</div>
+</div>
+
+<div class="recommend-section">
+  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>
+    🤘 Find anbefalinger baseret på mine favoritter
+  </button>
+  <div class="action-bar">
+    <button class="btn-ghost" onclick="clearSelections()">Nulstil valg</button>
+    <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()">Fjern anbefalinger</button>
   </div>
+</div>
 
-  <div id="results">
-    <div class="res-header">// Dine 10 anbefalinger — prioriteret rækkefølge</div>
-    <div class="res-sub" id="resSub"></div>
-    <div id="cardContainer"></div>
-    <button class="btn-reset" onclick="reset()">← Prøv igen</button>
-  </div>
+<div class="results-section hidden" id="results">
+  <div class="results-header">AI Anbefalinger — baseret på dine favoritter</div>
+  <div id="resultsList"></div>
+</div>
 
-  <div class="powered">Powered by <a href="https://pollinations.ai" target="_blank">Pollinations.ai</a></div>
+<div class="footer">
+  Powered by <a href="https://groq.com" target="_blank">Groq</a> · 
+  Data fra <a href="https://copenhell.dk/program/" target="_blank">copenhell.dk</a>
 </div>
 
 <script>
-const FALLBACK_LINEUP = [
-  "Iron Maiden","Bring Me The Horizon","Volbeat","Twisted Sister","Alice Cooper",
-  "Papa Roach","A Perfect Circle","Trivium","Anthrax","Sepultura","The Pretty Reckless",
-  "P.O.D.","Kublai Khan TX","President","Tom Morello","Mastodon","Social Distortion",
-  "Bury Tomorrow","Paleface Swiss","All Them Witches","Mammoth","Loathe","Dogma",
-  "Slay Squad","Calva Louise","Lightchapter","Haandgemeng","Henret","Scimitar",
-  "Babymetal","Black Label Society","Suicidal Tendencies","Imminence","Soilwork",
-  "Djerv","Eyehategod","Faetooth","Unpeople","Maceration","Morild","Pustulant Flesh",
-  "Rap Martin Rap","Alestorm","Ice Nine Kills","Gaerea","Black Oak County",
-  "Queensryche","Static-X","Defecto","Six Feet Under","Konvent","Iotunn",
-  "Die Spitz","Thrown","Trollfest","Katla","Neckbreakker","Omsorg","Blood Fire Death",
-  "Gridiron","Split","Twenty One Children","Chopper","Violent Magic Orchestra",
-  "End It","Malevolence","Inhuman Nature","Vexed","Powerplant","Psycho Mosher"
+// ═══════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════
+const PROGRAM_URL = 'https://copenhell.dk/en/program/';
+const PROXIES = [
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
 ];
 
-let currentLineup = [...FALLBACK_LINEUP];
+const DAYS_CONFIG = [
+  { key: 'ons', en: 'Wed', name: 'Onsdag', date: '24. juni' },
+  { key: 'tor', en: 'Thu', name: 'Torsdag', date: '25. juni' },
+  { key: 'fre', en: 'Fri', name: 'Fredag', date: '26. juni' },
+  { key: 'lor', en: 'Sat', name: 'Lørdag', date: '27. juni' },
+];
 
-window.addEventListener('load', () => {
-  const saved = localStorage.getItem('groq_key');
-  if (saved) {
-    document.getElementById('groqKeyInput').value = saved;
-    document.getElementById('apiStatus').textContent = '// Nøgle gemt ✓';
-    document.getElementById('apiStatus').style.color = '#1DB954';
+// Map English day abbreviations → our keys
+const DAY_MAP = { 'Wed': 'ons', 'Thu': 'tor', 'Fri': 'fre', 'Sat': 'lor',
+                  'Ons': 'ons', 'Tor': 'tor', 'Fre': 'fre', 'Lør': 'lor' };
+
+// Known headliners (for HL badge)
+const HEADLINER_NAMES = ["IRON MAIDEN", "BRING ME THE HORIZON", "TWISTED SISTER", "VOLBEAT"];
+
+// ═══════════════════════════════════════════════════════
+// CACHED FALLBACK — snapshot marts 2026
+// Bruges KUN hvis live-hentning fejler
+// ═══════════════════════════════════════════════════════
+const CACHED_LINEUP = {
+  "IRON MAIDEN":{ day:"ons", stage:"Helvíti" },
+  "ALICE COOPER":{ day:"ons", stage:"Helvíti" },
+  "TOM MORELLO":{ day:"ons", stage:"Helvíti" },
+  "MASTODON":{ day:"ons", stage:"Hades" },
+  "SUICIDAL TENDENCIES":{ day:"ons", stage:"Hades" },
+  "SIX FEET UNDER":{ day:"ons", stage:"Hades" },
+  "MAMMOTH":{ day:"ons", stage:"Hades" },
+  "KONVENT":{ day:"ons", stage:"Pandæmonium" },
+  "THROWN":{ day:"ons", stage:"Pandæmonium" },
+  "LOATHE":{ day:"ons", stage:"Pandæmonium" },
+  "SLAY SQUAD":{ day:"ons", stage:"Pandæmonium" },
+  "DOGMA":{ day:"ons", stage:"Pandæmonium" },
+  "THE BROWNING":{ day:"ons", stage:"Gehenna" },
+  "FAETOOTH":{ day:"ons", stage:"Gehenna" },
+  "SPLIT":{ day:"ons", stage:"Gehenna" },
+  "TWENTY ONE CHILDREN":{ day:"ons", stage:"Gehenna" },
+  "SCIMITAR":{ day:"ons", stage:"Gehenna" },
+  "BRING ME THE HORIZON":{ day:"tor", stage:"Helvíti" },
+  "PAPA ROACH":{ day:"tor", stage:"Helvíti" },
+  "BLACK LABEL SOCIETY":{ day:"tor", stage:"Helvíti" },
+  "ICE NINE KILLS":{ day:"tor", stage:"" },
+  "SEPULTURA":{ day:"tor", stage:"Hades" },
+  "THE PRETTY RECKLESS":{ day:"tor", stage:"Hades" },
+  "STATIC-X":{ day:"tor", stage:"Hades" },
+  "QUEENSRŸCHE":{ day:"tor", stage:"Hades" },
+  "LIGHTCHAPTER":{ day:"tor", stage:"Hades" },
+  "KUBLAI KHAN TX":{ day:"tor", stage:"Pandæmonium" },
+  "PRESIDENT":{ day:"tor", stage:"Pandæmonium" },
+  "IOTUNN":{ day:"tor", stage:"Pandæmonium" },
+  "UNPEOPLE":{ day:"tor", stage:"Pandæmonium" },
+  "(0)":{ day:"tor", stage:"Pandæmonium" },
+  "DIE SPITZ":{ day:"tor", stage:"Gehenna" },
+  "CALVA LOUISE":{ day:"tor", stage:"Gehenna" },
+  "END IT":{ day:"tor", stage:"Gehenna" },
+  "GRIDIRON":{ day:"tor", stage:"Gehenna" },
+  "RAP MARTIN RAP":{ day:"tor", stage:"Gehenna" },
+  "TWISTED SISTER":{ day:"fre", stage:"Helvíti" },
+  "A PERFECT CIRCLE":{ day:"fre", stage:"Helvíti" },
+  "TRIVIUM":{ day:"fre", stage:"Helvíti" },
+  "JAKOB STEGELMANN AND AARHUS SYMFONIORKESTER":{ day:"fre", stage:"Helvíti" },
+  "ANTHRAX":{ day:"fre", stage:"Hades" },
+  "P.O.D.":{ day:"fre", stage:"Hades" },
+  "IMMINENCE":{ day:"fre", stage:"Hades" },
+  "NECKBREAKKER":{ day:"fre", stage:"Hades" },
+  "DEFECTO":{ day:"fre", stage:"Hades" },
+  "GAEREA":{ day:"fre", stage:"" },
+  "ALL THEM WITCHES":{ day:"fre", stage:"Pandæmonium" },
+  "PALEFACE SWISS":{ day:"fre", stage:"Pandæmonium" },
+  "SOILWORK":{ day:"fre", stage:"Pandæmonium" },
+  "HÅNDGEMENG":{ day:"fre", stage:"Pandæmonium" },
+  "VIOLENT MAGIC ORCHESTRA":{ day:"fre", stage:"Gehenna" },
+  "VOICE OF BACEPROT":{ day:"fre", stage:"Gehenna" },
+  "POWERPLANT":{ day:"fre", stage:"Gehenna" },
+  "MORILD":{ day:"fre", stage:"Gehenna" },
+  "OMSORG":{ day:"fre", stage:"Gehenna" },
+  "PUSTULANT FLESH":{ day:"fre", stage:"Gehenna" },
+  "VOLBEAT":{ day:"lor", stage:"Helvíti" },
+  "ALESTORM":{ day:"lor", stage:"Helvíti" },
+  "SOCIAL DISTORTION":{ day:"lor", stage:"Helvíti" },
+  "WARKINGS":{ day:"lor", stage:"Helvíti" },
+  "BABYMETAL":{ day:"lor", stage:"Hades" },
+  "BURY TOMORROW":{ day:"lor", stage:"Hades" },
+  "DJERV":{ day:"lor", stage:"Hades" },
+  "BLACK OAK COUNTY":{ day:"lor", stage:"Hades" },
+  "MALEVOLENCE":{ day:"lor", stage:"Pandæmonium" },
+  "BLOOD FIRE DEATH":{ day:"lor", stage:"Pandæmonium" },
+  "KATLA":{ day:"lor", stage:"Pandæmonium" },
+  "TROLLFEST":{ day:"lor", stage:"Pandæmonium" },
+  "MACERATION":{ day:"lor", stage:"Pandæmonium" },
+  "EYEHATEGOD":{ day:"lor", stage:"Gehenna" },
+  "VEXED":{ day:"lor", stage:"Gehenna" },
+  "HENRET":{ day:"lor", stage:"Gehenna" },
+  "CHOPPER":{ day:"lor", stage:"Gehenna" },
+  "INHUMAN NATURE":{ day:"lor", stage:"Gehenna" },
+  "PSYCHOMOSHER":{ day:"lor", stage:"Gehenna" },
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let LINEUP = {};     // active lineup data
+let dataIsLive = false;
+const selected = new Set();
+const recommended = new Map();
+
+// ═══════════════════════════════════════════════════════
+// LIVE SCRAPING
+// ═══════════════════════════════════════════════════════
+
+// Parse the copenhell.dk/en/program/ HTML to extract bands
+function parseProgram(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const lineup = {};
+
+  // Each band is in an <a> card containing day, stage, and name
+  // Pattern in the HTML: dayAbbrev \n – \n Stage \n ### BAND NAME
+  // We look for all artist links containing h3 headings
+  const cards = doc.querySelectorAll('a[href*="/artist/"]');
+
+  cards.forEach(card => {
+    const text = card.textContent.trim();
+    const nameEl = card.querySelector('h3');
+    if (!nameEl) return;
+
+    const bandName = nameEl.textContent.trim().toUpperCase();
+
+    // Skip Copenhell Con events (non-music)
+    const isCon = text.includes('Copenhell Con');
+    if (isCon) return;
+
+    // Extract day abbreviation from the card text
+    let day = '';
+    let stage = '';
+
+    // The card text typically starts with "Wed – Helvíti" or similar
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+    for (const line of lines) {
+      // Check for day abbreviation
+      const dayMatch = Object.keys(DAY_MAP).find(d =>
+        line === d || line.startsWith(d + ' ') || line.startsWith(d + '\t')
+      );
+      if (dayMatch && !day) {
+        day = DAY_MAP[dayMatch];
+        continue;
+      }
+
+      // Check for known stages
+      const stages = ['Helvíti', 'Hades', 'Pandæmonium', 'Gehenna', 'Copenhell Con'];
+      const stageMatch = stages.find(s => line.includes(s));
+      if (stageMatch && !stage && stageMatch !== 'Copenhell Con') {
+        stage = stageMatch;
+      }
+    }
+
+    if (bandName && bandName.length > 0) {
+      lineup[bandName] = { day: day || '', stage: stage || '' };
+    }
+  });
+
+  return lineup;
+}
+
+async function fetchLiveLineup() {
+  for (const makeUrl of PROXIES) {
+    try {
+      const url = makeUrl(PROGRAM_URL);
+      console.log(`[Copenhell] Trying proxy: ${url.substring(0, 60)}...`);
+      const resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) continue;
+
+      const html = await resp.text();
+      // Verify we got actual Copenhell HTML
+      if (!html.includes('artist') || html.length < 5000) continue;
+
+      const parsed = parseProgram(html);
+      const bandCount = Object.keys(parsed).length;
+      console.log(`[Copenhell] Parsed ${bandCount} bands from live data`);
+
+      if (bandCount >= 20) {
+        // Filter out any non-music entries that slipped through
+        const musicBands = {};
+        for (const [name, info] of Object.entries(parsed)) {
+          // Skip very long names that are likely Con events
+          if (name.length > 60) continue;
+          musicBands[name] = info;
+        }
+        return musicBands;
+      }
+    } catch (e) {
+      console.log(`[Copenhell] Proxy failed:`, e.message);
+    }
   }
-});
+  return null;
+}
 
-function saveGroqKey() {
-  const key = document.getElementById('groqKeyInput').value.trim();
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function getBandsByDay(dayKey) {
+  return Object.entries(LINEUP)
+    .filter(([_, info]) => info.day === dayKey)
+    .map(([name, info]) => ({ name, stage: info.stage }))
+    .sort((a, b) => a.name.replace(/^[\(\)0-9\s]+/, '').localeCompare(
+                     b.name.replace(/^[\(\)0-9\s]+/, ''), 'da'));
+}
+
+function renderDays() {
+  const container = document.getElementById('dayContainer');
+  container.innerHTML = '';
+
+  // First render bands with assigned days
+  DAYS_CONFIG.forEach(day => {
+    const bands = getBandsByDay(day.key);
+    if (bands.length === 0) return;
+
+    const section = document.createElement('div');
+    section.className = `day-section day-${day.key}`;
+    section.innerHTML = `
+      <div class="day-header">
+        <div class="day-dot"></div>
+        <div class="day-name">${day.name}</div>
+        <div class="day-date">${day.date}</div>
+        <div class="day-count"><span>${bands.length}</span> bands</div>
+      </div>
+      <div class="band-grid"></div>
+    `;
+    container.appendChild(section);
+    const grid = section.querySelector('.band-grid');
+    bands.forEach(band => renderBandCard(band, grid));
+  });
+
+  // Then render any bands without a day assignment
+  const unassigned = Object.entries(LINEUP)
+    .filter(([_, info]) => !info.day)
+    .map(([name, info]) => ({ name, stage: info.stage }))
+    .sort((a, b) => a.name.localeCompare(b.name, 'da'));
+
+  if (unassigned.length > 0) {
+    const section = document.createElement('div');
+    section.className = 'day-section';
+    section.innerHTML = `
+      <div class="day-header">
+        <div class="day-dot" style="background:#555"></div>
+        <div class="day-name">Dag ikke annonceret</div>
+        <div class="day-date">TBA</div>
+        <div class="day-count"><span>${unassigned.length}</span> bands</div>
+      </div>
+      <div class="band-grid"></div>
+    `;
+    container.appendChild(section);
+    const grid = section.querySelector('.band-grid');
+    unassigned.forEach(band => renderBandCard(band, grid));
+  }
+}
+
+function renderBandCard(band, grid) {
+  const card = document.createElement('div');
+  card.className = 'band-card';
+  card.dataset.band = band.name;
+  if (selected.has(band.name)) card.classList.add('selected');
+  if (recommended.has(band.name)) card.classList.add('recommended');
+
+  const isHL = HEADLINER_NAMES.includes(band.name);
+  card.innerHTML = `
+    <div class="band-skull">💀</div>
+    <div class="band-info">
+      <div class="band-name" title="${band.name}">${band.name}</div>
+      ${band.stage ? `<div class="band-stage">${band.stage}</div>` : ''}
+    </div>
+    ${isHL ? '<span class="headliner-tag">HL</span>' : ''}
+    <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
+  `;
+  card.addEventListener('click', () => toggleBand(band.name, card));
+  grid.appendChild(card);
+}
+
+function toggleBand(band, card) {
+  if (selected.has(band)) {
+    selected.delete(band);
+    card.classList.remove('selected');
+  } else {
+    selected.add(band);
+    card.classList.add('selected');
+    card.style.transform = 'scale(1.03)';
+    setTimeout(() => card.style.transform = '', 150);
+  }
+  updateCounter();
+}
+
+function updateCounter() {
+  document.getElementById('favCount').textContent = selected.size;
+  document.getElementById('recBtn').disabled = selected.size < 1;
+}
+
+function clearSelections() {
+  selected.clear();
+  recommended.clear();
+  renderDays();
+  updateCounter();
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('clearRecBtn').classList.add('hidden');
+}
+
+function clearRecommendations() {
+  recommended.clear();
+  renderDays();
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('clearRecBtn').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════
+// API KEY
+// ═══════════════════════════════════════════════════════
+function saveApiKey() {
+  const key = document.getElementById('apiKey').value.trim();
   if (!key.startsWith('gsk_')) {
-    document.getElementById('apiStatus').textContent = '// Nøglen skal starte med gsk_';
-    document.getElementById('apiStatus').style.color = 'var(--red)';
+    document.getElementById('apiStatus').textContent = '✗ Nøglen skal starte med gsk_';
+    document.getElementById('apiStatus').style.color = '#c23c2c';
     return;
   }
-  localStorage.setItem('groq_key', key);
-  document.getElementById('apiStatus').textContent = '// Nøgle gemt ✓';
-  document.getElementById('apiStatus').style.color = '#1DB954';
+  localStorage.setItem('groq_api_key', key);
+  document.getElementById('apiStatus').textContent = '✓ Nøgle gemt';
+  document.getElementById('apiStatus').style.color = '#3ddc84';
 }
 
-async function fetchLineup() {
-  const statusEl = document.getElementById('lineupStatus');
-  try {
-    const proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://copenhell.dk/en/category/copenhell-2026-en/');
-    const resp = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
-    const data = await resp.json();
-    const html = data.contents || '';
-    const SKIP = new Set(['COPENHELL','NEW','BANDS','THE','AND','FOR','WITH','FROM',
-      'MORE','ALL','STAGE','TICKETS','FESTIVAL','READ','JUNE','JULY','AUGUST',
-      'HTTP','HTML','MENU','SKIP','MAIN','HERE','THIS','THEIR','THEY','WHEN',
-      'WHAT','HAVE','BEEN','WILL','YOUR','ALSO','THAT','THESE','THOSE','IRON']);
-    const matches = [...html.matchAll(/\b([A-Z][A-Z0-9 &.\-']{1,35}[A-Z0-9])\b/g)]
-      .map(m => m[1].trim()).filter(n => n.length > 2 && !SKIP.has(n));
-    const unique = [...new Set(matches)];
-    if (unique.length > 15) {
-      currentLineup = unique;
-      statusEl.textContent = '// Lineup hentet live: ' + unique.length + ' bands';
-      statusEl.style.color = '#1DB954';
-    } else { throw new Error('too few'); }
-  } catch(e) {
-    currentLineup = FALLBACK_LINEUP;
-    statusEl.textContent = '// Cached lineup: ' + FALLBACK_LINEUP.length + ' bands';
-    statusEl.style.color = '#555';
-  }
-}
-fetchLineup();
-
-function showErr(msg) {
-  const el = document.getElementById('errBox');
-  el.textContent = '// ' + msg;
-  el.style.display = 'block';
-}
-
+// ═══════════════════════════════════════════════════════
+// AI RECOMMENDATIONS
+// ═══════════════════════════════════════════════════════
 async function getRecommendations() {
-  const b1 = document.getElementById('b1').value.trim();
-  const b2 = document.getElementById('b2').value.trim();
-  const b3 = document.getElementById('b3').value.trim();
-  if (!b1 || !b2 || !b3) { showErr('Udfyld alle 3 favoritbands.'); return; }
+  const apiKey = localStorage.getItem('groq_api_key') || document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById('apiBox').setAttribute('open', '');
+    document.getElementById('apiStatus').textContent = '✗ Indtast din Groq API nøgle først';
+    document.getElementById('apiStatus').style.color = '#c23c2c';
+    return;
+  }
 
-  document.getElementById('inputCard').style.display = 'none';
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('errBox').style.display = 'none';
-  document.getElementById('loadSub').textContent = 'Analyserer ' + currentLineup.length + ' bands...';
+  const favorites = Array.from(selected);
+  const remaining = Object.keys(LINEUP).filter(b => !selected.has(b));
+  if (favorites.length < 1) return;
 
-  const systemMsg = 'Du er en metal-ekspert. Svar KUN med valid JSON uden markdown eller forklaring udenfor JSON.';
-  const userMsg = `En bruger elsker: "${b1}", "${b2}", "${b3}".
+  const btn = document.getElementById('recBtn');
+  btn.classList.add('loading');
+  btn.textContent = '💀 AI analyserer din musiksmag...';
 
-Copenhell 2026 lineup: ${currentLineup.join(', ')}
+  const remainingWithDays = remaining.map(b => {
+    const info = LINEUP[b];
+    const dayObj = DAYS_CONFIG.find(d => d.key === info.day);
+    return `• ${b} (${dayObj ? dayObj.name : 'dag TBA'} — ${info.stage || 'scene TBA'})`;
+  }).join('\n');
 
-Vaelg de 10 bedste bands fra lineuppet baseret paa brugerens musiksmag. Sorter i prioriteret raekkefoelge, bedste match foerst (priority 1 = bedste).
+  const prompt = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
 
-Returner JSON i dette format:
-{"recommendations":[{"name":"praecist bandnavn fra lineup","hype":"fed saelgende saetning paa dansk max 10 ord","reason":"2-3 saetninger paa dansk om hvorfor bandet matcher smagen med specifikke referencer til de 3 favoritbands","priority":1}]}`;
+${favorites.map(b => `• ${b}`).join('\n')}
+
+Her er de ØVRIGE bands på Copenhell 2026 (med dag og scene):
+${remainingWithDays}
+
+Anbefal de 10 bedste bands fra den øvrige liste baseret på brugerens musiksmag. Sortér efter match-kvalitet. Giv en kort begrundelse (1-2 sætninger på dansk) for hvert band.
+
+SVAR KUN med denne JSON-struktur, ingen anden tekst:
+[
+  {"rank": 1, "band": "BANDNAVN", "reason": "Kort begrundelse på dansk", "match": "95%"},
+  {"rank": 2, "band": "BANDNAVN", "reason": "Kort begrundelse", "match": "90%"}
+]
+
+VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med valid JSON, max 10 bands.`;
 
   try {
-    // Brug den korrekte POST endpoint med json=true som query parameter
-    const groqKey = localStorage.getItem('groq_key');
-    if (!groqKey) throw new Error('Ingen Groq API-nøgle gemt — se instruktion nedenfor');
-
-    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + groqKey
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model: 'llama-3.1-8b-instant',
-        messages: [
-          { role: 'system', content: systemMsg },
-          { role: 'user',   content: userMsg }
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0.7
-      }),
-      signal: AbortSignal.timeout(30000)
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7,
+        max_tokens: 2000
+      })
     });
 
-    if (!resp.ok) {
-      const errText = await resp.text();
-      throw new Error('API fejl ' + resp.status + ': ' + errText.slice(0,100));
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || `API fejl: ${response.status}`);
     }
 
-    const text = await resp.text();
-    let json;
-    // Parse standard OpenAI/OpenRouter format
-    let searchText = '';
-    try {
-      const parsed = JSON.parse(text.trim());
-      if (parsed.choices?.[0]?.message?.content) {
-        searchText = parsed.choices[0].message.content;
-      } else if (parsed.recommendations) {
-        json = parsed;
-      }
-    } catch(e) { searchText = text; }
+    const data = await response.json();
+    const text = data.choices[0].message.content.trim();
+    const clean = text.replace(/```json\s?/g, '').replace(/```/g, '').trim();
+    const recs = JSON.parse(clean);
+    displayRecommendations(recs);
 
-    if (!json) {
-      const clean = searchText.replace(/```json|```/g, '').trim();
-      try {
-        json = JSON.parse(clean);
-      } catch(e) {
-        const m = clean.match(/\{[\s\S]*\}/);
-        if (m) { try { json = JSON.parse(m[0]); } catch(e2) { throw new Error('Parse fejl: ' + e2.message); } }
-        else { throw new Error('Intet JSON i svar: ' + clean.slice(0,200)); }
-      }
-    }
-
-    if (!json.recommendations || json.recommendations.length === 0)
-      throw new Error('Ingen anbefalinger i svaret — prøv igen');
-
-    json.recommendations.sort((a,b) => (a.priority||99) - (b.priority||99));
-    showResults(json.recommendations.slice(0,10), b1, b2, b3);
-
-  } catch(e) {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('inputCard').style.display = 'block';
-    showErr(e.message);
+  } catch (err) {
+    console.error('Groq fejl:', err);
+    alert('Fejl: ' + err.message);
+  } finally {
+    btn.classList.remove('loading');
+    btn.textContent = '🤘 Find anbefalinger baseret på mine favoritter';
   }
 }
 
-function showResults(recs, b1, b2, b3) {
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('results').style.display = 'block';
-  document.getElementById('resSub').textContent =
-    'Baseret paa: ' + b1.toUpperCase() + ' · ' + b2.toUpperCase() + ' · ' + b3.toUpperCase();
-  const container = document.getElementById('cardContainer');
-  container.innerHTML = '';
-  recs.forEach((rec, i) => {
-    const card = document.createElement('div');
-    card.className = 'band-card';
-    card.innerHTML =
-      '<div class="prio-badge">#<span>' + (rec.priority||i+1) + '</span></div>' +
-      '<div class="band-name">' + rec.name.toUpperCase() + '</div>' +
-      '<div class="band-hype">' + rec.hype + '</div>' +
-      '<div class="band-reason">' + rec.reason + '</div>' +
-      '<a class="spotify-btn" href="https://open.spotify.com/search/' + encodeURIComponent(rec.name) + '" target="_blank">▶ Spotify</a>';
-    container.appendChild(card);
-    setTimeout(() => card.classList.add('show'), i * 120 + 50);
+function displayRecommendations(recs) {
+  recommended.clear();
+  recs.forEach(r => {
+    const match = Object.keys(LINEUP).find(
+      b => b.toUpperCase() === r.band.toUpperCase()
+    );
+    if (match) recommended.set(match, r.rank);
   });
+
+  renderDays();
+
+  const results = document.getElementById('results');
+  const list = document.getElementById('resultsList');
+  results.classList.remove('hidden');
+  list.innerHTML = '';
+
+  recs.forEach((r, i) => {
+    const bandKey = Object.keys(LINEUP).find(
+      b => b.toUpperCase() === r.band.toUpperCase()
+    );
+    const info = bandKey ? LINEUP[bandKey] : null;
+    const dayObj = info ? DAYS_CONFIG.find(d => d.key === info.day) : null;
+
+    const item = document.createElement('div');
+    item.className = 'result-item';
+    item.style.animationDelay = `${i * 0.05}s`;
+    item.innerHTML = `
+      <div class="result-rank">${r.rank}</div>
+      <div class="result-content">
+        <div class="result-name">${r.band}</div>
+        ${dayObj ? `<div class="result-day-stage">
+          <span class="day-label day-${info.day}">${dayObj.name}</span>
+          ${info.stage ? ` · ${info.stage}` : ''}
+        </div>` : ''}
+        <div class="result-reason">${r.reason}</div>
+        <div class="result-match">${r.match} match</div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+
+  document.getElementById('clearRecBtn').classList.remove('hidden');
+  results.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function reset() {
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('inputCard').style.display = 'block';
-  document.getElementById('cardContainer').innerHTML = '';
-  ['b1','b2','b3'].forEach(id => document.getElementById(id).value = '');
+// ═══════════════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════════════
+async function init() {
+  // Load API key
+  const savedKey = localStorage.getItem('groq_api_key');
+  if (savedKey) {
+    document.getElementById('apiKey').value = savedKey;
+    document.getElementById('apiStatus').textContent = '✓ Nøgle gemt';
+    document.getElementById('apiStatus').style.color = '#3ddc84';
+    document.getElementById('apiBox').removeAttribute('open');
+  }
+
+  // Try to fetch live lineup
+  const src = document.getElementById('dataSource');
+  const live = await fetchLiveLineup();
+
+  if (live && Object.keys(live).length >= 20) {
+    LINEUP = live;
+    dataIsLive = true;
+    src.textContent = `✓ Live data fra copenhell.dk — ${Object.keys(LINEUP).length} bands`;
+    src.className = 'data-source live';
+    console.log('[Copenhell] Using LIVE data:', Object.keys(LINEUP).length, 'bands');
+  } else {
+    LINEUP = CACHED_LINEUP;
+    dataIsLive = false;
+    src.textContent = `⚠ Cached data (marts 2026) — ${Object.keys(LINEUP).length} bands`;
+    src.className = 'data-source cached';
+    console.log('[Copenhell] Using CACHED data:', Object.keys(LINEUP).length, 'bands');
+  }
+
+  renderDays();
+  updateCounter();
 }
-document.addEventListener('keydown', e => { if (e.key === 'Enter') getRecommendations(); });
+
+init();
 </script>
 </body>
 </html>
