@@ -938,9 +938,9 @@ VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med 
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
+        temperature: 0.5,
         max_tokens: 4000
       })
     });
@@ -960,19 +960,28 @@ VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med 
       recs = JSON.parse(clean);
     } catch (e1) {
       console.warn('[Copenhell] JSON parse failed, attempting fixes...', e1.message);
-      // Fix 1: trailing commas before ] or }
-      clean = clean.replace(/,\s*([}\]])/g, '$1');
-      // Fix 2: single quotes → double quotes
-      clean = clean.replace(/'/g, '"');
-      // Fix 3: extract just the array if there's surrounding text
+      // Fix 1: extract just the array
       const arrMatch = clean.match(/\[[\s\S]*\]/);
       if (arrMatch) clean = arrMatch[0];
-      // Fix 4: remove trailing commas again after extraction
+      // Fix 2: trailing commas before ] or }
+      clean = clean.replace(/,\s*([}\]])/g, '$1');
+      // Fix 3: fix unescaped quotes inside strings (common with descriptions)
+      // Replace newlines inside strings
+      clean = clean.replace(/\n/g, ' ');
+      // Fix 4: try to repair truncated JSON — close open brackets
+      if (!clean.endsWith(']')) {
+        // Find last complete object
+        const lastBrace = clean.lastIndexOf('}');
+        if (lastBrace > 0) {
+          clean = clean.substring(0, lastBrace + 1) + ']';
+        }
+      }
+      // Fix 5: trailing commas again
       clean = clean.replace(/,\s*([}\]])/g, '$1');
       try {
         recs = JSON.parse(clean);
       } catch (e2) {
-        console.error('[Copenhell] JSON still invalid after fixes:', e2.message);
+        console.error('[Copenhell] JSON still invalid:', clean.substring(0, 200));
         throw new Error('AI returnerede ugyldigt svar. Prøv igen — det hjælper ofte.');
       }
     }
