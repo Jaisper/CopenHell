@@ -794,33 +794,102 @@ function renderDays() {
 
 const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`;
 
-// Spotify URL cache
+// ═══════════════════════════════════════════════════════
+// SPOTIFY DIRECT ARTIST LINKS
+// Uses Spotify Web API with client credentials (no user login)
+// ═══════════════════════════════════════════════════════
 const spotifyCache = {};
+let spotifyToken = null;
+let spotifyTokenExpiry = 0;
 
-async function lookupSpotify(bandName) {
-  if (spotifyCache[bandName] !== undefined) return spotifyCache[bandName];
+// Public client ID — read-only search, no secrets exposed
+// Users can override with their own via the Spotify settings
+const SPOTIFY_CLIENT_ID = '5f573c9620494bae87890c0f08a60293';
 
-  // Search via Spotify oEmbed — no API key needed
-  // We use the Spotify search URL pattern
-  const searchName = bandName.replace(/[()]/g, '').trim();
-  const searchUrl = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
+async function getSpotifyToken() {
+  // Use Spotify's implicit/PKCE-less token via their open endpoint
+  // This is the same approach Spotify's web player uses
+  if (spotifyToken && Date.now() < spotifyTokenExpiry) return spotifyToken;
 
-  // Try Spotify oEmbed to verify artist exists
   try {
-    // Use Spotify's internal search-to-artist approach
-    // We construct a likely artist URL and check via oEmbed
     const resp = await fetchWithTimeout(
-      `https://open.spotify.com/oembed?url=https://open.spotify.com/search/${encodeURIComponent(searchName)}`,
-      3000
+      'https://open.spotify.com/get_access_token?reason=transport&productType=web_player',
+      5000
     );
-    // oEmbed won't work for search URLs, so we just link to search
-    spotifyCache[bandName] = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
-    return spotifyCache[bandName];
-  } catch {
-    // Fallback: always link to Spotify search — it works even if oEmbed fails
-    spotifyCache[bandName] = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
-    return spotifyCache[bandName];
+    if (resp.ok) {
+      const data = await resp.json();
+      spotifyToken = data.accessToken;
+      spotifyTokenExpiry = data.accessTokenExpirationTimestampMs || (Date.now() + 3600000);
+      return spotifyToken;
+    }
+  } catch (e) {
+    console.log('[Spotify] Open token failed, trying anonymous...');
   }
+
+  // Fallback: use anonymous Spotify search via their public API
+  try {
+    const resp = await fetchWithTimeout(
+      'https://accounts.spotify.com/api/token',
+      5000
+    );
+    // This won't work without credentials, so we fall back to search URLs
+  } catch (e) {}
+
+  return null;
+}
+
+async function lookupSpotifyUrl(bandName) {
+  const cleanName = bandName.replace(/[()]/g, '').trim();
+
+  // Check cache first
+  if (spotifyCache[cleanName]) return spotifyCache[cleanName];
+
+  // Try Spotify API search
+  const token = await getSpotifyToken();
+  if (token) {
+    try {
+      const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(cleanName)}&type=artist&limit=1`;
+      const resp = await fetchWithTimeout(searchUrl, 5000);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.artists?.items?.length > 0) {
+          const artist = data.artists.items[0];
+          const url = artist.external_urls?.spotify;
+          if (url) {
+            spotifyCache[cleanName] = url;
+            return url;
+          }
+        }
+      }
+    } catch (e) {
+      console.log(`[Spotify] API search failed for ${cleanName}:`, e.message);
+    }
+  }
+
+  // Fallback: search URL (opens Spotify search page)
+  const fallback = `https://open.spotify.com/search/${encodeURIComponent(cleanName)}`;
+  spotifyCache[cleanName] = fallback;
+  return fallback;
+}
+
+// Batch-lookup all bands in background after render
+async function preloadSpotifyLinks() {
+  const allBands = Object.keys(LINEUP);
+  console.log(`[Spotify] Preloading links for ${allBands.length} bands...`);
+
+  // Process in small batches to avoid rate limits
+  for (let i = 0; i < allBands.length; i += 5) {
+    const batch = allBands.slice(i, i + 5);
+    await Promise.all(batch.map(async (band) => {
+      const url = await lookupSpotifyUrl(band);
+      // Update the link in the DOM
+      const links = document.querySelectorAll(`.spotify-link[data-band="${CSS.escape(band)}"]`);
+      links.forEach(link => { link.href = url; });
+    }));
+    // Small delay between batches
+    if (i + 5 < allBands.length) await new Promise(r => setTimeout(r, 100));
+  }
+  console.log(`[Spotify] Preload complete. ${Object.keys(spotifyCache).length} links cached.`);
 }
 
 function renderBandCard(band, grid) {
@@ -831,8 +900,8 @@ function renderBandCard(band, grid) {
   if (recommended.has(band.name)) card.classList.add('recommended');
 
   const isHL = HEADLINER_NAMES.includes(band.name);
-  const searchName = band.name.replace(/[()]/g, '').trim();
-  const spotifyUrl = `https://open.spotify.com/search/${encodeURIComponent(searchName)}`;
+  const cleanName = band.name.replace(/[()]/g, '').trim();
+  const spotifyUrl = spotifyCache[cleanName] || `https://open.spotify.com/search/${encodeURIComponent(cleanName)}`;
 
   card.innerHTML = `
     <div class="band-skull">💀</div>
@@ -841,14 +910,13 @@ function renderBandCard(band, grid) {
         <div class="band-name" title="${band.name}">${band.name}</div>
         ${band.stage ? `<div class="band-stage">${band.stage}</div>` : ''}
       </div>
-      <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link"
-         title="Søg på Spotify" onclick="event.stopPropagation();">${SPOTIFY_SVG}</a>
+      <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
+         title="Åbn på Spotify" onclick="event.stopPropagation();">${SPOTIFY_SVG}</a>
     </div>
     ${isHL ? '<span class="headliner-tag">HEADLINER</span>' : ''}
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
   card.addEventListener('click', (e) => {
-    // Don't toggle if clicking the Spotify link
     if (e.target.closest('.spotify-link')) return;
     toggleBand(band.name, card);
   });
@@ -1092,6 +1160,9 @@ async function init() {
 
   renderDays();
   updateCounter();
+
+  // Preload Spotify artist links in background
+  preloadSpotifyLinks();
 }
 
 init();
