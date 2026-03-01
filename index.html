@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Copenhell 2026 — Band Anbefaler</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -301,11 +302,11 @@
   .headliner-tag {
     font-size: 0.45rem;
     letter-spacing: 0.1em;
-    color: var(--accent);
+    color: #fff;
     text-transform: uppercase;
     flex-shrink: 0;
-    border: 1px solid rgba(194,60,44,0.3);
-    padding: 0.1rem 0.3rem;
+    background: var(--accent);
+    padding: 0.15rem 0.35rem;
   }
 
   .recommend-section {
@@ -843,7 +844,7 @@ function renderBandCard(band, grid) {
       <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link"
          title="Søg på Spotify" onclick="event.stopPropagation();">${SPOTIFY_SVG}</a>
     </div>
-    ${isHL ? '<span class="headliner-tag">HL</span>' : ''}
+    ${isHL ? '<span class="headliner-tag">HEADLINER</span>' : ''}
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
   card.addEventListener('click', (e) => {
