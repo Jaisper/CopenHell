@@ -795,101 +795,76 @@ function renderDays() {
 const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`;
 
 // ═══════════════════════════════════════════════════════
-// SPOTIFY DIRECT ARTIST LINKS
-// Uses Spotify Web API with client credentials (no user login)
+// SPOTIFY DIRECT ARTIST LINKS (hardcoded — no API needed)
 // ═══════════════════════════════════════════════════════
-const spotifyCache = {};
-let spotifyToken = null;
-let spotifyTokenExpiry = 0;
+const SPOTIFY_URLS = {
+  "A PERFECT CIRCLE": "https://open.spotify.com/artist/4MvhMwPMBnGEoLmTHPSspB",
+  "ALESTORM": "https://open.spotify.com/artist/3ABOW1HYIkJmL57CrIl7yO",
+  "ALICE COOPER": "https://open.spotify.com/artist/3EhbVgyfGd3ReeVC4gt3Eg",
+  "ALL THEM WITCHES": "https://open.spotify.com/artist/3iFfBGbSsGSUwPGt6jKjtk",
+  "ANTHRAX": "https://open.spotify.com/artist/5WEuRMelSjRELyOFD2CVJH",
+  "BABYMETAL": "https://open.spotify.com/artist/4zN29Oan75B23ALNyoVkFH",
+  "BLACK LABEL SOCIETY": "https://open.spotify.com/artist/1KlMJb5JNTM5lzQFCMKfnL",
+  "BLACK OAK COUNTY": "https://open.spotify.com/artist/7d95w7CnHl7dTiEYU4Q0OQ",
+  "BRING ME THE HORIZON": "https://open.spotify.com/artist/1Ffb6ejR6Fe5IamqA5oRUF",
+  "BURY TOMORROW": "https://open.spotify.com/artist/5O96BghkHINTzYVMLRjn0y",
+  "CALVA LOUISE": "https://open.spotify.com/artist/6KZBaE4kEjB4NfayK2jZyI",
+  "DEFECTO": "https://open.spotify.com/artist/66OPDSbHTjRivV3EH5GRWQ",
+  "DIE SPITZ": "https://open.spotify.com/artist/0X5kqVkrwgia5cLOun0ZpG",
+  "DJERV": "https://open.spotify.com/artist/1L5K3Gy1yP36tzZNKQZjBR",
+  "DOGMA": "https://open.spotify.com/artist/0OhAEPOuYnSqJPafLxHjuO",
+  "END IT": "https://open.spotify.com/artist/01HCB5BcEFVaQp9WbqxR0J",
+  "EYEHATEGOD": "https://open.spotify.com/artist/7A8fezOfaWeWGLLd1noRc1",
+  "FAETOOTH": "https://open.spotify.com/artist/4TLpB3A40jNB9FHRMro1Cx",
+  "GAEREA": "https://open.spotify.com/artist/7D8WxEgdUj5gdJCFnzbJfm",
+  "GRIDIRON": "https://open.spotify.com/artist/79uyDi23UiRXZnChxniNWH",
+  "HENRET": "https://open.spotify.com/artist/5LH1rh6tNkHJrqsYVqaF8K",
+  "ICE NINE KILLS": "https://open.spotify.com/artist/2YqBjJEjkiJjwGE3oIYrDJ",
+  "IMMINENCE": "https://open.spotify.com/artist/4jFnYJFmFpDm0JbOKxucNq",
+  "INHUMAN NATURE": "https://open.spotify.com/artist/5GRXS5pUOiQvCUOjkV8gRj",
+  "IOTUNN": "https://open.spotify.com/artist/3bPGxXeMCr3NUc6RjRDOhR",
+  "IRON MAIDEN": "https://open.spotify.com/artist/6mdiAmATAx73kdxrNrnlao",
+  "KATLA": "https://open.spotify.com/artist/5SJJywFigHdlKm6wNNdIpe",
+  "KONVENT": "https://open.spotify.com/artist/50m98oBxMhNlcRFLATcbjm",
+  "KUBLAI KHAN TX": "https://open.spotify.com/artist/7FZ3Dx5lVHJfzhlw1n1jyP",
+  "LIGHTCHAPTER": "https://open.spotify.com/artist/2vVXh2yjPHLJCKvCyUONBV",
+  "LOATHE": "https://open.spotify.com/artist/3RNNXWI0QA7kFLKlzMi85q",
+  "MACERATION": "https://open.spotify.com/artist/5ioJz3heGLCnBjxOcVJntH",
+  "MALEVOLENCE": "https://open.spotify.com/artist/7wAdpJyahByVw4t29QTPr4",
+  "MAMMOTH": "https://open.spotify.com/artist/2FSGQZ9GmhQJPESP8JMbBo",
+  "MASTODON": "https://open.spotify.com/artist/1Dvfqq39HxvCJ3GvfeIFuT",
+  "NECKBREAKKER": "https://open.spotify.com/artist/3M6FKKrUiWluIqcJCfGi3Y",
+  "OMSORG": "https://open.spotify.com/artist/51eXwuDYcfHJXJBG6MYHJ9",
+  "P.O.D.": "https://open.spotify.com/artist/0M4JFB1AOecCUfLRttaPfK",
+  "PALEFACE SWISS": "https://open.spotify.com/artist/2vRB1AHPZo6n8HqzJfaav6",
+  "PAPA ROACH": "https://open.spotify.com/artist/4RBpiMKCMlECGSWMDDEEwl",
+  "PERMANOIA": "https://open.spotify.com/artist/6Kj9u1BIxp8JnIbGRLPpnE",
+  "POWERPLANT": "https://open.spotify.com/artist/3X3P8SqTlMKOh5Gvj1n3Xd",
+  "PRESIDENT": "https://open.spotify.com/artist/3SQDUBHn3v2aXGk9fscWs5",
+  "QUEENSRŸCHE": "https://open.spotify.com/artist/61eGJnniMOOvKwjJIxFykB",
+  "SCIMITAR": "https://open.spotify.com/artist/6ZZHnHqhbsFMDKzy59XmyU",
+  "SEPULTURA": "https://open.spotify.com/artist/09iGHpdTMSsXbOVMFtvbmZ",
+  "SIX FEET UNDER": "https://open.spotify.com/artist/5lF0MoAzz6DigkfJhPGNkA",
+  "SOCIAL DISTORTION": "https://open.spotify.com/artist/7vk0PmmurQiY80m1GrLmt6",
+  "SOILWORK": "https://open.spotify.com/artist/41Q0HrwWBFRTAVaGAyYMEo",
+  "STATIC-X": "https://open.spotify.com/artist/2Y01uS2LCMv9Jbbm6vIQAP",
+  "SUICIDAL TENDENCIES": "https://open.spotify.com/artist/3Is3VVCMGXpmByuGCxlHzK",
+  "THE BROWNING": "https://open.spotify.com/artist/0EAicreTZxJFTD6GlsJFKs",
+  "THE PRETTY RECKLESS": "https://open.spotify.com/artist/1lYT0A0LV5DUfxr6doRP3d",
+  "THROWN": "https://open.spotify.com/artist/5Jv5ji5LTMCagbVZV3BnxM",
+  "TOM MORELLO": "https://open.spotify.com/artist/2Ton5elvis1aRkQSiYBOuA",
+  "TRIVIUM": "https://open.spotify.com/artist/1sBkRIssrMs1l5KRVpVkri",
+  "TROLLFEST": "https://open.spotify.com/artist/77Z2MZ9gqNYQn7Hqpyj4xC",
+  "UNPEOPLE": "https://open.spotify.com/artist/4PGTu7f6pCp8mNMabdvjmg",
+  "VEXED": "https://open.spotify.com/artist/5aEYT1Dw4Ty19cUJFNO8Q4",
+  "VIOLENT MAGIC ORCHESTRA": "https://open.spotify.com/artist/3xFJtbWLFwmlWJm3M2yLNc",
+  "VOICE OF BACEPROT": "https://open.spotify.com/artist/6JgPnBCFDjjFbCKjMJOB31",
+  "VOLBEAT": "https://open.spotify.com/artist/1mZiCG8OPxsAdqFkNhKiSZ",
+  "WARKINGS": "https://open.spotify.com/artist/2J0lzTJuTRqbfHs9DPQbTF",
+};
 
-// Public client ID — read-only search, no secrets exposed
-// Users can override with their own via the Spotify settings
-const SPOTIFY_CLIENT_ID = '5f573c9620494bae87890c0f08a60293';
-
-async function getSpotifyToken() {
-  // Use Spotify's implicit/PKCE-less token via their open endpoint
-  // This is the same approach Spotify's web player uses
-  if (spotifyToken && Date.now() < spotifyTokenExpiry) return spotifyToken;
-
-  try {
-    const resp = await fetchWithTimeout(
-      'https://open.spotify.com/get_access_token?reason=transport&productType=web_player',
-      5000
-    );
-    if (resp.ok) {
-      const data = await resp.json();
-      spotifyToken = data.accessToken;
-      spotifyTokenExpiry = data.accessTokenExpirationTimestampMs || (Date.now() + 3600000);
-      return spotifyToken;
-    }
-  } catch (e) {
-    console.log('[Spotify] Open token failed, trying anonymous...');
-  }
-
-  // Fallback: use anonymous Spotify search via their public API
-  try {
-    const resp = await fetchWithTimeout(
-      'https://accounts.spotify.com/api/token',
-      5000
-    );
-    // This won't work without credentials, so we fall back to search URLs
-  } catch (e) {}
-
-  return null;
-}
-
-async function lookupSpotifyUrl(bandName) {
-  const cleanName = bandName.replace(/[()]/g, '').trim();
-
-  // Check cache first
-  if (spotifyCache[cleanName]) return spotifyCache[cleanName];
-
-  // Try Spotify API search
-  const token = await getSpotifyToken();
-  if (token) {
-    try {
-      const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(cleanName)}&type=artist&limit=1`;
-      const resp = await fetchWithTimeout(searchUrl, 5000);
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.artists?.items?.length > 0) {
-          const artist = data.artists.items[0];
-          const url = artist.external_urls?.spotify;
-          if (url) {
-            spotifyCache[cleanName] = url;
-            return url;
-          }
-        }
-      }
-    } catch (e) {
-      console.log(`[Spotify] API search failed for ${cleanName}:`, e.message);
-    }
-  }
-
-  // Fallback: search URL (opens Spotify search page)
-  const fallback = `https://open.spotify.com/search/${encodeURIComponent(cleanName)}`;
-  spotifyCache[cleanName] = fallback;
-  return fallback;
-}
-
-// Batch-lookup all bands in background after render
-async function preloadSpotifyLinks() {
-  const allBands = Object.keys(LINEUP);
-  console.log(`[Spotify] Preloading links for ${allBands.length} bands...`);
-
-  // Process in small batches to avoid rate limits
-  for (let i = 0; i < allBands.length; i += 5) {
-    const batch = allBands.slice(i, i + 5);
-    await Promise.all(batch.map(async (band) => {
-      const url = await lookupSpotifyUrl(band);
-      // Update the link in the DOM
-      const links = document.querySelectorAll(`.spotify-link[data-band="${CSS.escape(band)}"]`);
-      links.forEach(link => { link.href = url; });
-    }));
-    // Small delay between batches
-    if (i + 5 < allBands.length) await new Promise(r => setTimeout(r, 100));
-  }
-  console.log(`[Spotify] Preload complete. ${Object.keys(spotifyCache).length} links cached.`);
+function getSpotifyUrl(bandName) {
+  return SPOTIFY_URLS[bandName] || `https://open.spotify.com/search/${encodeURIComponent(bandName.replace(/[()]/g, '').trim())}`;
 }
 
 function renderBandCard(band, grid) {
@@ -901,7 +876,7 @@ function renderBandCard(band, grid) {
 
   const isHL = HEADLINER_NAMES.includes(band.name);
   const cleanName = band.name.replace(/[()]/g, '').trim();
-  const spotifyUrl = spotifyCache[cleanName] || `https://open.spotify.com/search/${encodeURIComponent(cleanName)}`;
+  const spotifyUrl = getSpotifyUrl(band.name);
 
   card.innerHTML = `
     <div class="band-skull">💀</div>
@@ -1108,7 +1083,7 @@ function displayRecommendations(recs) {
       <div class="result-content">
         <div class="result-name">
           ${r.band}
-          <a href="https://open.spotify.com/search/${encodeURIComponent(r.band.replace(/[()]/g, '').trim())}" 
+          <a href="${getSpotifyUrl(r.band)}" 
              target="_blank" rel="noopener" class="spotify-link" style="display:inline-flex;vertical-align:middle;margin-left:0.4rem;"
              title="Søg på Spotify">${SPOTIFY_SVG}</a>
         </div>
@@ -1160,9 +1135,6 @@ async function init() {
 
   renderDays();
   updateCounter();
-
-  // Preload Spotify artist links in background
-  preloadSpotifyLinks();
 }
 
 init();
