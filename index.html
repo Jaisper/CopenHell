@@ -495,9 +495,10 @@
 // ═══════════════════════════════════════════════════════
 const PROGRAM_URL = 'https://copenhell.dk/en/program/';
 const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://proxy.cors.sh/${url}`,
 ];
 
 const DAYS_CONFIG = [
@@ -663,16 +664,21 @@ function parseProgram(html) {
   return lineup;
 }
 
+function fetchWithTimeout(url, ms = 10000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
 async function fetchLiveLineup() {
   for (const makeUrl of PROXIES) {
     try {
       const url = makeUrl(PROGRAM_URL);
       console.log(`[Copenhell] Trying proxy: ${url.substring(0, 60)}...`);
-      const resp = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      const resp = await fetchWithTimeout(url, 10000);
       if (!resp.ok) continue;
 
       const html = await resp.text();
-      // Verify we got actual Copenhell HTML
       if (!html.includes('artist') || html.length < 5000) continue;
 
       const parsed = parseProgram(html);
@@ -680,10 +686,8 @@ async function fetchLiveLineup() {
       console.log(`[Copenhell] Parsed ${bandCount} bands from live data`);
 
       if (bandCount >= 20) {
-        // Filter out any non-music entries that slipped through
         const musicBands = {};
         for (const [name, info] of Object.entries(parsed)) {
-          // Skip very long names that are likely Con events
           if (name.length > 60) continue;
           musicBands[name] = info;
         }
@@ -891,8 +895,35 @@ VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med 
 
     const data = await response.json();
     const text = data.choices[0].message.content.trim();
-    const clean = text.replace(/```json\s?/g, '').replace(/```/g, '').trim();
-    const recs = JSON.parse(clean);
+    let clean = text.replace(/```json\s?/g, '').replace(/```/g, '').trim();
+
+    // Robust JSON parsing — fix common LLM mistakes
+    let recs;
+    try {
+      recs = JSON.parse(clean);
+    } catch (e1) {
+      console.warn('[Copenhell] JSON parse failed, attempting fixes...', e1.message);
+      // Fix 1: trailing commas before ] or }
+      clean = clean.replace(/,\s*([}\]])/g, '$1');
+      // Fix 2: single quotes → double quotes
+      clean = clean.replace(/'/g, '"');
+      // Fix 3: extract just the array if there's surrounding text
+      const arrMatch = clean.match(/\[[\s\S]*\]/);
+      if (arrMatch) clean = arrMatch[0];
+      // Fix 4: remove trailing commas again after extraction
+      clean = clean.replace(/,\s*([}\]])/g, '$1');
+      try {
+        recs = JSON.parse(clean);
+      } catch (e2) {
+        console.error('[Copenhell] JSON still invalid after fixes:', e2.message);
+        throw new Error('AI returnerede ugyldigt svar. Prøv igen — det hjælper ofte.');
+      }
+    }
+
+    if (!Array.isArray(recs) || recs.length === 0) {
+      throw new Error('AI returnerede tomt svar. Prøv igen.');
+    }
+
     displayRecommendations(recs);
 
   } catch (err) {
