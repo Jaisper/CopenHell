@@ -1,1 +1,1 @@
-"# CopenHell" 
+"CopenHell by Lippert" 
