@@ -343,6 +343,51 @@
     padding: 0.15rem 0.35rem;
   }
 
+  /* ── GENRE PICKER ── */
+  .genre-section {
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    padding: 0 1.5rem;
+  }
+  .genre-header {
+    font-size: 0.75rem;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  .genre-hint {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+  .genre-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+  .genre-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.35rem 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+  .genre-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .genre-chip.active {
+    background: rgba(194, 60, 44, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+  }
+
   .recommend-section {
     max-width: 1200px;
     margin: 2rem auto;
@@ -529,6 +574,24 @@
   <div class="loading-indicator" id="loadingIndicator">Henter lineup fra copenhell.dk</div>
 </div>
 
+<div class="genre-section">
+  <div class="genre-header">🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
+  <div class="genre-grid" id="genreGrid">
+    <div class="genre-chip" data-genre="Heavy Metal (Klassisk)">Heavy Metal (Klassisk)</div>
+    <div class="genre-chip" data-genre="Heavy Rock">Heavy Rock</div>
+    <div class="genre-chip" data-genre="Thrash Metal">Thrash Metal</div>
+    <div class="genre-chip" data-genre="Dødsmetal">Dødsmetal</div>
+    <div class="genre-chip" data-genre="Black Metal">Black Metal</div>
+    <div class="genre-chip" data-genre="Doom Metal">Doom Metal</div>
+    <div class="genre-chip" data-genre="Power Metal">Power Metal</div>
+    <div class="genre-chip" data-genre="Glam Metal">Glam Metal</div>
+    <div class="genre-chip" data-genre="Gothic Metal">Gothic Metal</div>
+    <div class="genre-chip" data-genre="Alternativ Metal">Alternativ Metal</div>
+    <div class="genre-chip" data-genre="Progressiv Metal">Progressiv Metal</div>
+    <div class="genre-chip" data-genre="Speed Metal">Speed Metal</div>
+  </div>
+</div>
+
 <div class="recommend-section">
   <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>
     🤘 Find anbefalinger baseret på mine favoritter
@@ -671,6 +734,7 @@ const CACHED_LINEUP = {
 let LINEUP = {};     // active lineup data
 let dataIsLive = false;
 const selected = new Set();
+const selectedGenres = new Set();
 const recommended = new Map();
 
 // ═══════════════════════════════════════════════════════
@@ -1014,14 +1078,18 @@ async function getRecommendations() {
     return `• ${b} (${dayObj ? dayObj.name : 'dag TBA'} — ${info.stage || 'scene TBA'})`;
   }).join('\n');
 
+  const genreText = selectedGenres.size > 0
+    ? `\n\nBrugeren har desuden angivet disse FAVORIT-GENRER:\n${Array.from(selectedGenres).map(g => `• ${g}`).join('\n')}\n\nPrioritér bands der matcher disse genrer højere i anbefalingerne.`
+    : '';
+
   const prompt = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
 
-${favorites.map(b => `• ${b}`).join('\n')}
+${favorites.map(b => `• ${b}`).join('\n')}${genreText}
 
 Her er de ØVRIGE bands på Copenhell 2026 (med dag og scene):
 ${remainingWithDays}
 
-Anbefal de 10 bedste bands fra den øvrige liste baseret på brugerens musiksmag. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
+Anbefal de 10 bedste bands fra den øvrige liste baseret på brugerens musiksmag${selectedGenres.size > 0 ? ' og foretrukne genrer' : ''}. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
 
 SVAR KUN med denne JSON-struktur, ingen anden tekst:
 [
@@ -1192,6 +1260,20 @@ async function init() {
 
   renderDays();
   updateCounter();
+
+  // Genre chip click handlers
+  document.querySelectorAll('.genre-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const genre = chip.dataset.genre;
+      if (selectedGenres.has(genre)) {
+        selectedGenres.delete(genre);
+        chip.classList.remove('active');
+      } else {
+        selectedGenres.add(genre);
+        chip.classList.add('active');
+      }
+    });
+  });
 }
 
 init();
