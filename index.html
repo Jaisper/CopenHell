@@ -1018,12 +1018,14 @@ function toggleBand(band, card) {
 
 function updateCounter() {
   document.getElementById('favCount').textContent = selected.size;
-  document.getElementById('recBtn').disabled = selected.size < 1;
+  document.getElementById('recBtn').disabled = selected.size < 1 && selectedGenres.size < 1;
 }
 
 function clearSelections() {
   selected.clear();
+  selectedGenres.clear();
   recommended.clear();
+  document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
   renderDays();
   updateCounter();
   document.getElementById('results').classList.add('hidden');
@@ -1066,7 +1068,7 @@ async function getRecommendations() {
 
   const favorites = Array.from(selected);
   const remaining = Object.keys(LINEUP).filter(b => !selected.has(b));
-  if (favorites.length < 1) return;
+  if (favorites.length < 1 && selectedGenres.size < 1) return;
 
   const btn = document.getElementById('recBtn');
   btn.classList.add('loading');
@@ -1078,18 +1080,38 @@ async function getRecommendations() {
     return `• ${b} (${dayObj ? dayObj.name : 'dag TBA'} — ${info.stage || 'scene TBA'})`;
   }).join('\n');
 
-  const genreText = selectedGenres.size > 0
-    ? `\n\nBrugeren har desuden angivet disse FAVORIT-GENRER:\n${Array.from(selectedGenres).map(g => `• ${g}`).join('\n')}\n\nPrioritér bands der matcher disse genrer højere i anbefalingerne.`
-    : '';
+  const hasFavs = favorites.length > 0;
+  const hasGenres = selectedGenres.size > 0;
+  const genreList = Array.from(selectedGenres).map(g => `• ${g}`).join('\n');
 
-  const prompt = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
+  let introText;
+  if (hasFavs && hasGenres) {
+    introText = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
 
-${favorites.map(b => `• ${b}`).join('\n')}${genreText}
+${favorites.map(b => `• ${b}`).join('\n')}
+
+Brugeren har desuden angivet disse FAVORIT-GENRER:
+${genreList}
+
+Prioritér bands der matcher disse genrer højere i anbefalingerne.`;
+  } else if (hasFavs) {
+    introText = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
+
+${favorites.map(b => `• ${b}`).join('\n')}`;
+  } else {
+    introText = `Du er en metal- og rockmusik-ekspert. Brugeren har angivet disse FAVORIT-GENRER:
+
+${genreList}
+
+Anbefal bands der bedst matcher disse genrer.`;
+  }
+
+  const prompt = `${introText}
 
 Her er de ØVRIGE bands på Copenhell 2026 (med dag og scene):
 ${remainingWithDays}
 
-Anbefal de 10 bedste bands fra den øvrige liste baseret på brugerens musiksmag${selectedGenres.size > 0 ? ' og foretrukne genrer' : ''}. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
+Anbefal de 10 bedste bands fra listen baseret på brugerens musiksmag${hasGenres ? ' og foretrukne genrer' : ''}. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
 
 SVAR KUN med denne JSON-struktur, ingen anden tekst:
 [
@@ -1272,6 +1294,7 @@ async function init() {
         selectedGenres.add(genre);
         chip.classList.add('active');
       }
+      updateCounter();
     });
   });
 }
