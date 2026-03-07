@@ -30,7 +30,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .api-status{font-size:.8rem;margin-top:.5rem}
 .instructions{max-width:900px;margin:1.5rem auto;padding:0 1.5rem;text-align:center}
 .instructions p{font-size:1.05rem;color:var(--text-dim);line-height:1.8}.instructions strong{color:var(--text)}
-.fav-counter{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;padding:.6rem 1.5rem;background:var(--surface);border:1px solid var(--border);font-size:1.05rem;border-radius:3px}
+.fav-counter{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.25rem;padding:.6rem 1.5rem;background:var(--surface);border:1px solid var(--border);font-size:1.05rem;border-radius:3px;max-width:400px;margin-left:auto;margin-right:auto}
 .fav-counter .skull{color:var(--accent);font-size:1.1rem}.fav-counter .count{color:var(--gold);font-weight:700}
 .loading-indicator{text-align:center;padding:3rem;color:var(--text-dim);font-size:.9rem}
 .loading-indicator::after{content:'';display:inline-block;width:1em;height:1em;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;margin-left:.5rem;animation:spin .6s linear infinite;vertical-align:middle}
@@ -44,15 +44,16 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .day-count{margin-left:auto;font-size:.85rem;color:var(--text-dim);font-weight:600}.day-count span{color:var(--gold)}
 .sort-indicator{font-size:.75rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;text-align:right;margin-bottom:.4rem}
 .scene-grid{display:grid;grid-template-columns:repeat(var(--stage-count,4),1fr);gap:3px}
-.scene-column{display:flex;flex-direction:column;gap:3px}
+.scene-column{display:flex;flex-direction:column;gap:3px;min-width:0}
 .scene-header{background:var(--surface2);border:1px solid var(--border);padding:.45rem .5rem;text-align:center;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:600;position:sticky;top:0;z-index:10}
 .scene-header.main-stage{color:var(--accent);border-color:rgba(194,60,44,.3)}
 .band-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:3px}
-.band-card{background:var(--surface);border:1px solid var(--border);padding:.55rem .7rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:all .15s ease;user-select:none;border-radius:3px}
+.band-card{background:var(--surface);border:1px solid var(--border);padding:.55rem .7rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:all .15s ease;user-select:none;border-radius:3px;overflow:hidden;min-width:0}
 .band-card:hover{background:var(--surface2);border-color:rgba(255,255,255,.2)}
 .band-card.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
 .band-card.selected .band-skull{opacity:1;transform:scale(1)}.band-card.selected .band-name{color:#fff}
-.band-card.recommended{background:rgba(212,168,67,.1);border-color:var(--gold);border-width:2px;box-shadow:0 0 10px rgba(212,168,67,.2)}.band-card.recommended .rec-badge{display:flex}.band-card.recommended .band-name{color:var(--gold)}
+.band-card.recommended-gold{background:rgba(212,168,67,.1);border-color:var(--gold);border-width:2px;box-shadow:0 0 10px rgba(212,168,67,.2)}.band-card.recommended-gold .rec-badge{display:flex;background:var(--gold)}.band-card.recommended-gold .band-name{color:var(--gold)}
+.band-card.recommended-green{background:rgba(61,220,132,.08);border-color:#3ddc84;border-width:2px;box-shadow:0 0 10px rgba(61,220,132,.15)}.band-card.recommended-green .rec-badge{display:flex;background:#3ddc84}.band-card.recommended-green .band-name{color:#3ddc84}
 .band-skull{font-size:1rem;opacity:.2;transform:scale(.85);transition:all .2s ease;flex-shrink:0;width:1.2rem;text-align:center}
 .band-card:hover .band-skull{opacity:.5;transform:scale(.95)}
 .band-info{flex:1;min-width:0;display:flex;align-items:center;gap:.4rem}
@@ -545,7 +546,10 @@ function renderBandCard(band, grid) {
   card.className = 'band-card';
   card.dataset.band = band.name;
   if (selected.has(band.name)) card.classList.add('selected');
-  if (recommended.has(band.name)) card.classList.add('recommended');
+  if (recommended.has(band.name)) {
+    const rank = recommended.get(band.name);
+    card.classList.add(rank <= 10 ? 'recommended-gold' : 'recommended-green');
+  }
 
   const cleanName = band.name.replace(/[()]/g, '').trim();
   const spotifyUrl = getSpotifyUrl(band.name);
