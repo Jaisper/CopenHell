@@ -114,13 +114,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
 </div>
 
-<div class="instructions">
-  <p>
-    Tryk <strong>💀</strong> på de bands du kender og kan lide — vælg så mange du vil.<br>
-    AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
-  </p>
-</div>
-
 <div class="day-container" id="dayContainer">
   <div class="loading-indicator" id="loadingIndicator">Henter lineup fra copenhell.dk</div>
 </div>
@@ -143,11 +136,19 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
 </div>
 
+<div class="instructions">
+  <p>
+    Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>
+    AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
+  </p>
+</div>
+
 <div class="recommend-section">
-  <div class="fav-counter">
+  <div class="fav-counter" id="favCounter">
     <span class="skull">💀</span>
-    <span>Valgte favoritter: <span class="count" id="favCount">0</span></span>
+    <span id="favText">Valgte: 0 bands · 0 genrer</span>
   </div>
+  <br>
   <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>
     🤘 Find anbefalinger baseret på mine favoritter
   </button>
@@ -584,8 +585,14 @@ function toggleBand(band, card) {
 }
 
 function updateCounter() {
-  document.getElementById('favCount').textContent = selected.size;
-  document.getElementById('recBtn').disabled = selected.size < 1 && selectedGenres.size < 1;
+  const b = selected.size, g = selectedGenres.size;
+  const parts = [];
+  if (b > 0) parts.push(`${b} band${b > 1 ? 's' : ''}`);
+  if (g > 0) parts.push(`${g} genre${g > 1 ? 'r' : ''}`);
+  document.getElementById('favText').textContent = parts.length > 0 
+    ? `Valgte: ${parts.join(' · ')}` 
+    : 'Vælg bands og/eller genrer ovenfor';
+  document.getElementById('recBtn').disabled = b < 1 && g < 1;
 }
 
 function clearSelections() {
