@@ -12,7 +12,6 @@
 body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
 .header{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
-.header::after{content:'';position:absolute;bottom:-1px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
 .logo{font-family:'Oswald',sans-serif;font-size:clamp(2.5rem,8vw,5rem);font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;color:var(--text)}
 .logo span{color:var(--accent)}
 .subtitle{font-size:.9rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-top:.6rem;font-weight:600}
@@ -21,7 +20,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .api-section{max-width:600px;margin:2rem auto;padding:0 1.5rem}
 .api-box{background:var(--surface);border:1px solid var(--border);padding:1.25rem;border-radius:3px}
 .api-box summary{font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem;font-weight:600}
-.api-box summary::before{content:'⚙'}.api-box summary::-webkit-details-marker{display:none}
+.api-box summary::before{content:''}.api-box summary::-webkit-details-marker{display:none}
 .api-box[open] summary{margin-bottom:1rem;color:var(--text)}
 .api-hint{font-size:.85rem;color:var(--text-dim);line-height:1.6;margin-bottom:.75rem}.api-hint a{color:var(--gold);text-decoration:none}
 .api-row{display:flex;gap:.5rem}
@@ -31,7 +30,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .api-status{font-size:.8rem;margin-top:.5rem}
 .instructions{max-width:900px;margin:1.5rem auto;padding:0 1.5rem;text-align:center}
 .instructions p{font-size:1.05rem;color:var(--text-dim);line-height:1.8}.instructions strong{color:var(--text)}
-.fav-counter{display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem;padding:.6rem 1.5rem;background:var(--surface);border:1px solid var(--border);font-size:1.05rem;border-radius:3px}
+.fav-counter{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;padding:.6rem 1.5rem;background:var(--surface);border:1px solid var(--border);font-size:1.05rem;border-radius:3px}
 .fav-counter .skull{color:var(--accent);font-size:1.1rem}.fav-counter .count{color:var(--gold);font-weight:700}
 .loading-indicator{text-align:center;padding:3rem;color:var(--text-dim);font-size:.9rem}
 .loading-indicator::after{content:'';display:inline-block;width:1em;height:1em;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;margin-left:.5rem;animation:spin .6s linear infinite;vertical-align:middle}
@@ -83,6 +82,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .results-section{max-width:900px;margin:2rem auto;padding:0 1.5rem 4rem}
 .results-header{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid rgba(212,168,67,.2);text-align:center;font-weight:600}
 .result-item{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 0;border-bottom:1px solid var(--border);animation:fadeIn .3s ease}
+.result-item.top-10{border-left:3px solid var(--gold);padding-left:1rem}
+.result-item.top-20{border-left:3px solid #3ddc84;padding-left:1rem}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .result-rank{font-family:'Oswald',sans-serif;font-size:2rem;color:var(--accent);min-width:2.5rem;text-align:right;line-height:1.2;font-weight:700}
 .result-content{flex:1}
@@ -113,30 +114,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
 </div>
 
-<div class="api-section">
-  <details class="api-box" id="apiBox">
-    <summary>Groq API Nøgle</summary>
-    <p class="api-hint">
-      Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
-      log ind → API Keys → Create. Nøglen gemmes kun i din browser.
-    </p>
-    <div class="api-row">
-      <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
-      <button class="btn-small" onclick="saveApiKey()">Gem</button>
-    </div>
-    <div class="api-status" id="apiStatus"></div>
-  </details>
-</div>
-
 <div class="instructions">
   <p>
     Tryk <strong>💀</strong> på de bands du kender og kan lide — vælg så mange du vil.<br>
     AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
   </p>
-  <div class="fav-counter">
-    <span class="skull">💀</span>
-    <span>Valgte favoritter: <span class="count" id="favCount">0</span></span>
-  </div>
 </div>
 
 <div class="day-container" id="dayContainer">
@@ -162,12 +144,30 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </div>
 
 <div class="recommend-section">
+  <div class="fav-counter">
+    <span class="skull">💀</span>
+    <span>Valgte favoritter: <span class="count" id="favCount">0</span></span>
+  </div>
   <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>
     🤘 Find anbefalinger baseret på mine favoritter
   </button>
   <div class="action-bar">
     <button class="btn-ghost" onclick="clearSelections()">Nulstil valg</button>
     <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()">Fjern anbefalinger</button>
+  </div>
+  <div class="api-section" style="margin-top:1.5rem">
+    <details class="api-box" id="apiBox">
+      <summary>⚙ Groq API Nøgle</summary>
+      <p class="api-hint">
+        Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
+        log ind → API Keys → Create. Nøglen gemmes kun i din browser.
+      </p>
+      <div class="api-row">
+        <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
+        <button class="btn-small" onclick="saveApiKey()">Gem</button>
+      </div>
+      <div class="api-status" id="apiStatus"></div>
+    </details>
   </div>
 </div>
 
@@ -678,7 +678,7 @@ Anbefal bands der bedst matcher disse genrer.`;
 Her er de ØVRIGE bands på Copenhell 2026 (med dag og scene):
 ${remainingWithDays}
 
-Anbefal de 10 bedste bands fra listen baseret på brugerens musiksmag${hasGenres ? ' og foretrukne genrer' : ''}. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
+Anbefal de 20 bedste bands fra listen baseret på brugerens musiksmag${hasGenres ? ' og foretrukne genrer' : ''}. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
 
 SVAR KUN med denne JSON-struktur, ingen anden tekst:
 [
@@ -686,7 +686,7 @@ SVAR KUN med denne JSON-struktur, ingen anden tekst:
   {"rank": 2, "band": "BANDNAVN", "reason": "3-5 sætninger beskrivelse", "match": "90%"}
 ]
 
-VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med valid JSON, max 10 bands.`;
+VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med valid JSON, max 20 bands.`;
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -699,7 +699,7 @@ VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med 
         model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.5,
-        max_tokens: 4000
+        max_tokens: 8000
       })
     });
 
@@ -790,7 +790,7 @@ function displayRecommendations(recs) {
     const copenhellUrl = `https://copenhell.dk/artist/${chSlug}/`;
 
     const item = document.createElement('div');
-    item.className = 'result-item';
+    item.className = `result-item ${i < 10 ? 'top-10' : 'top-20'}`;
     item.style.animationDelay = `${i * 0.05}s`;
     item.innerHTML = `
       <div class="result-rank">${r.rank}</div>
