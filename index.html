@@ -159,7 +159,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
   <div class="api-section" style="margin-top:1.5rem">
     <details class="api-box" id="apiBox">
-      <summary>⚙ Groq API Nøgle</summary>
+      <summary>⚙ Indstillinger</summary>
       <p class="api-hint">
         Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
         log ind → API Keys → Create. Nøglen gemmes kun i din browser.
@@ -169,6 +169,16 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <button class="btn-small" onclick="saveApiKey()">Gem</button>
       </div>
       <div class="api-status" id="apiStatus"></div>
+      <div style="margin-top:1rem">
+        <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem">AI Model</label>
+        <select id="modelSelect" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.5rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px">
+          <option value="compound-beta">🔍 Compound Beta (web search — langsom)</option>
+          <option value="llama-3.3-70b-versatile" selected>⚡ Llama 3.3 70B (anbefalet — hurtig)</option>
+          <option value="deepseek-r1-distill-llama-70b">🧠 DeepSeek R1 70B (god ræsonnering)</option>
+          <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B (ultra-hurtig, lavere kvalitet)</option>
+        </select>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint">Hurtig og god til de fleste bands</div>
+      </div>
     </details>
   </div>
 </div>
@@ -643,20 +653,24 @@ async function getRecommendations() {
     document.getElementById('apiStatus').style.color = '#c23c2c';
     return;
   }
-
   const favorites = Array.from(selected);
   const remaining = Object.keys(LINEUP).filter(b => !selected.has(b));
   if (favorites.length < 1 && selectedGenres.size < 1) return;
 
+  const model = document.getElementById('modelSelect').value;
+  const isCompound = model === 'compound-beta';
   const btn = document.getElementById('recBtn');
   btn.classList.add('loading');
-  btn.textContent = '💀 AI analyserer din musiksmag...';
+  btn.textContent = isCompound ? '🔍 AI søger på nettet og analyserer...' : '💀 AI analyserer din musiksmag...';
 
-  const remainingWithDays = remaining.map(b => {
-    const info = LINEUP[b];
-    const dayObj = DAYS_CONFIG.find(d => d.key === info.day);
-    return `• ${b} (${dayObj ? dayObj.name : 'dag TBA'} — ${info.stage || 'scene TBA'})`;
-  }).join('\n');
+  // Compact list for compound-beta to save tokens (rate limit)
+  const remainingWithDays = isCompound
+    ? remaining.map(b => `• ${b}`).join('\n')
+    : remaining.map(b => {
+        const info = LINEUP[b];
+        const dayObj = DAYS_CONFIG.find(d => d.key === info.day);
+        return `• ${b} (${dayObj ? dayObj.name : 'dag TBA'} — ${info.stage || 'scene TBA'})`;
+      }).join('\n');
 
   const hasFavs = favorites.length > 0;
   const hasGenres = selectedGenres.size > 0;
@@ -664,103 +678,74 @@ async function getRecommendations() {
 
   let introText;
   if (hasFavs && hasGenres) {
-    introText = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
-
-${favorites.map(b => `• ${b}`).join('\n')}
-
-Brugeren har desuden angivet disse FAVORIT-GENRER:
-${genreList}
-
-Prioritér bands der matcher disse genrer højere i anbefalingerne.`;
+    introText = `Brugerens favoritter fra Copenhell 2026:\n${favorites.map(b => `• ${b}`).join('\n')}\n\nFAVORIT-GENRER:\n${genreList}\nPrioritér bands der matcher disse genrer.`;
   } else if (hasFavs) {
-    introText = `Du er en metal- og rockmusik-ekspert. Brugeren har valgt disse bands som favoritter fra Copenhell 2026:
-
-${favorites.map(b => `• ${b}`).join('\n')}`;
+    introText = `Brugerens favoritter fra Copenhell 2026:\n${favorites.map(b => `• ${b}`).join('\n')}`;
   } else {
-    introText = `Du er en metal- og rockmusik-ekspert. Brugeren har angivet disse FAVORIT-GENRER:
-
-${genreList}
-
-Anbefal bands der bedst matcher disse genrer.`;
+    introText = `FAVORIT-GENRER:\n${genreList}\nAnbefal bands der matcher disse genrer.`;
   }
 
-  const prompt = `${introText}
+  const prompt = `Metal/rock-ekspert: anbefal bands på Copenhell 2026.
 
-Her er de ØVRIGE bands på Copenhell 2026 (med dag og scene):
+${introText}
+
+ØVRIGE bands at anbefale fra:
 ${remainingWithDays}
 
-Anbefal de 20 bedste bands fra listen baseret på brugerens musiksmag${hasGenres ? ' og foretrukne genrer' : ''}. Sortér efter match-kvalitet. Giv en beskrivelse på 3-5 sætninger på dansk for hvert band — forklar deres genre, lyd og hvorfor de passer til brugerens smag.
+REGLER:
+- Anbefal KUN bands du med sikkerhed kender og kan beskrive korrekt
+- SPRING bands over du ikke kender — det er bedre med 8 gode anbefalinger end 20 med fejl
+- Beskriv faktisk genre, lyd og stil — OPFIND ALDRIG fakta
+- 2-3 sætninger på dansk per band
 
-SVAR KUN med denne JSON-struktur, ingen anden tekst:
-[
-  {"rank": 1, "band": "BANDNAVN", "reason": "3-5 sætninger på dansk der beskriver bandet, deres genre/lyd, og hvorfor brugeren vil kunne lide dem.", "match": "95%"},
-  {"rank": 2, "band": "BANDNAVN", "reason": "3-5 sætninger beskrivelse", "match": "90%"}
-]
+Anbefal OP TIL 20 bands du KENDER, sorteret efter match. Brug PRÆCIS navne fra listen.
+Det er OK at returnere færre end 20 hvis du ikke kender nok bands.
+JSON array, ingen anden tekst:
+[{"rank":1,"band":"NAVN","reason":"2-3 sætninger dansk","match":"95%"}]`;
 
-VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med valid JSON, max 20 bands.`;
+  async function callGroq(m, retries) {
+    if (retries === undefined) retries = 2;
+    const body = { model: m, messages: [{ role: 'user', content: prompt }], temperature: 0.4, max_tokens: 8000 };
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) {
+      const e = await r.json(); const msg = e.error?.message || '';
+      if (msg.includes('Rate limit') && retries > 0) {
+        const w = msg.match(/try again in ([\d.]+)s/i);
+        const delay = w ? Math.ceil(parseFloat(w[1]) * 1000) + 500 : 15000;
+        btn.textContent = `⏳ Rate limited — venter ${Math.ceil(delay/1000)}s...`;
+        await new Promise(ok => setTimeout(ok, delay));
+        return callGroq(m, retries - 1);
+      }
+      if (m === 'compound-beta') {
+        btn.textContent = '⚡ Compound Beta fejlede — skifter til Llama 3.3...';
+        await new Promise(ok => setTimeout(ok, 1000));
+        return callGroq('llama-3.3-70b-versatile', 1);
+      }
+      throw new Error(msg || 'API fejl');
+    }
+    return r.json();
+  }
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.5,
-        max_tokens: 8000
-      })
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error?.message || `API fejl: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const text = data.choices[0].message.content.trim();
-    let clean = text.replace(/```json\s?/g, '').replace(/```/g, '').trim();
-
-    // Robust JSON parsing — fix common LLM mistakes
+    const data = await callGroq(model);
+    let raw = data.choices[0].message.content.trim();
+    raw = raw.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+    let clean = raw.replace(/```json\s?/g, '').replace(/```/g, '').trim();
     let recs;
-    try {
-      recs = JSON.parse(clean);
-    } catch (e1) {
-      console.warn('[Copenhell] JSON parse failed, attempting fixes...', e1.message);
-      // Fix 1: extract just the array
+    try { recs = JSON.parse(clean); } catch (e1) {
       const arrMatch = clean.match(/\[[\s\S]*\]/);
       if (arrMatch) clean = arrMatch[0];
-      // Fix 2: trailing commas before ] or }
+      clean = clean.replace(/,\s*([}\]])/g, '$1').replace(/\n/g, ' ');
+      if (!clean.endsWith(']')) { const lb = clean.lastIndexOf('}'); if (lb > 0) clean = clean.substring(0, lb + 1) + ']'; }
       clean = clean.replace(/,\s*([}\]])/g, '$1');
-      // Fix 3: fix unescaped quotes inside strings (common with descriptions)
-      // Replace newlines inside strings
-      clean = clean.replace(/\n/g, ' ');
-      // Fix 4: try to repair truncated JSON — close open brackets
-      if (!clean.endsWith(']')) {
-        // Find last complete object
-        const lastBrace = clean.lastIndexOf('}');
-        if (lastBrace > 0) {
-          clean = clean.substring(0, lastBrace + 1) + ']';
-        }
-      }
-      // Fix 5: trailing commas again
-      clean = clean.replace(/,\s*([}\]])/g, '$1');
-      try {
-        recs = JSON.parse(clean);
-      } catch (e2) {
-        console.error('[Copenhell] JSON still invalid:', clean.substring(0, 200));
-        throw new Error('AI returnerede ugyldigt svar. Prøv igen — det hjælper ofte.');
-      }
+      try { recs = JSON.parse(clean); } catch { throw new Error('AI returnerede ugyldigt svar. Prøv igen.'); }
     }
-
-    if (!Array.isArray(recs) || recs.length === 0) {
-      throw new Error('AI returnerede tomt svar. Prøv igen.');
-    }
-
+    if (!Array.isArray(recs) || recs.length === 0) throw new Error('AI returnerede tomt svar. Prøv igen.');
     displayRecommendations(recs);
-
   } catch (err) {
     console.error('Groq fejl:', err);
     alert('Fejl: ' + err.message);
@@ -769,6 +754,7 @@ VIGTIGT: Brug KUN bandnavne PRÆCIS som de står i listen ovenfor. Svar KUN med 
     btn.textContent = '🤘 Find anbefalinger baseret på mine favoritter';
   }
 }
+
 
 function displayRecommendations(recs) {
   recommended.clear();
@@ -839,6 +825,19 @@ async function init() {
     document.getElementById('apiStatus').style.color = '#3ddc84';
     document.getElementById('apiBox').removeAttribute('open');
   }
+  // Restore saved model
+  const savedModel = localStorage.getItem('groq_model');
+  if (savedModel) document.getElementById('modelSelect').value = savedModel;
+  document.getElementById('modelSelect').addEventListener('change', function() {
+    localStorage.setItem('groq_model', this.value);
+    const hints = {
+      'compound-beta': 'Søger på nettet — langsom og rammer ofte rate limit',
+      'llama-3.3-70b-versatile': 'Hurtig og god til de fleste bands',
+      'deepseek-r1-distill-llama-70b': 'God til ræsonnering, lidt langsommere',
+      'llama-3.1-8b-instant': 'Ultra-hurtig men lavere kvalitet'
+    };
+    document.getElementById('modelHint').textContent = hints[this.value] || '';
+  });
 
   // Try to fetch live lineup
   const src = document.getElementById('dataSource');
