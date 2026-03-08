@@ -172,12 +172,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div style="margin-top:1rem">
         <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem">AI Model</label>
         <select id="modelSelect" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.5rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px">
+          <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B (anbefalet — bedst kvalitet)</option>
+          <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B (hurtig, lavere kvalitet)</option>
           <option value="compound-beta">🔍 Compound Beta (web search — langsom)</option>
-          <option value="llama-3.3-70b-versatile" selected>⚡ Llama 3.3 70B (anbefalet — hurtig)</option>
-          <option value="deepseek-r1-distill-llama-70b">🧠 DeepSeek R1 70B (god ræsonnering)</option>
           <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B (ultra-hurtig, lavere kvalitet)</option>
         </select>
-        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint">Hurtig og god til de fleste bands</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint">OpenAI's åbne model — bedst til korrekte beskrivelser</div>
       </div>
     </details>
   </div>
@@ -831,9 +831,9 @@ async function init() {
   document.getElementById('modelSelect').addEventListener('change', function() {
     localStorage.setItem('groq_model', this.value);
     const hints = {
-      'compound-beta': 'Søger på nettet — langsom og rammer ofte rate limit',
-      'llama-3.3-70b-versatile': 'Hurtig og god til de fleste bands',
-      'deepseek-r1-distill-llama-70b': 'God til ræsonnering, lidt langsommere',
+      'openai/gpt-oss-120b': 'OpenAI\'s åbne model — bedst til korrekte beskrivelser',
+      'llama-3.3-70b-versatile': 'Hurtig men kan hallucinere om ukendte bands',
+      'compound-beta': 'Søger på nettet — langsom, rammer ofte rate limit',
       'llama-3.1-8b-instant': 'Ultra-hurtig men lavere kvalitet'
     };
     document.getElementById('modelHint').textContent = hints[this.value] || '';
