@@ -748,6 +748,14 @@ JSON array: [{"rank":1,"band":"NAVN","reason":"beskrivelse","match":"95%"}]`;
 
 
 function displayRecommendations(recs) {
+  // Filter out already-selected favorites
+  recs = recs.filter(r => {
+    const match = Object.keys(LINEUP).find(b => b.toUpperCase() === r.band.toUpperCase());
+    return !match || !selected.has(match);
+  });
+  // Re-rank after filtering
+  recs.forEach((r, i) => r.rank = i + 1);
+
   recommended.clear();
   recs.forEach(r => {
     const match = Object.keys(LINEUP).find(
