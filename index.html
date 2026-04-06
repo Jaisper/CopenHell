@@ -67,6 +67,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .spotify-link svg{width:18px;height:18px;fill:#1DB954;pointer-events:none}
 .rec-badge{display:none;align-items:center;justify-content:center;background:var(--gold);color:var(--bg);font-size:.6rem;font-weight:700;padding:.15rem .4rem;flex-shrink:0;border-radius:2px}
 .genre-section{max-width:1200px;margin:2rem auto 0;padding:0 1.5rem}
+.personal-fav-section{max-width:1200px;margin:1.5rem auto 0;padding:0 1.5rem;text-align:center}
 .genre-header{font-family:'Oswald',sans-serif;font-size:1.15rem;color:var(--text);margin-bottom:.75rem;text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
 .genre-hint{font-family:'Source Sans 3',sans-serif;font-size:.9rem;color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0}
 .genre-grid{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
@@ -136,6 +137,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="genre-chip" data-genre="Progressiv Metal">Progressiv Metal</div>
     <div class="genre-chip" data-genre="Speed Metal">Speed Metal</div>
   </div>
+</div>
+
+<div class="personal-fav-section">
+  <div class="genre-header">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
+  <input type="text" id="personalFavs" placeholder="F.eks. Metallica, Slayer, Pantera" maxlength="200" style="width:100%;max-width:600px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
 </div>
 
 <div class="instructions">
@@ -605,13 +611,15 @@ function toggleBand(band, card) {
 
 function updateCounter() {
   const b = selected.size, g = selectedGenres.size;
+  const p = (document.getElementById('personalFavs')?.value||'').split(',').map(s=>s.trim()).filter(s=>s).length;
   const parts = [];
   if (b > 0) parts.push(`${b} band${b > 1 ? 's' : ''}`);
   if (g > 0) parts.push(`${g} genre${g > 1 ? 'r' : ''}`);
+  if (p > 0) parts.push(`${p} egne favorit${p > 1 ? 'ter' : ''}`);
   document.getElementById('favText').textContent = parts.length > 0 
     ? `Valgte: ${parts.join(' · ')}` 
-    : 'Vælg bands og/eller genrer ovenfor';
-  document.getElementById('recBtn').disabled = b < 1 && g < 1;
+    : 'Vælg bands, genrer og/eller egne favoritter';
+  document.getElementById('recBtn').disabled = b < 1 && g < 1 && p < 1;
 }
 
 function clearSelections() {
@@ -619,6 +627,7 @@ function clearSelections() {
   selectedGenres.clear();
   recommended.clear();
   document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('personalFavs').value = '';
   renderDays();
   updateCounter();
   document.getElementById('results').classList.add('hidden');
@@ -660,7 +669,10 @@ async function getRecommendations() {
   }
   const favorites = Array.from(selected);
   const remaining = Object.keys(LINEUP).filter(b => !selected.has(b));
-  if (favorites.length < 1 && selectedGenres.size < 1) return;
+  // Parse personal favorites (max 3, comma-separated)
+  const personalRaw = document.getElementById('personalFavs').value.trim();
+  const personalFavs = personalRaw ? personalRaw.split(',').map(s=>s.trim()).filter(s=>s).slice(0,3) : [];
+  if (favorites.length < 1 && selectedGenres.size < 1 && personalFavs.length < 1) return;
 
   const model = document.getElementById('modelSelect').value;
   const isSmallLimit = model.includes('gpt-oss') || model === 'compound-beta';
@@ -679,21 +691,23 @@ async function getRecommendations() {
 
   const hasFavs = favorites.length > 0;
   const hasGenres = selectedGenres.size > 0;
+  const hasPersonal = personalFavs.length > 0;
   const genreList = Array.from(selectedGenres).map(g => g).join(', ');
 
   let introText;
-  if (hasFavs && hasGenres) {
-    introText = `Brugerens favoritter: ${favorites.join(', ')}
-Brugerens foretrukne genrer: ${genreList}
-Anbefal bands der ligner favoritterne OG matcher de valgte genrer (inkl. nært beslægtede subgenrer).`;
-  } else if (hasFavs) {
-    introText = `Brugerens favoritter: ${favorites.join(', ')}
-Anbefal bands med lignende lyd og stil.`;
+  const parts = [];
+  if (hasFavs) parts.push(`Favoritter fra Copenhell: ${favorites.join(', ')}`);
+  if (hasPersonal) parts.push(`Brugerens yndlingskunstnere generelt (IKKE på festivalen): ${personalFavs.join(', ')}`);
+  if (hasGenres) parts.push(`Foretrukne genrer: ${genreList}`);
+  
+  if (hasPersonal && !hasFavs && !hasGenres) {
+    introText = `${parts.join('\n')}
+Anbefal bands der ligner disse kunstnere i lyd, stil og genre.`;
+  } else if (parts.length > 0) {
+    introText = `${parts.join('\n')}
+Anbefal bands der matcher ovenstående præferencer (inkl. nært beslægtede subgenrer).`;
   } else {
-    introText = `Brugerens foretrukne genrer: ${genreList}
-Anbefal bands der spiller ${genreList} eller nært beslægtede subgenrer.
-F.eks. matcher "Thrash Metal" også crossover thrash, speed metal osv.
-Men vær fornuftig — anbefal ikke glam metal til en black metal-bruger.`;
+    introText = '';
   }
 
   const prompt = `Copenhell 2026 metal/rock koncertanbefaler.
@@ -913,6 +927,9 @@ async function init() {
       updateCounter();
     });
   });
+
+  // Personal favorites input
+  document.getElementById('personalFavs').addEventListener('input', () => updateCounter());
 }
 
 init();
