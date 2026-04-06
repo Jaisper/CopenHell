@@ -16,7 +16,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .logo span{color:var(--accent)}
 .subtitle{font-size:.9rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-top:.6rem;font-weight:600}
 .year-badge{display:inline-block;margin-top:1rem;padding:.3rem 1.2rem;border:2px solid var(--accent);color:var(--accent);font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.25em;text-transform:uppercase;font-weight:600}
-.data-source{font-size:.7rem;color:var(--text-dim);margin-top:.5rem}.data-source.live{color:#3ddc84}.data-source.cached{color:var(--gold)}
+.data-source{font-size:.95rem;color:var(--text-dim);margin-top:.75rem;font-weight:600;transition:all .3s ease}.data-source.live{color:#3ddc84}.data-source.cached{color:var(--gold)}.data-source.updating{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .api-section{max-width:600px;margin:2rem auto;padding:0 1.5rem}
 .api-box{background:var(--surface);border:1px solid var(--border);padding:1.25rem;border-radius:3px}
 .api-box summary{font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem;font-weight:600}
@@ -298,6 +299,8 @@ const CACHED_LINEUP = {
   "CHOPPER":{ day:"lor", stage:"Gehenna" },
   "INHUMAN NATURE":{ day:"lor", stage:"Gehenna" },
   "PSYCHOMOSHER":{ day:"lor", stage:"Gehenna" },
+  // ─── NYESTE TILFØJELSER (forår 2026) ───
+  "SAXON":{ day:"lor", stage:"" },
   // ─── BONEYARD (dag/tid TBA) ───
   "BRAINDEAD":{ day:"", stage:"Boneyard" },
   "GOING FOR THE ONE":{ day:"", stage:"Boneyard" },
@@ -854,20 +857,43 @@ async function init() {
 
   // Try to fetch live lineup
   const src = document.getElementById('dataSource');
+  src.textContent = '🔄 Vent lidt... opdaterer program fra copenhell.dk';
+  src.className = 'data-source updating';
+  const cachedCount = Object.keys(CACHED_LINEUP).length;
   const live = await fetchLiveLineup();
 
   if (live && Object.keys(live).length >= 20) {
-    LINEUP = live;
+    // Start with cached data, then overlay live data (live takes priority)
+    LINEUP = {};
+    // First add all cached bands
+    for (const [name, info] of Object.entries(CACHED_LINEUP)) {
+      LINEUP[name] = { ...info };
+    }
+    // Then overlay/add live scraped bands (case-insensitive merge)
+    let newBands = 0;
+    for (const [name, info] of Object.entries(live)) {
+      const existing = Object.keys(LINEUP).find(k => k.toUpperCase() === name.toUpperCase());
+      if (existing) {
+        // Update with live data if it has more info
+        if (info.day) LINEUP[existing].day = info.day;
+        if (info.stage) LINEUP[existing].stage = info.stage;
+        if (info._slug) LINEUP[existing]._slug = info._slug;
+      } else {
+        LINEUP[name] = info;
+        newBands++;
+      }
+    }
     dataIsLive = true;
-    src.textContent = `✓ Live data fra copenhell.dk — ${Object.keys(LINEUP).length} bands`;
+    const total = Object.keys(LINEUP).length;
+    src.textContent = newBands > 0 
+      ? `✓ ${total} bands — ${newBands} nye fundet!`
+      : `✓ ${total} bands — programmet er opdateret`;
     src.className = 'data-source live';
-    console.log('[Copenhell] Using LIVE data:', Object.keys(LINEUP).length, 'bands');
   } else {
-    LINEUP = CACHED_LINEUP;
+    LINEUP = {...CACHED_LINEUP};
     dataIsLive = false;
-    src.textContent = `⚠ Cached data (marts 2026) — ${Object.keys(LINEUP).length} bands`;
+    src.textContent = `⚠ Cached data (april 2026) — ${Object.keys(LINEUP).length} bands`;
     src.className = 'data-source cached';
-    console.log('[Copenhell] Using CACHED data:', Object.keys(LINEUP).length, 'bands');
   }
 
   renderDays();
