@@ -682,14 +682,15 @@ async function getRecommendations() {
   if (hasFavs && hasGenres) {
     introText = `Brugerens favoritter: ${favorites.join(', ')}
 Brugerens foretrukne genrer: ${genreList}
-Anbefal bands der ligner favoritterne OG matcher de valgte genrer.`;
+Anbefal bands der ligner favoritterne OG matcher de valgte genrer (inkl. nært beslægtede subgenrer).`;
   } else if (hasFavs) {
     introText = `Brugerens favoritter: ${favorites.join(', ')}
 Anbefal bands med lignende lyd og stil.`;
   } else {
     introText = `Brugerens foretrukne genrer: ${genreList}
-VIGTIGT: Anbefal KUN bands der FAKTISK spiller ${genreList}.
-Medtag IKKE bands fra andre genrer — hellere 5 rigtige end 20 forkerte.`;
+Anbefal bands der spiller ${genreList} eller nært beslægtede subgenrer.
+F.eks. matcher "Thrash Metal" også crossover thrash, speed metal osv.
+Men vær fornuftig — anbefal ikke glam metal til en black metal-bruger.`;
   }
 
   const prompt = `Copenhell 2026 metal/rock koncertanbefaler.
@@ -699,11 +700,10 @@ Bands at vælge fra (BRUG PRÆCIS DISSE NAVNE):
 ${remainingWithDays}
 
 REGLER:
-1. Anbefal KUN bands du KENDER og som FAKTISK matcher de valgte genrer/favoritter
-2. Vær STRENG med genre-match — et band skal primært spille den valgte genre
-3. Spring bands over du ikke kender eller som ikke matcher
-4. 2-3 sætninger dansk per band, OPFIND ALDRIG fakta
-5. "band" feltet SKAL kopieres PRÆCIST fra listen
+1. Anbefal KUN bands du KENDER og som matcher de valgte genrer (inkl. subgenrer)
+2. Spring bands over du ikke kender eller som slet ikke er relateret til genren
+3. 2-3 sætninger dansk per band, OPFIND ALDRIG fakta
+4. "band" feltet SKAL kopieres PRÆCIST fra listen
 JSON array, INGEN anden tekst: [{"rank":1,"band":"PRÆCIST NAVN","reason":"beskrivelse","match":"95%"}]`;
 
   async function callGroq(m, retries) {
