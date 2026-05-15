@@ -416,7 +416,7 @@ async function enrichArtistData() {
   }
 
   // Check sessionStorage cache
-  const cacheKey = 'ch26_artist_times_v1';
+  const cacheKey = 'ch26_artist_times_v3';
   try {
     const cached = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
     let usedCache = 0;
@@ -434,16 +434,16 @@ async function enrichArtistData() {
   const stillNeeds = Object.entries(LINEUP).filter(([_, info]) => !info.time && info._slug);
   if (stillNeeds.length === 0) return;
 
-  // Find working proxy - test with a known band
+  // Find working proxy - use DANISH pages (correct 24h time format)
   let workingProxy = null;
-  const testSlug = 'soilwork-2'; // known working slug
+  const testSlug = 'soilwork'; // Danish slug (no -2 suffix)
   for (const makeUrl of PROXIES) {
     try {
-      const testUrl = `https://copenhell.dk/en/artist/${testSlug}/`;
+      const testUrl = `https://copenhell.dk/artist/${testSlug}/`;
       const r = await fetchWithTimeout(makeUrl(testUrl), 8000);
       if (r.ok) {
         const html = await r.text();
-        if (html.length > 2000 && (html.includes('Time') || html.includes('Scene'))) {
+        if (html.length > 2000 && (html.includes('Tid') || html.includes('Scene'))) {
           workingProxy = makeUrl;
           break;
         }
@@ -467,21 +467,24 @@ async function enrichArtistData() {
     const batch = stillNeeds.slice(i, i + BATCH);
     await Promise.all(batch.map(async ([name, info]) => {
       try {
-        const pageUrl = `https://copenhell.dk/en/artist/${info._slug}/`;
+        // Use Danish page (correct 24h format) — slug without -2 suffix
+        const daSlug = info._slug ? info._slug.replace(/-2$/, '') : '';
+        if (!daSlug) return;
+        const pageUrl = `https://copenhell.dk/artist/${daSlug}/`;
         const r = await fetchWithTimeout(workingProxy(pageUrl), 8000);
         if (!r.ok) return;
         const html = await r.text();
 
-        // Parse time - very flexible patterns to handle HTML, markdown, plaintext
+        // Parse time from Danish page: "Tid" header followed by "Ons 15:30"
         const timePatterns = [
-          // "Time</h4>...Fri 17:30" (HTML with tags between)
-          /Time<\/h[34]>[\s\S]{0,200}?(?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
-          // "Time\n\nFri 17:30" (markdown)  
-          /Time[\s\n]+(?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
-          // "#### Time ... Fri 17:30" (markdown with ####)
-          /#{1,4}\s*Time[\s\S]{0,50}?(?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
-          // Fallback: just "Wed 17:30" or "Fri 17:30" anywhere in page (with word boundary)
-          /\b(?:Wed|Thu|Fri|Sat)\s+(\d{2}:\d{2})\b/
+          // "Tid</h4>...Ons 15:30" (HTML)
+          /Tid<\/h[34]>[\s\S]{0,200}?(?:Ons|Tor|Fre|Lør|Wed|Thu|Fri|Sat)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // "Tid\n\nOns 15:30" or "#### Tid\n\nOns 15:30" (markdown)
+          /(?:#{1,4}\s*)?Tid[\s\n]+(?:Ons|Tor|Fre|Lør|Wed|Thu|Fri|Sat)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // "Time" header (English fallback)
+          /(?:#{1,4}\s*)?Time[\s\n]+(?:Wed|Thu|Fri|Sat)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // Bare "Ons 15:30" near Tid/Time keyword
+          /(?:Tid|Time)[\s\S]{0,100}?(\d{2}:\d{2})/i
         ];
         let parsedTime = '';
         for (const pat of timePatterns) {
