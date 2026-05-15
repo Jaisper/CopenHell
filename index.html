@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="da">
 <head>
 <meta charset="UTF-8">
@@ -227,87 +228,87 @@ const DAY_MAP = { 'Wed': 'ons', 'Thu': 'tor', 'Fri': 'fre', 'Sat': 'lor',
 const HEADLINER_NAMES = ["IRON MAIDEN", "BRING ME THE HORIZON", "VOLBEAT"];
 
 // ═══════════════════════════════════════════════════════
-// CACHED FALLBACK — snapshot marts 2026
+// CACHED FALLBACK — snapshot maj 2026
 // Bruges KUN hvis live-hentning fejler
 // ═══════════════════════════════════════════════════════
 const CACHED_LINEUP = {
-  "IRON MAIDEN":{ day:"ons", stage:"Helvíti" },
-  "ALICE COOPER":{ day:"ons", stage:"Helvíti" },
-  "TOM MORELLO":{ day:"ons", stage:"Helvíti" },
-  "MASTODON":{ day:"ons", stage:"Hades" },
-  "SUICIDAL TENDENCIES":{ day:"ons", stage:"Hades" },
-  "SIX FEET UNDER":{ day:"ons", stage:"Hades" },
-  "MAMMOTH":{ day:"ons", stage:"Hades" },
-  "KONVENT":{ day:"ons", stage:"Pandæmonium" },
-  "THROWN":{ day:"ons", stage:"Pandæmonium" },
-  "LOATHE":{ day:"ons", stage:"Pandæmonium" },
-  "SLAY SQUAD":{ day:"ons", stage:"Pandæmonium" },
-  "DOGMA":{ day:"ons", stage:"Pandæmonium" },
-  "THE BROWNING":{ day:"ons", stage:"Gehenna" },
-  "FAETOOTH":{ day:"ons", stage:"Gehenna" },
-  "SPLIT":{ day:"ons", stage:"Gehenna" },
-  "TWENTY ONE CHILDREN":{ day:"ons", stage:"Gehenna" },
-  "SCIMITAR":{ day:"ons", stage:"Gehenna" },
-  "BRING ME THE HORIZON":{ day:"tor", stage:"Helvíti" },
-  "PAPA ROACH":{ day:"tor", stage:"Helvíti" },
-  "BLACK LABEL SOCIETY":{ day:"tor", stage:"Helvíti" },
-  "ICE NINE KILLS":{ day:"tor", stage:"" },
-  "SEPULTURA":{ day:"tor", stage:"Hades" },
-  "THE PRETTY RECKLESS":{ day:"tor", stage:"Hades" },
-  "STATIC-X":{ day:"tor", stage:"Hades" },
-  "QUEENSRŸCHE":{ day:"tor", stage:"Hades" },
-  "LIGHTCHAPTER":{ day:"tor", stage:"Hades" },
-  "KUBLAI KHAN TX":{ day:"tor", stage:"Pandæmonium" },
-  "PRESIDENT":{ day:"tor", stage:"Pandæmonium" },
-  "IOTUNN":{ day:"tor", stage:"Pandæmonium" },
-  "UNPEOPLE":{ day:"tor", stage:"Pandæmonium" },
-  "(0)":{ day:"tor", stage:"Pandæmonium" },
-  "DIE SPITZ":{ day:"tor", stage:"Gehenna" },
-  "CALVA LOUISE":{ day:"tor", stage:"Gehenna" },
-  "END IT":{ day:"tor", stage:"Gehenna" },
-  "GRIDIRON":{ day:"tor", stage:"Gehenna" },
-  "RAP MARTIN RAP":{ day:"tor", stage:"Gehenna" },
-  "A PERFECT CIRCLE":{ day:"fre", stage:"Helvíti" },
-  "TRIVIUM":{ day:"fre", stage:"Helvíti" },
-  "JAKOB STEGELMANN AND AARHUS SYMFONIORKESTER":{ day:"fre", stage:"Helvíti" },
-  "ANTHRAX":{ day:"fre", stage:"Hades" },
-  "P.O.D.":{ day:"fre", stage:"Hades" },
-  "IMMINENCE":{ day:"fre", stage:"Hades" },
-  "NECKBREAKKER":{ day:"fre", stage:"Hades" },
-  "DEFECTO":{ day:"fre", stage:"Hades" },
-  "GAEREA":{ day:"fre", stage:"" },
-  "ALL THEM WITCHES":{ day:"fre", stage:"Pandæmonium" },
-  "PALEFACE SWISS":{ day:"fre", stage:"Pandæmonium" },
-  "SOILWORK":{ day:"fre", stage:"Pandæmonium" },
-  "HÅNDGEMENG":{ day:"fre", stage:"Pandæmonium" },
-  "VIOLENT MAGIC ORCHESTRA":{ day:"fre", stage:"Gehenna" },
-  "VOICE OF BACEPROT":{ day:"fre", stage:"Gehenna" },
-  "POWERPLANT":{ day:"fre", stage:"Gehenna" },
-  "MORILD":{ day:"fre", stage:"Gehenna" },
-  "OMSORG":{ day:"fre", stage:"Gehenna" },
-  "PUSTULANT FLESH":{ day:"fre", stage:"Gehenna" },
-  "VOLBEAT":{ day:"lor", stage:"Helvíti" },
-  "ALESTORM":{ day:"lor", stage:"Helvíti" },
-  "SOCIAL DISTORTION":{ day:"lor", stage:"Helvíti" },
-  "WARKINGS":{ day:"lor", stage:"Helvíti" },
-  "BABYMETAL":{ day:"lor", stage:"Hades" },
-  "BURY TOMORROW":{ day:"lor", stage:"Hades" },
-  "DJERV":{ day:"lor", stage:"Hades" },
-  "BLACK OAK COUNTY":{ day:"lor", stage:"Hades" },
-  "MALEVOLENCE":{ day:"lor", stage:"Pandæmonium" },
-  "BLOOD FIRE DEATH":{ day:"lor", stage:"Pandæmonium" },
-  "KATLA":{ day:"lor", stage:"Pandæmonium" },
-  "TROLLFEST":{ day:"lor", stage:"Pandæmonium" },
-  "MACERATION":{ day:"lor", stage:"Pandæmonium" },
-  "EYEHATEGOD":{ day:"lor", stage:"Gehenna" },
-  "VEXED":{ day:"lor", stage:"Gehenna" },
-  "HENRET":{ day:"lor", stage:"Gehenna" },
-  "CHOPPER":{ day:"lor", stage:"Gehenna" },
-  "INHUMAN NATURE":{ day:"lor", stage:"Gehenna" },
-  "PSYCHOMOSHER":{ day:"lor", stage:"Gehenna" },
-  // ─── NYESTE TILFØJELSER (forår 2026) ───
-  "SAXON":{ day:"lor", stage:"" },
-  // ─── BONEYARD (dag/tid TBA) ───
+  "(0)":{ day:"tor", stage:"Pandæmonium", _slug:"0" },
+  "15 YEARS IN HELL – ALL STAR SHOW":{ day:"fre", stage:"", _slug:"15-years-in-hell-all-star-show-2" },
+  "A PERFECT CIRCLE":{ day:"fre", stage:"Helvíti", _slug:"a-perfect-circle-2" },
+  "ALESTORM":{ day:"lor", stage:"Helvíti", _slug:"alestorm-2" },
+  "ALICE COOPER":{ day:"ons", stage:"Helvíti", _slug:"alice-cooper-2" },
+  "ALL THEM WITCHES":{ day:"fre", stage:"Pandæmonium", _slug:"all-them-witches-2" },
+  "ANTHRAX":{ day:"fre", stage:"Hades", _slug:"anthrax-2" },
+  "BABYMETAL":{ day:"lor", stage:"Hades", _slug:"baby-metal-2" },
+  "BLACK LABEL SOCIETY":{ day:"tor", stage:"Helvíti", _slug:"black-label-society-2" },
+  "BLACK OAK COUNTY":{ day:"lor", stage:"Hades", _slug:"black-oak-county-2" },
+  "BLOOD FIRE DEATH":{ day:"lor", stage:"Pandæmonium", _slug:"blood-fire-death-2" },
+  "BRING ME THE HORIZON":{ day:"tor", stage:"Helvíti", _slug:"bring-me-the-horizon-2" },
+  "BURY TOMORROW":{ day:"lor", stage:"Hades", _slug:"bury-tomorrow-2" },
+  "CALVA LOUISE":{ day:"tor", stage:"Gehenna", _slug:"calva-louise-2" },
+  "CHOPPER":{ day:"lor", stage:"Gehenna", _slug:"chopper-2" },
+  "DEFECTO":{ day:"fre", stage:"Hades", _slug:"defecto-2" },
+  "DIE SPITZ":{ day:"tor", stage:"Gehenna", _slug:"die-spitz-2" },
+  "DJERV":{ day:"lor", stage:"Hades", _slug:"djerv-2" },
+  "DOGMA":{ day:"ons", stage:"Pandæmonium", _slug:"dogma-2" },
+  "END IT":{ day:"tor", stage:"Gehenna", _slug:"end-it-2" },
+  "EYEHATEGOD":{ day:"lor", stage:"Gehenna", _slug:"eyehategod-2" },
+  "FAETOOTH":{ day:"ons", stage:"Gehenna", _slug:"faetooth-2" },
+  "GAEREA":{ day:"fre", stage:"Pandæmonium", _slug:"gaerea-2" },
+  "GRIDIRON":{ day:"tor", stage:"Gehenna", _slug:"gridiron-2" },
+  "HENRET":{ day:"lor", stage:"Gehenna", _slug:"henret-2" },
+  "HÅNDGEMENG":{ day:"fre", stage:"Pandæmonium", _slug:"handgemeng-2" },
+  "ICE NINE KILLS":{ day:"tor", stage:"Helvíti", _slug:"ice-nine-kills-2" },
+  "IMMINENCE":{ day:"fre", stage:"Hades", _slug:"imminence-2" },
+  "INHUMAN NATURE":{ day:"lor", stage:"Gehenna", _slug:"inhuman-nature-2" },
+  "IOTUNN":{ day:"tor", stage:"Pandæmonium", _slug:"iotunn-2" },
+  "IRON MAIDEN":{ day:"ons", stage:"Helvíti", _slug:"iron-maiden-2" },
+  "JAKOB STEGELMANN AND AARHUS SYMFONIORKESTER":{ day:"fre", stage:"Helvíti", _slug:"jakob-stegelmann-aarhus-symfoniorkester-2" },
+  "KATLA":{ day:"lor", stage:"Pandæmonium", _slug:"katla-2" },
+  "KONVENT":{ day:"ons", stage:"Pandæmonium", _slug:"konvent-2" },
+  "KUBLAI KHAN TX":{ day:"tor", stage:"Pandæmonium", _slug:"kublai-khan-tx-2" },
+  "LIGHTCHAPTER":{ day:"tor", stage:"Hades", _slug:"lightchapter-2" },
+  "LOATHE":{ day:"ons", stage:"Pandæmonium", _slug:"loathe-2" },
+  "MACERATION":{ day:"lor", stage:"Pandæmonium", _slug:"maceration-2" },
+  "MALEVOLENCE":{ day:"lor", stage:"Pandæmonium", _slug:"malevolence-2" },
+  "MAMMOTH":{ day:"ons", stage:"Hades", _slug:"mammoth-2" },
+  "MASTODON":{ day:"ons", stage:"Hades", _slug:"mastodon-2" },
+  "MOR":{ day:"tor", stage:"Gehenna", _slug:"mor-2" },
+  "MORILD":{ day:"fre", stage:"Gehenna", _slug:"morild-2" },
+  "NECKBREAKKER":{ day:"fre", stage:"Hades", _slug:"neckbreakker-2" },
+  "OMSORG":{ day:"fre", stage:"Gehenna", _slug:"omsorg-2" },
+  "P.O.D.":{ day:"fre", stage:"Hades", _slug:"p-o-d-2" },
+  "PALEFACE SWISS":{ day:"fre", stage:"Pandæmonium", _slug:"paleface-swiss-2" },
+  "PAPA ROACH":{ day:"tor", stage:"Helvíti", _slug:"papa-roach-2" },
+  "POWERPLANT":{ day:"fre", stage:"Gehenna", _slug:"powerplant-2" },
+  "PRESIDENT":{ day:"tor", stage:"Pandæmonium", _slug:"president-2" },
+  "PSYCHOMOSHER":{ day:"lor", stage:"Gehenna", _slug:"psycho-mosher-2" },
+  "PUSTULANT FLESH":{ day:"fre", stage:"Gehenna", _slug:"pustulant-flesh-2" },
+  "QUEENSRŸCHE":{ day:"tor", stage:"Hades", _slug:"queensryche-2" },
+  "RAP MARTIN RAP":{ day:"tor", stage:"Gehenna", _slug:"rap-martin-rap-2" },
+  "RIVAL SONS":{ day:"tor", stage:"Hades", _slug:"rival-sons-2" },
+  "SAXON":{ day:"lor", stage:"Hades", _slug:"saxon-2" },
+  "SCIMITAR":{ day:"ons", stage:"Gehenna", _slug:"scimitar-2" },
+  "SEPULTURA":{ day:"tor", stage:"Hades", _slug:"sepultura-2" },
+  "SIX FEET UNDER":{ day:"ons", stage:"Hades", _slug:"six-feet-under-2" },
+  "SLAY SQUAD":{ day:"ons", stage:"Pandæmonium", _slug:"slay-squad-2" },
+  "SOCIAL DISTORTION":{ day:"lor", stage:"Helvíti", _slug:"social-distortion-2" },
+  "SOILWORK":{ day:"fre", stage:"Pandæmonium", _slug:"soilwork-2" },
+  "SPLIT":{ day:"ons", stage:"Gehenna", _slug:"split-2" },
+  "STATIC-X":{ day:"tor", stage:"Hades", _slug:"static-x-2" },
+  "SUICIDAL TENDENCIES":{ day:"ons", stage:"Hades", _slug:"suicidal-tendencies-2" },
+  "THE BROWNING":{ day:"ons", stage:"Gehenna", _slug:"the-browning-2" },
+  "THROWN":{ day:"ons", stage:"Pandæmonium", _slug:"thrown-2" },
+  "TOM MORELLO":{ day:"ons", stage:"Helvíti", _slug:"tom-morello-2" },
+  "TRIVIUM":{ day:"fre", stage:"Helvíti", _slug:"trivium-2" },
+  "TROLLFEST":{ day:"lor", stage:"Pandæmonium", _slug:"trollfest-2" },
+  "TWENTY ONE CHILDREN":{ day:"ons", stage:"Gehenna", _slug:"twenty-one-children-2" },
+  "UNPEOPLE":{ day:"tor", stage:"Pandæmonium", _slug:"unpeople-2" },
+  "VEXED":{ day:"lor", stage:"Gehenna", _slug:"vexed-2" },
+  "VIOLENT MAGIC ORCHESTRA":{ day:"fre", stage:"Gehenna", _slug:"violent-magic-orchestra-2" },
+  "VOICE OF BACEPROT":{ day:"fre", stage:"Gehenna", _slug:"voice-of-baceprot-2" },
+  "VOLBEAT":{ day:"lor", stage:"Helvíti", _slug:"volbeat-2" },
+  "WARKINGS":{ day:"lor", stage:"Helvíti", _slug:"warkings-2" },
   "BRAINDEAD":{ day:"", stage:"Boneyard" },
   "GOING FOR THE ONE":{ day:"", stage:"Boneyard" },
   "MITE":{ day:"", stage:"Boneyard" },
@@ -315,7 +316,7 @@ const CACHED_LINEUP = {
   "PRESIDENT FETCH":{ day:"", stage:"Boneyard" },
   "THE ROTTEN LEPRECHAUNS":{ day:"", stage:"Boneyard" },
   "S.T.A.B.":{ day:"", stage:"Boneyard" },
-  "SLYTTER":{ day:"", stage:"Boneyard" },
+  "SLYTTER":{ day:"", stage:"Boneyard" }
 };
 
 // ═══════════════════════════════════════════════════════
@@ -368,12 +369,17 @@ function parseProgram(html) {
         continue;
       }
 
-      // Check for day abbreviation
+      // Check for day abbreviation (may include time: "Fri 17:30")
       const dayMatch = Object.keys(DAY_MAP).find(d =>
         line === d || line.startsWith(d + ' ') || line.startsWith(d + '\t')
       );
       if (dayMatch && !day) {
         day = DAY_MAP[dayMatch];
+        // Check if time follows day (e.g. "Fri 17:30")
+        const dayTimeMatch = line.match(/\b(\d{1,2}[:.]\d{2})\b/);
+        if (dayTimeMatch && !time) {
+          time = dayTimeMatch[1].replace('.', ':');
+        }
         continue;
       }
 
@@ -386,26 +392,123 @@ function parseProgram(html) {
     }
 
     if (bandName && bandName.length > 0) {
-      lineup[bandName] = { day: day || '', stage: stage || '', time: time || '' };
+      // Extract slug from href
+      const href = card.getAttribute('href') || '';
+      const slugMatch = href.match(/\/artist\/([^/]+)/);
+      const slug = slugMatch ? slugMatch[1] : '';
+      lineup[bandName] = { day: day || '', stage: stage || '', time: time || '', _slug: slug };
     }
   });
 
   return lineup;
 }
 
-function fetchWithTimeout(url, ms = 10000) {
+// ═══════════════════════════════════════════════════════
+// ENRICHMENT — fetch individual artist pages for play times
+// ═══════════════════════════════════════════════════════
+async function enrichArtistData() {
+  const src = document.getElementById('dataSource');
+  const allBands = Object.entries(LINEUP);
+  const needsFetch = allBands.filter(([_, info]) => !info.time && info._slug);
+  
+  if (needsFetch.length === 0) {
+    return;
+  }
+
+  // Check sessionStorage cache
+  const cacheKey = 'ch26_artist_times_v1';
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), ms);
-    return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timer));
-  } catch (e) { return fetch(url); }
+    const cached = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
+    let usedCache = 0;
+    for (const [name, info] of needsFetch) {
+      if (cached[name]) {
+        if (cached[name].time) { LINEUP[name].time = cached[name].time; usedCache++; }
+      }
+    }
+    if (usedCache > 0) {
+      renderDays();
+    }
+  } catch (e) { /* ignore cache errors */ }
+
+  // Re-filter after cache restore
+  const stillNeeds = Object.entries(LINEUP).filter(([_, info]) => !info.time && info._slug);
+  if (stillNeeds.length === 0) return;
+
+  // Find working proxy
+  let workingProxy = null;
+  for (const makeUrl of PROXIES) {
+    try {
+      const testUrl = `https://copenhell.dk/en/artist/${stillNeeds[0][1]._slug}/`;
+      const r = await fetchWithTimeout(makeUrl(testUrl), 6000);
+      if (r.ok) {
+        const html = await r.text();
+        if (html.length > 2000) { workingProxy = makeUrl; break; }
+      }
+    } catch (e) { /* try next */ }
+  }
+  if (!workingProxy) {
+    return;
+  }
+
+  src.textContent = `🔄 Vent lidt... henter spilletider`;
+  src.className = 'data-source updating';
+
+  const BATCH = 5;
+  let fetched = 0;
+  const cacheData = {};
+
+  for (let i = 0; i < stillNeeds.length; i += BATCH) {
+    const batch = stillNeeds.slice(i, i + BATCH);
+    await Promise.all(batch.map(async ([name, info]) => {
+      try {
+        const pageUrl = `https://copenhell.dk/en/artist/${info._slug}/`;
+        const r = await fetchWithTimeout(workingProxy(pageUrl), 8000);
+        if (!r.ok) return;
+        const html = await r.text();
+
+        // Parse time from "#### Time\n\nFri 17:30" pattern
+        const timeMatch = html.match(/Time\s*\n+((?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)\s+(\d{1,2}[:.]\d{2}))/i);
+        if (timeMatch && timeMatch[2]) {
+          const time = timeMatch[2].replace('.', ':');
+          LINEUP[name].time = time;
+          cacheData[name] = { time };
+          fetched++;
+        }
+      } catch (e) { /* skip */ }
+    }));
+
+    // Update progress
+    const done = Math.min(i + BATCH, stillNeeds.length);
+    src.textContent = `🔄 Vent lidt... henter spilletider ${done}/${stillNeeds.length}`;
+    
+    if (fetched > 0) renderDays();
+    if (i + BATCH < stillNeeds.length) await new Promise(ok => setTimeout(ok, 300));
+  }
+
+  // Save to sessionStorage
+  try {
+    const existing = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
+    sessionStorage.setItem(cacheKey, JSON.stringify({ ...existing, ...cacheData }));
+  } catch (e) { /* ignore */ }
+
+  const total = Object.keys(LINEUP).length;
+  const withTime = Object.values(LINEUP).filter(i => i.time).length;
+  src.textContent = `✓ ${total} bands — ${withTime} med spilletid`;
+  src.className = 'data-source live';
+}
+
+function fetchWithTimeout(url, ms = 10000) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Timeout')), ms);
+    fetch(url).then(r => { clearTimeout(timer); resolve(r); }).catch(e => { clearTimeout(timer); reject(e); });
+  });
 }
 
 async function fetchLiveLineup() {
   for (const makeUrl of PROXIES) {
     try {
       const url = makeUrl(PROGRAM_URL);
-      console.log(`[Copenhell] Trying proxy: ${url.substring(0, 60)}...`);
+      
       const resp = await fetchWithTimeout(url, 10000);
       if (!resp.ok) continue;
 
@@ -414,7 +517,7 @@ async function fetchLiveLineup() {
 
       const parsed = parseProgram(html);
       const bandCount = Object.keys(parsed).length;
-      console.log(`[Copenhell] Parsed ${bandCount} bands from live data`);
+      
 
       if (bandCount >= 20) {
         const musicBands = {};
@@ -425,7 +528,7 @@ async function fetchLiveLineup() {
         return musicBands;
       }
     } catch (e) {
-      console.log(`[Copenhell] Proxy failed:`, e.message);
+      
     }
   }
   return null;
@@ -906,7 +1009,7 @@ async function init() {
   } else {
     LINEUP = {...CACHED_LINEUP};
     dataIsLive = false;
-    src.textContent = `⚠ Cached data (april 2026) — ${Object.keys(LINEUP).length} bands`;
+    src.textContent = `⚠ Cached data (maj 2026) — ${Object.keys(LINEUP).length} bands`;
     src.className = 'data-source cached';
   }
 
@@ -930,9 +1033,13 @@ async function init() {
 
   // Personal favorites input
   document.getElementById('personalFavs').addEventListener('input', () => updateCounter());
+
+  // Step 2: progressively enrich with play times from individual artist pages
+  enrichArtistData();
 }
 
 init();
 </script>
+
 </body>
 </html>
