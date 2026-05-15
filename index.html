@@ -434,19 +434,25 @@ async function enrichArtistData() {
   const stillNeeds = Object.entries(LINEUP).filter(([_, info]) => !info.time && info._slug);
   if (stillNeeds.length === 0) return;
 
-  // Find working proxy
+  // Find working proxy - test with a known band
   let workingProxy = null;
+  const testSlug = 'soilwork-2'; // known working slug
   for (const makeUrl of PROXIES) {
     try {
-      const testUrl = `https://copenhell.dk/en/artist/${stillNeeds[0][1]._slug}/`;
-      const r = await fetchWithTimeout(makeUrl(testUrl), 6000);
+      const testUrl = `https://copenhell.dk/en/artist/${testSlug}/`;
+      const r = await fetchWithTimeout(makeUrl(testUrl), 8000);
       if (r.ok) {
         const html = await r.text();
-        if (html.length > 2000) { workingProxy = makeUrl; break; }
+        if (html.length > 2000 && (html.includes('Time') || html.includes('Scene'))) {
+          workingProxy = makeUrl;
+          break;
+        }
       }
     } catch (e) { /* try next */ }
   }
   if (!workingProxy) {
+    src.textContent = `✓ ${Object.keys(LINEUP).length} bands — spilletider ikke tilgængelige`;
+    src.className = 'data-source live';
     return;
   }
 
@@ -466,12 +472,25 @@ async function enrichArtistData() {
         if (!r.ok) return;
         const html = await r.text();
 
-        // Parse time from "#### Time\n\nFri 17:30" pattern
-        const timeMatch = html.match(/Time\s*\n+((?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)\s+(\d{1,2}[:.]\d{2}))/i);
-        if (timeMatch && timeMatch[2]) {
-          const time = timeMatch[2].replace('.', ':');
-          LINEUP[name].time = time;
-          cacheData[name] = { time };
+        // Parse time - very flexible patterns to handle HTML, markdown, plaintext
+        const timePatterns = [
+          // "Time</h4>...Fri 17:30" (HTML with tags between)
+          /Time<\/h[34]>[\s\S]{0,200}?(?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // "Time\n\nFri 17:30" (markdown)  
+          /Time[\s\n]+(?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // "#### Time ... Fri 17:30" (markdown with ####)
+          /#{1,4}\s*Time[\s\S]{0,50}?(?:Wed|Thu|Fri|Sat|Ons|Tor|Fre|Lør)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // Fallback: just "Wed 17:30" or "Fri 17:30" anywhere in page (with word boundary)
+          /\b(?:Wed|Thu|Fri|Sat)\s+(\d{2}:\d{2})\b/
+        ];
+        let parsedTime = '';
+        for (const pat of timePatterns) {
+          const m = html.match(pat);
+          if (m && m[1]) { parsedTime = m[1].replace('.', ':'); break; }
+        }
+        if (parsedTime) {
+          LINEUP[name].time = parsedTime;
+          cacheData[name] = { time: parsedTime };
           fetched++;
         }
       } catch (e) { /* skip */ }
