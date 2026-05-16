@@ -84,7 +84,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .timeline-header.main-stage{color:var(--accent);border-color:rgba(194,60,44,.3)}
 .timeline-time{font-family:'Source Sans 3',sans-serif;font-size:.7rem;color:var(--text-dim);padding:.2rem .3rem;text-align:right;background:rgba(255,255,255,.02);border-right:1px solid var(--border);font-weight:600;white-space:nowrap;position:sticky;left:0;z-index:5}
 .timeline-time.hour{color:var(--gold);font-weight:700;font-size:.75rem;border-top:1px solid rgba(255,255,255,.06)}
-.timeline-slot{min-height:2.2rem;position:relative}
+.timeline-slot{min-height:1.8rem;position:relative}
 .timeline-band{position:absolute;left:2px;right:2px;top:1px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.25rem .4rem;display:flex;align-items:center;gap:.3rem;overflow:hidden;cursor:default;transition:all .15s;z-index:2}
 .timeline-band:hover{background:var(--surface2);border-color:rgba(255,255,255,.2);z-index:3}
 .timeline-band.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
@@ -651,9 +651,9 @@ function renderTimelineDay(section, day, dayBands, stages) {
   });
   if (minSlot === Infinity) return false;
 
-  // Round to 30-min boundaries
+  // Round to 30-min boundaries, add 90 min for last Helvíti band
   minSlot = Math.floor(minSlot / 30) * 30;
-  maxSlot = Math.ceil((maxSlot + 60) / 30) * 30; // +60 min for last band duration
+  maxSlot = Math.ceil((maxSlot + 90) / 30) * 30;
 
   const SLOT_SIZE = 15;
   const rows = [];
@@ -711,9 +711,15 @@ function renderTimelineDay(section, day, dayBands, stages) {
         if (recRank && recRank <= 10) cls += ' rec-gold';
         else if (recRank) cls += ' rec-green';
 
+        // Duration: Helvíti = 90 min, others = 60 min
+        const durationMin = (stage === 'Helvíti') ? 90 : 60;
+        const slotsSpan = durationMin / SLOT_SIZE;
+        // Height = number of slots * slot height (1.8rem) - 2px for gap
+        const heightRem = slotsSpan * 1.8;
+
         const el = document.createElement('div');
         el.className = cls;
-        el.style.height = '2.8rem'; // ~45 min default duration
+        el.style.height = `calc(${heightRem}rem - 2px)`;
         el.innerHTML = `<span class="tl-skull" title="Vælg som favorit">💀</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span><span class="tl-time">${band.time}</span><span class="tl-spotify"><a href="${getSpotifyUrl(band.name)}" target="_blank">${SPOTIFY_SVG}</a></span>`;
 
         el.querySelector('.tl-skull').addEventListener('click', e => {
