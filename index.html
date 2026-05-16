@@ -78,6 +78,29 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .genre-chip{background:var(--surface);border:2px solid var(--border);color:var(--text-dim);padding:.5rem 1.1rem;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:500;cursor:pointer;transition:all .15s ease;user-select:none;border-radius:3px;letter-spacing:.05em}
 .genre-chip:hover{border-color:var(--accent);color:var(--text)}
 .genre-chip.active{background:rgba(194,60,44,.15);border-color:var(--accent);color:var(--accent);font-weight:700}
+.timeline-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.timeline-grid{display:grid;gap:1px;min-width:600px}
+.timeline-header{position:sticky;top:0;z-index:10;font-family:'Oswald',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:.4rem .3rem;text-align:center;background:var(--surface2);border:1px solid var(--border);font-weight:600}
+.timeline-header.main-stage{color:var(--accent);border-color:rgba(194,60,44,.3)}
+.timeline-time{font-family:'Source Sans 3',sans-serif;font-size:.7rem;color:var(--text-dim);padding:.2rem .3rem;text-align:right;background:rgba(255,255,255,.02);border-right:1px solid var(--border);font-weight:600;white-space:nowrap;position:sticky;left:0;z-index:5}
+.timeline-time.hour{color:var(--gold);font-weight:700;font-size:.75rem;border-top:1px solid rgba(255,255,255,.06)}
+.timeline-slot{min-height:2.2rem;position:relative}
+.timeline-band{position:absolute;left:2px;right:2px;top:1px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.25rem .4rem;display:flex;align-items:center;gap:.3rem;overflow:hidden;cursor:default;transition:all .15s;z-index:2}
+.timeline-band:hover{background:var(--surface2);border-color:rgba(255,255,255,.2);z-index:3}
+.timeline-band.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
+.timeline-band.selected .tl-skull::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.5rem;color:var(--accent);font-weight:700}
+.timeline-band.rec-gold{background:rgba(212,168,67,.1);border-color:var(--gold)}.timeline-band.rec-gold .tl-name a{color:var(--gold)}
+.timeline-band.rec-green{background:rgba(61,220,132,.08);border-color:#3ddc84}.timeline-band.rec-green .tl-name a{color:#3ddc84}
+.tl-skull{font-size:.75rem;opacity:.25;cursor:pointer;position:relative;flex-shrink:0;width:1.2rem;text-align:center;border-right:1px solid rgba(255,255,255,.08);padding-right:.3rem;margin-right:.2rem;-webkit-tap-highlight-color:transparent}
+.tl-skull:hover{opacity:.7}
+.timeline-band.selected .tl-skull{opacity:1}
+.tl-name{font-family:'Oswald',sans-serif;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.tl-name a{color:inherit;text-decoration:none}.tl-name a:hover{text-decoration:underline}
+.tl-time{font-size:.65rem;color:var(--gold);font-weight:700;flex-shrink:0}
+.tl-spotify{flex-shrink:0;opacity:.3;width:18px;height:18px;display:flex;align-items:center}.tl-spotify:hover{opacity:.9}
+.tl-spotify a{display:flex}.tl-spotify svg{width:14px;height:14px;fill:#1DB954;pointer-events:none}
+.timeline-toggle{font-size:.75rem;color:var(--text-dim);cursor:pointer;margin-left:auto;padding:.2rem .6rem;border:1px solid var(--border);border-radius:3px;font-family:'Oswald',sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.timeline-toggle:hover{color:var(--text);border-color:var(--text-dim)}
 .recommend-section{max-width:1200px;margin:2rem auto;padding:0 1.5rem;text-align:center}
 .btn-recommend{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:1rem 2.5rem;font-family:'Oswald',sans-serif;font-size:1.1rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s ease;font-weight:700;border-radius:3px}
 .btn-recommend:hover:not(:disabled){background:var(--accent);color:#fff;box-shadow:0 0 30px rgba(194,60,44,.3)}
@@ -419,7 +442,7 @@ async function enrichArtistData() {
   }
 
   // Check sessionStorage cache
-  const cacheKey = 'ch26_artist_times_v3';
+  const cacheKey = 'ch26_artist_times_v4';
   try {
     const cached = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
     let usedCache = 0;
@@ -600,70 +623,175 @@ function getBandsForDayStage(dayKey, stage) {
   return { bands, sortedByTime: hasAnyTime };
 }
 
+let viewMode = {}; // per-day: 'timeline' or 'classic'
+
+function timeToSlot(t) {
+  if (!t) return -1;
+  let [h, m] = t.split(':').map(Number);
+  if (h >= 0 && h <= 4) h += 24; // late night
+  return (h * 60 + m);
+}
+
+function renderTimelineDay(section, day, dayBands, stages) {
+  // Collect all bands with times, grouped by stage
+  const bandsByStage = {};
+  stages.forEach(s => bandsByStage[s] = []);
+  dayBands.forEach(([name, info]) => {
+    const s = info.stage;
+    if (stages.includes(s) && info.time) {
+      bandsByStage[s].push({ name, time: info.time, slot: timeToSlot(info.time) });
+    }
+  });
+
+  // Find time range (15-min grid)
+  let minSlot = Infinity, maxSlot = -Infinity;
+  Object.values(bandsByStage).flat().forEach(b => {
+    if (b.slot < minSlot) minSlot = b.slot;
+    if (b.slot > maxSlot) maxSlot = b.slot;
+  });
+  if (minSlot === Infinity) return false;
+
+  // Round to 30-min boundaries
+  minSlot = Math.floor(minSlot / 30) * 30;
+  maxSlot = Math.ceil((maxSlot + 60) / 30) * 30; // +60 min for last band duration
+
+  const SLOT_SIZE = 15;
+  const rows = [];
+  for (let s = minSlot; s < maxSlot; s += SLOT_SIZE) {
+    const h = Math.floor(s / 60) % 24;
+    const m = s % 60;
+    rows.push({ slot: s, label: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`, isHour: m === 0 });
+  }
+
+  const colCount = stages.length + 1; // +1 for time column
+  const grid = document.createElement('div');
+  grid.className = 'timeline-grid';
+  grid.style.gridTemplateColumns = `3.5rem repeat(${stages.length}, 1fr)`;
+
+  // Header row
+  const timeH = document.createElement('div');
+  timeH.className = 'timeline-header';
+  timeH.textContent = 'TID';
+  grid.appendChild(timeH);
+  stages.forEach((s, i) => {
+    const h = document.createElement('div');
+    h.className = `timeline-header${i === 0 ? ' main-stage' : ''}`;
+    h.textContent = s;
+    grid.appendChild(h);
+  });
+
+  // Time rows
+  rows.forEach(row => {
+    // Time label
+    const tCell = document.createElement('div');
+    tCell.className = `timeline-time${row.isHour ? ' hour' : ''}`;
+    tCell.textContent = row.isHour ? row.label : '';
+    grid.appendChild(tCell);
+
+    // Stage cells
+    stages.forEach(stage => {
+      const cell = document.createElement('div');
+      cell.className = 'timeline-slot';
+      if (row.isHour) cell.style.borderTop = '1px solid rgba(255,255,255,.04)';
+
+      // Find band starting in this slot
+      const band = bandsByStage[stage].find(b => {
+        const bSlot = Math.floor(b.slot / SLOT_SIZE) * SLOT_SIZE;
+        return bSlot === row.slot;
+      });
+
+      if (band) {
+        const info = LINEUP[band.name] || {};
+        const slug = info._slug || band.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const artistUrl = `https://copenhell.dk/artist/${slug.replace(/-2$/, '')}/`;
+        const isSelected = selected.has(band.name);
+        const recRank = recommended.get(band.name);
+        let cls = 'timeline-band';
+        if (isSelected) cls += ' selected';
+        if (recRank && recRank <= 10) cls += ' rec-gold';
+        else if (recRank) cls += ' rec-green';
+
+        const el = document.createElement('div');
+        el.className = cls;
+        el.style.height = '2.8rem'; // ~45 min default duration
+        el.innerHTML = `<span class="tl-skull" title="Vælg som favorit">💀</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span><span class="tl-time">${band.time}</span><span class="tl-spotify"><a href="${getSpotifyUrl(band.name)}" target="_blank">${SPOTIFY_SVG}</a></span>`;
+
+        el.querySelector('.tl-skull').addEventListener('click', e => {
+          e.stopPropagation();
+          if (selected.has(band.name)) { selected.delete(band.name); el.classList.remove('selected'); }
+          else { selected.add(band.name); el.classList.add('selected'); }
+          updateCounter();
+        });
+
+        cell.appendChild(el);
+      }
+      grid.appendChild(cell);
+    });
+  });
+
+  const wrap = document.createElement('div');
+  wrap.className = 'timeline-wrap';
+  wrap.appendChild(grid);
+  section.appendChild(wrap);
+  return true;
+}
+
 function renderDays() {
   const container = document.getElementById('dayContainer');
   container.innerHTML = '';
+
+  // Check if screen is wide enough for timeline (min 2 stages visible)
+  const screenW = window.innerWidth;
+  const canTimeline = screenW >= 600;
 
   DAYS_CONFIG.forEach(day => {
     const dayBands = Object.entries(LINEUP).filter(([_, info]) => effectiveDay(info.day, info.time) === day.key);
     if (dayBands.length === 0) return;
 
-    // Check if any band this day has time info
-    const dayHasTime = dayBands.some(([_, info]) => info.time);
+    const dayHasTime = dayBands.filter(([_, info]) => info.time).length >= 3;
+    const activeStages = STAGES_ORDER.filter(s => dayBands.some(([_, info]) => info.stage === s));
+    const mode = viewMode[day.key] || (dayHasTime && canTimeline ? 'timeline' : 'classic');
 
     const section = document.createElement('div');
     section.className = `day-section day-${day.key}`;
 
-    section.innerHTML = `
+    const headerHTML = `
       <div class="day-header">
         <div class="day-dot"></div>
         <div class="day-name">${day.name}</div>
         <div class="day-date">${day.date}</div>
         <div class="day-count"><span>${dayBands.length}</span> bands</div>
+        ${dayHasTime && canTimeline ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? '☰ Liste' : '🕐 Tidsplan'}</div>` : ''}
       </div>
-      <div class="sort-indicator">${dayHasTime ? '↓ Sorteret efter starttid' : '↓ Alfabetisk'}</div>
-      <div class="scene-grid"></div>
     `;
+    section.innerHTML = headerHTML;
+
+    // Toggle button
+    const toggle = section.querySelector('.timeline-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        viewMode[day.key] = viewMode[day.key] === 'timeline' ? 'classic' : 'timeline';
+        renderDays();
+      });
+    }
+
     container.appendChild(section);
 
-    const sceneGrid = section.querySelector('.scene-grid');
-
-    STAGES_ORDER.forEach((stage, i) => {
-      const col = document.createElement('div');
-      col.className = 'scene-column';
-
-      const header = document.createElement('div');
-      header.className = `scene-header${i === 0 ? ' main-stage' : ''}`;
-      header.textContent = stage;
-      col.appendChild(header);
-
-      const { bands } = getBandsForDayStage(day.key, stage);
-      bands.forEach(b => {
-        renderBandCard({ name: b.name, stage: stage, time: b.time }, col);
-      });
-
-      if (bands.length === 0) {
-        const empty = document.createElement('div');
-        empty.style.cssText = 'padding:0.5rem;text-align:center;font-size:0.55rem;color:#333;';
-        empty.textContent = '—';
-        col.appendChild(empty);
+    if (mode === 'timeline' && activeStages.length >= 2) {
+      const ok = renderTimelineDay(section, day, dayBands, activeStages);
+      if (!ok) {
+        // Fallback to classic if timeline fails
+        renderClassicDay(section, day, dayBands);
       }
+    } else {
+      renderClassicDay(section, day, dayBands);
+    }
 
-      sceneGrid.appendChild(col);
-    });
-
-    // Any bands on this day without a known stage (stage === '')
-    const unstagedBands = Object.entries(LINEUP)
-      .filter(([_, info]) => info.day === day.key && !STAGES_ORDER.includes(info.stage) && info.stage !== '')
-      .map(([name, info]) => ({ name, stage: info.stage }));
-
-    const noStageBands = Object.entries(LINEUP)
-      .filter(([_, info]) => info.day === day.key && info.stage === '')
-      .map(([name]) => ({ name, stage: '' }));
-
-    const extraBands = [...unstagedBands, ...noStageBands]
+    // Bands without known stage
+    const extraBands = dayBands
+      .filter(([_, info]) => !STAGES_ORDER.includes(info.stage))
+      .map(([name, info]) => ({ name, stage: info.stage || '', time: info.time || '' }))
       .sort((a, b) => a.name.localeCompare(b.name, 'da'));
-
     if (extraBands.length > 0) {
       const extraGrid = document.createElement('div');
       extraGrid.className = 'band-grid';
@@ -673,12 +801,11 @@ function renderDays() {
     }
   });
 
-  // Bands without any day assignment
+  // Unassigned
   const unassigned = Object.entries(LINEUP)
     .filter(([_, info]) => !effectiveDay(info.day, info.time))
     .map(([name, info]) => ({ name, stage: info.stage }))
     .sort((a, b) => a.name.localeCompare(b.name, 'da'));
-
   if (unassigned.length > 0) {
     const section = document.createElement('div');
     section.className = 'day-section';
@@ -695,6 +822,30 @@ function renderDays() {
     const grid = section.querySelector('.band-grid');
     unassigned.forEach(band => renderBandCard(band, grid));
   }
+}
+
+function renderClassicDay(section, day, dayBands) {
+  const dayHasTime = dayBands.some(([_, info]) => info.time);
+  section.innerHTML += `<div class="sort-indicator">${dayHasTime ? '↓ Sorteret efter starttid' : '↓ Alfabetisk'}</div><div class="scene-grid"></div>`;
+  const sceneGrid = section.querySelector('.scene-grid');
+
+  STAGES_ORDER.forEach((stage, i) => {
+    const col = document.createElement('div');
+    col.className = 'scene-column';
+    const header = document.createElement('div');
+    header.className = `scene-header${i === 0 ? ' main-stage' : ''}`;
+    header.textContent = stage;
+    col.appendChild(header);
+    const { bands } = getBandsForDayStage(day.key, stage);
+    bands.forEach(b => renderBandCard({ name: b.name, stage, time: b.time }, col));
+    if (bands.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'padding:0.5rem;text-align:center;font-size:0.55rem;color:#333;';
+      empty.textContent = '—';
+      col.appendChild(empty);
+    }
+    sceneGrid.appendChild(col);
+  });
 }
 
 const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`;
