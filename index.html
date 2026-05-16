@@ -258,7 +258,7 @@ const HEADLINER_NAMES = ["IRON MAIDEN", "BRING ME THE HORIZON", "VOLBEAT"];
 // Bruges KUN hvis live-hentning fejler
 // ═══════════════════════════════════════════════════════
 const CACHED_LINEUP = {
-  "(0)":{ day:"tor", stage:"Pandæmonium", _slug:"0" },
+  "(0)":{ day:"tor", stage:"Pandæmonium", time:"15:00", _slug:"0-3" },
   "15 YEARS IN HELL – ALL STAR SHOW":{ day:"fre", stage:"", _slug:"15-years-in-hell-all-star-show-2" },
   "A PERFECT CIRCLE":{ day:"fre", stage:"Helvíti", _slug:"a-perfect-circle-2" },
   "ALESTORM":{ day:"lor", stage:"Helvíti", _slug:"alestorm-2" },
@@ -701,9 +701,7 @@ function renderTimelineDay(section, day, dayBands, stages) {
       });
 
       if (band) {
-        const info = LINEUP[band.name] || {};
-        const slug = info._slug || band.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        const artistUrl = `https://copenhell.dk/artist/${slug.replace(/-2$/, '')}/`;
+        const artistUrl = getArtistUrl(band.name);
         const isSelected = selected.has(band.name);
         const recRank = recommended.get(band.name);
         let cls = 'timeline-band';
@@ -829,8 +827,13 @@ function renderDays() {
 
 function renderClassicDay(section, day, dayBands) {
   const dayHasTime = dayBands.some(([_, info]) => info.time);
-  section.innerHTML += `<div class="sort-indicator">${dayHasTime ? '↓ Sorteret efter starttid' : '↓ Alfabetisk'}</div><div class="scene-grid"></div>`;
-  const sceneGrid = section.querySelector('.scene-grid');
+  const sortDiv = document.createElement('div');
+  sortDiv.className = 'sort-indicator';
+  sortDiv.textContent = dayHasTime ? '↓ Sorteret efter starttid' : '↓ Alfabetisk';
+  section.appendChild(sortDiv);
+  const sceneGrid = document.createElement('div');
+  sceneGrid.className = 'scene-grid';
+  section.appendChild(sceneGrid);
 
   STAGES_ORDER.forEach((stage, i) => {
     const col = document.createElement('div');
@@ -858,6 +861,14 @@ const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
 // Uses Spotify search with artist filter — reliable, no API needed
 // Opens Spotify with a pre-filtered artist search for each band
 // ═══════════════════════════════════════════════════════
+const ARTIST_URL_OVERRIDES = {"(0)":"https://copenhell.dk/en/program/"};
+function getArtistUrl(name) {
+  if (ARTIST_URL_OVERRIDES[name]) return ARTIST_URL_OVERRIDES[name];
+  const info = LINEUP[name] || {};
+  const slug = info._slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return `https://copenhell.dk/artist/${slug.replace(/-2$/, '')}/`;
+}
+
 function getSpotifyUrl(bandName) {
   const clean = bandName.replace(/[()]/g, '').trim();
   // Standard web URL — works in browser and app universal links
@@ -874,10 +885,7 @@ function renderBandCard(band, grid) {
     card.classList.add(rank <= 10 ? 'recommended-gold' : 'recommended-green');
   }
 
-  // Build artist page URL from slug or name
-  const info = LINEUP[band.name] || {};
-  const slug = info._slug || band.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  const artistUrl = `https://copenhell.dk/artist/${slug.replace(/-2$/, '')}/`;
+  const artistUrl = getArtistUrl(band.name);
   const spotifyUrl = getSpotifyUrl(band.name);
 
   card.innerHTML = `
