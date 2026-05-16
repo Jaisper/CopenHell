@@ -595,15 +595,8 @@ function sortableTime(t) {
   return t;
 }
 
-// Day shift: concerts 00:00-04:59 belong to the PREVIOUS day's program
-const DAY_ORDER = ['ons', 'tor', 'fre', 'lor'];
+// Day from data is already correct — 00:00 Fri means Friday night, not Thursday
 function effectiveDay(day, time) {
-  if (!time || !day) return day;
-  const h = parseInt(time.split(':')[0]);
-  if (h >= 0 && h <= 4) {
-    const idx = DAY_ORDER.indexOf(day);
-    if (idx > 0) return DAY_ORDER[idx - 1];
-  }
   return day;
 }
 
