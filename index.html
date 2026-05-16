@@ -740,17 +740,15 @@ function renderDays() {
   const container = document.getElementById('dayContainer');
   container.innerHTML = '';
 
-  // Check if screen is wide enough for timeline (min 2 stages visible)
-  const screenW = window.innerWidth;
-  const canTimeline = screenW >= 600;
-
   DAYS_CONFIG.forEach(day => {
     const dayBands = Object.entries(LINEUP).filter(([_, info]) => effectiveDay(info.day, info.time) === day.key);
     if (dayBands.length === 0) return;
 
-    const dayHasTime = dayBands.filter(([_, info]) => info.time).length >= 3;
+    const dayHasTime = dayBands.filter(([_, info]) => info.time).length >= 2;
     const activeStages = STAGES_ORDER.filter(s => dayBands.some(([_, info]) => info.stage === s));
-    const mode = viewMode[day.key] || (dayHasTime && canTimeline ? 'timeline' : 'classic');
+    const wideEnough = window.innerWidth >= 500;
+    if (!viewMode[day.key] && dayHasTime && wideEnough) viewMode[day.key] = 'timeline';
+    const mode = viewMode[day.key] || 'classic';
 
     const section = document.createElement('div');
     section.className = `day-section day-${day.key}`;
@@ -761,7 +759,7 @@ function renderDays() {
         <div class="day-name">${day.name}</div>
         <div class="day-date">${day.date}</div>
         <div class="day-count"><span>${dayBands.length}</span> bands</div>
-        ${dayHasTime && canTimeline ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? '☰ Liste' : '🕐 Tidsplan'}</div>` : ''}
+        ${dayHasTime ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? '☰ Liste' : '🕐 Tidsplan'}</div>` : ''}
       </div>
     `;
     section.innerHTML = headerHTML;
@@ -777,10 +775,9 @@ function renderDays() {
 
     container.appendChild(section);
 
-    if (mode === 'timeline' && activeStages.length >= 2) {
+    if (mode === 'timeline') {
       const ok = renderTimelineDay(section, day, dayBands, activeStages);
       if (!ok) {
-        // Fallback to classic if timeline fails
         renderClassicDay(section, day, dayBands);
       }
     } else {
