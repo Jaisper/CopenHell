@@ -751,8 +751,8 @@ function renderDays() {
     const dayHasTime = dayBands.filter(([_, info]) => info.time).length >= 2;
     const activeStages = STAGES_ORDER.filter(s => dayBands.some(([_, info]) => info.stage === s));
     const wideEnough = window.innerWidth >= 500;
-    if (!viewMode[day.key] && dayHasTime && wideEnough) viewMode[day.key] = 'timeline';
-    const mode = viewMode[day.key] || 'classic';
+    if (!viewMode[day.key]) viewMode[day.key] = 'classic';
+    const mode = viewMode[day.key];
 
     const section = document.createElement('div');
     section.className = `day-section day-${day.key}`;
