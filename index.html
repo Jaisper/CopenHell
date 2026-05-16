@@ -331,7 +331,7 @@ const CACHED_LINEUP = {
   "TWENTY ONE CHILDREN":{ day:"ons", stage:"Gehenna", _slug:"twenty-one-children-2" },
   "UNPEOPLE":{ day:"tor", stage:"Pandæmonium", _slug:"unpeople-2" },
   "VEXED":{ day:"lor", stage:"Gehenna", _slug:"vexed-2" },
-  "VIOLENT MAGIC ORCHESTRA":{ day:"fre", stage:"Gehenna", _slug:"violent-magic-orchestra-2" },
+  "VIOLENT MAGIC ORCHESTRA":{ day:"fre", stage:"Gehenna", time:"00:00", _slug:"violent-magic-orchestra-2" },
   "VOICE OF BACEPROT":{ day:"fre", stage:"Gehenna", _slug:"voice-of-baceprot-2" },
   "VOLBEAT":{ day:"lor", stage:"Helvíti", _slug:"volbeat-2" },
   "WARKINGS":{ day:"lor", stage:"Helvíti", _slug:"warkings-2" },
@@ -442,7 +442,7 @@ async function enrichArtistData() {
   }
 
   // Check sessionStorage cache
-  const cacheKey = 'ch26_artist_times_v4';
+  const cacheKey = 'ch26_artist_times_v5';
   try {
     const cached = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
     let usedCache = 0;
