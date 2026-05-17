@@ -661,7 +661,11 @@ function renderTimelineDay(section, day, dayBands, stages) {
   const colCount = stages.length + 1; // +1 for time column
   const grid = document.createElement('div');
   grid.className = 'timeline-grid';
-  grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, 1fr)`;
+  if(window.innerWidth>=900){
+    grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, 1fr)`;
+  }else{
+    grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, minmax(160px, 1fr))`;
+  }
 
   // Header row
   const timeH = document.createElement('div');
