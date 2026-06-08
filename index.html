@@ -569,7 +569,7 @@ async function fetchLiveLineup() {
       
 
       if (bandCount >= 20) {
-        const NOT_BANDS = new Set(['METAL BINGO','POWER HOUR','MUAY THAI','OPENHELL','ST. DIGUE','TEATER LUX','THE BOBBY TENDERLOIN SHOW','METAL YOGA','METAL KARAOKE','METAL QUIZ','TATTOO','SIGNING','MEET & GREET','WARM UP','AFTERPARTY','DJ','FOOD','BAR','VIP','PRESS','DISABLED','BACKSTAGE','CREW','STAFF','CAMPING','PARKING','TOILETS','SHOWERS','LOCKERS','LOST & FOUND','INFO','FIRST AID','SECURITY','VOLUNTEER','MERCH']);
+        const NOT_BANDS = new Set(['METAL BINGO','POWER HOUR','MUAY THAI','OPENHELL','ST. DIGUE','TEATER LUX','THE BOBBY TENDERLOIN SHOW','METAL YOGA','METAL KARAOKE','METAL QUIZ','MUSIC QUIZ','TATTOO','SIGNING','MEET & GREET','WARM UP','AFTERPARTY','DJ','FOOD','BAR','VIP','PRESS','DISABLED','BACKSTAGE','CREW','STAFF','CAMPING','PARKING','TOILETS','SHOWERS','LOCKERS','LOST & FOUND','INFO','FIRST AID','SECURITY','VOLUNTEER','MERCH','NORDIC ELITE WRESTLING','DRAGS FROM HELL','COLD CULTURE','THE BOBBY TENDERLOIN']);
         const musicBands = {};
         for (const [name, info] of Object.entries(parsed)) {
           if (name.length > 60) continue;
@@ -794,9 +794,14 @@ function renderDays() {
       .map(([name, info]) => ({ name, stage: info.stage || '', time: info.time || '' }))
       .sort((a, b) => a.name.localeCompare(b.name, 'da'));
     if (extraBands.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'scene-header';
+      label.style.cssText = 'margin-top:6px;color:var(--text-dim);font-style:italic';
+      const hasBoneyard = extraBands.some(b => b.stage === 'Boneyard');
+      label.textContent = hasBoneyard ? 'Boneyard · Scene TBA' : 'Scene TBA';
+      section.appendChild(label);
       const extraGrid = document.createElement('div');
       extraGrid.className = 'band-grid';
-      extraGrid.style.marginTop = '4px';
       extraBands.forEach(band => renderBandCard(band, extraGrid));
       section.appendChild(extraGrid);
     }
