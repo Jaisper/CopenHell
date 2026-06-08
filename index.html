@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="da">
 <head>
 <meta charset="UTF-8">
@@ -570,9 +569,11 @@ async function fetchLiveLineup() {
       
 
       if (bandCount >= 20) {
+        const NOT_BANDS = new Set(['METAL BINGO','POWER HOUR','MUAY THAI','OPENHELL','ST. DIGUE','TEATER LUX','THE BOBBY TENDERLOIN SHOW','METAL YOGA','METAL KARAOKE','METAL QUIZ','TATTOO','SIGNING','MEET & GREET','WARM UP','AFTERPARTY','DJ','FOOD','BAR','VIP','PRESS','DISABLED','BACKSTAGE','CREW','STAFF','CAMPING','PARKING','TOILETS','SHOWERS','LOCKERS','LOST & FOUND','INFO','FIRST AID','SECURITY','VOLUNTEER','MERCH']);
         const musicBands = {};
         for (const [name, info] of Object.entries(parsed)) {
           if (name.length > 60) continue;
+          if (NOT_BANDS.has(name.toUpperCase())) continue;
           musicBands[name] = info;
         }
         return musicBands;
@@ -1258,6 +1259,5 @@ async function init() {
 
 init();
 </script>
-
 </body>
 </html>
