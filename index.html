@@ -147,7 +147,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="logo">COPEN<span>HELL</span></div>
   <div class="subtitle" data-t="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
   <div class="year-badge" data-t="badge">AI Band Anbefaler</div>
-  <div class="data-source" id="dataSource" data-t="loading">Henter program fra copenhell.dk...</div>
+  <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
 </div>
 
 <div class="day-container" id="dayContainer">
@@ -563,7 +563,7 @@ async function enrichArtistData() {
     } catch (e) { /* try next */ }
   }
   if (!workingProxy) {
-    src.textContent = `✓ ${Object.keys(LINEUP).length} bands — play times not available`;
+    src.textContent = `✓ ${Object.keys(LINEUP).length} bands`;
     src.className = 'data-source live';
     return;
   }
@@ -627,7 +627,7 @@ async function enrichArtistData() {
 
   const total = Object.keys(LINEUP).length;
   const withTime = Object.values(LINEUP).filter(i => i.time).length;
-  src.textContent = `✓ ${total} bands — ${withTime} med spilletid`;
+  src.textContent = `✓ ${total} bands — ${withTime} ${t('withTime')}`;
   src.className = 'data-source live';
 }
 
@@ -1108,21 +1108,40 @@ async function getRecommendations() {
 
   let introText;
   const parts = [];
-  if (hasFavs) parts.push(`Favoritter fra Copenhell: ${favorites.join(', ')}`);
-  if (hasPersonal) parts.push(`Brugerens yndlingskunstnere generelt (IKKE på festivalen): ${personalFavs.join(', ')}`);
-  if (hasGenres) parts.push(`Foretrukne genrer: ${genreList}`);
-  
-  if (hasPersonal && !hasFavs && !hasGenres) {
-    introText = `${parts.join('\n')}
-Anbefal bands der ligner disse kunstnere i lyd, stil og genre.`;
-  } else if (parts.length > 0) {
-    introText = `${parts.join('\n')}
-Anbefal bands der matcher ovenstående præferencer (inkl. nært beslægtede subgenrer).`;
+  if (LANG === 'en') {
+    if (hasFavs) parts.push(`Favourites from Copenhell: ${favorites.join(', ')}`);
+    if (hasPersonal) parts.push(`User's favourite artists in general (NOT at the festival): ${personalFavs.join(', ')}`);
+    if (hasGenres) parts.push(`Preferred genres: ${genreList}`);
+    if (hasPersonal && !hasFavs && !hasGenres) {
+      introText = `${parts.join('\n')}\nRecommend bands similar to these artists in sound, style and genre.`;
+    } else if (parts.length > 0) {
+      introText = `${parts.join('\n')}\nRecommend bands matching the above preferences (incl. closely related subgenres).`;
+    } else { introText = ''; }
   } else {
-    introText = '';
+    if (hasFavs) parts.push(`Favoritter fra Copenhell: ${favorites.join(', ')}`);
+    if (hasPersonal) parts.push(`Brugerens yndlingskunstnere generelt (IKKE på festivalen): ${personalFavs.join(', ')}`);
+    if (hasGenres) parts.push(`Foretrukne genrer: ${genreList}`);
+    if (hasPersonal && !hasFavs && !hasGenres) {
+      introText = `${parts.join('\n')}\nAnbefal bands der ligner disse kunstnere i lyd, stil og genre.`;
+    } else if (parts.length > 0) {
+      introText = `${parts.join('\n')}\nAnbefal bands der matcher ovenstående præferencer (inkl. nært beslægtede subgenrer).`;
+    } else { introText = ''; }
   }
 
-  const prompt = `Copenhell 2026 metal/rock koncertanbefaler.
+  const promptLang = LANG === 'en' ? `Copenhell 2026 metal/rock concert recommender.
+${introText}
+
+Bands to choose from (USE EXACT NAMES FROM THIS LIST):
+${remainingWithDays}
+
+RULES:
+1. Only recommend bands you KNOW and that match the selected genres (incl. subgenres and related music)
+2. Think BROADLY — a band doesn't need to be 100% within the genre, just overlap or appeal to the same audience
+3. Aim for 10-20 recommendations — the more relevant the better
+4. 2-3 sentences in English per band, NEVER invent facts
+5. The "band" field MUST be copied EXACTLY from the list
+JSON array, NO other text: [{"rank":1,"band":"EXACT NAME","reason":"description","match":"95%"}]`
+  : `Copenhell 2026 metal/rock koncertanbefaler.
 ${introText}
 
 Bands at vælge fra (BRUG PRÆCIS DISSE NAVNE):
@@ -1135,6 +1154,8 @@ REGLER:
 4. 2-3 sætninger dansk per band, OPFIND ALDRIG fakta
 5. "band" feltet SKAL kopieres PRÆCIST fra listen
 JSON array, INGEN anden tekst: [{"rank":1,"band":"PRÆCIST NAVN","reason":"beskrivelse","match":"95%"}]`;
+
+  const prompt = promptLang;
 
   async function callGroq(m, retries) {
     if (retries === undefined) retries = 2;
@@ -1285,7 +1306,7 @@ async function init() {
 
   // Try to fetch live lineup
   const src = document.getElementById('dataSource');
-  src.textContent = '🔄 Vent lidt... opdaterer program fra copenhell.dk';
+  src.textContent = LANG==='en'?'🔄 Updating program from copenhell.dk...':'🔄 Vent lidt... opdaterer program fra copenhell.dk';
   src.className = 'data-source updating';
   const cachedCount = Object.keys(CACHED_LINEUP).length;
   const live = await fetchLiveLineup();
