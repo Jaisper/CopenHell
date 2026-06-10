@@ -134,46 +134,51 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @media(max-width:800px){.scene-grid{grid-template-columns:repeat(2,1fr)}.band-name{font-size:.95rem}}
 @media(max-width:480px){.scene-grid{grid-template-columns:1fr}.header{padding:2rem 1rem 1.5rem}.genre-chip{font-size:.9rem;padding:.4rem .8rem}}
 .hidden{display:none!important}
+.lang-toggle{position:absolute;top:1rem;right:1.5rem;display:flex;gap:2px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;font-size:.75rem;font-family:'Oswald',sans-serif;letter-spacing:.05em}
+.lang-btn{padding:.3rem .6rem;cursor:pointer;color:rgba(255,255,255,.4);transition:all .2s;border:none;background:none;font-family:inherit;font-size:inherit;letter-spacing:inherit}
+.lang-btn.active{background:var(--accent);color:#fff}
+.lang-btn:hover{color:rgba(255,255,255,.7)}
 </style>
 </head>
 <body>
 
-<div class="header">
+<div class="header" style="position:relative">
+  <div class="lang-toggle"><button class="lang-btn active" data-lang="da" onclick="setLang('da')">DA</button><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button></div>
   <div class="logo">COPEN<span>HELL</span></div>
-  <div class="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
-  <div class="year-badge">AI Band Anbefaler</div>
-  <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
+  <div class="subtitle" data-t="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
+  <div class="year-badge" data-t="badge">AI Band Anbefaler</div>
+  <div class="data-source" id="dataSource" data-t="loading">Henter program fra copenhell.dk...</div>
 </div>
 
 <div class="day-container" id="dayContainer">
-  <div class="loading-indicator" id="loadingIndicator">Henter lineup fra copenhell.dk</div>
+  <div class="loading-indicator" id="loadingIndicator" data-t="loadingLineup">Henter lineup fra copenhell.dk</div>
 </div>
 
 <div class="genre-section">
-  <div class="genre-header">🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
+  <div class="genre-header" data-t="genreHeader">🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
   <div class="genre-grid" id="genreGrid">
     <div class="genre-chip" data-genre="Heavy Metal (Trad)">Heavy Metal (Trad)</div>
     <div class="genre-chip" data-genre="Hard Rock">Hard Rock</div>
     <div class="genre-chip" data-genre="Thrash Metal">Thrash Metal</div>
-    <div class="genre-chip" data-genre="Dødsmetal">Dødsmetal</div>
+    <div class="genre-chip" data-genre="Death Metal" data-t-da="Dødsmetal">Dødsmetal</div>
     <div class="genre-chip" data-genre="Black Metal">Black Metal</div>
     <div class="genre-chip" data-genre="Doom Metal">Doom Metal</div>
     <div class="genre-chip" data-genre="Power Metal">Power Metal</div>
     <div class="genre-chip" data-genre="Glam Metal">Glam Metal</div>
     <div class="genre-chip" data-genre="Gothic Metal">Gothic Metal</div>
-    <div class="genre-chip" data-genre="Alternativ Metal">Alternativ Metal</div>
-    <div class="genre-chip" data-genre="Progressiv Metal">Progressiv Metal</div>
+    <div class="genre-chip" data-genre="Alternative Metal" data-t-da="Alternativ Metal">Alternativ Metal</div>
+    <div class="genre-chip" data-genre="Progressive Metal" data-t-da="Progressiv Metal">Progressiv Metal</div>
     <div class="genre-chip" data-genre="Speed Metal">Speed Metal</div>
   </div>
 </div>
 
 <div class="personal-fav-section">
-  <div class="genre-header">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
-  <input type="text" id="personalFavs" placeholder="F.eks. Metallica, Slayer, Pantera" maxlength="200" style="width:100%;max-width:600px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
+  <div class="genre-header" data-t="favHeader">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
+  <input type="text" id="personalFavs" data-t-ph="favPlaceholder" placeholder="F.eks. Metallica, Slayer, Pantera" maxlength="200" style="width:100%;max-width:600px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
 </div>
 
 <div class="instructions">
-  <p>
+  <p data-t="instructions">
     Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>
     AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
   </p>
@@ -182,44 +187,44 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <div class="recommend-section">
   <div class="fav-counter" id="favCounter">
     <span class="skull">💀</span>
-    <span id="favText">Valgte: 0 bands · 0 genrer</span>
+    <span id="favText" data-t="favDefault">Valgte: 0 bands · 0 genrer</span>
   </div>
   <br>
-  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>
+  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled data-t="recBtn">
     🤘 Find anbefalinger baseret på mine favoritter
   </button>
   <div class="action-bar">
-    <button class="btn-ghost" onclick="clearSelections()">Nulstil valg</button>
-    <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()">Fjern anbefalinger</button>
+    <button class="btn-ghost" onclick="clearSelections()" data-t="clearBtn">Nulstil valg</button>
+    <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()" data-t="clearRecBtn">Fjern anbefalinger</button>
   </div>
   <div class="api-section" style="margin-top:1.5rem">
     <details class="api-box" id="apiBox">
-      <summary>⚙ AI Indstillinger (API Key og valg af AI Model)</summary>
-      <p class="api-hint">
+      <summary data-t="apiSummary">⚙ AI Indstillinger (API Key og valg af AI Model)</summary>
+      <p class="api-hint" data-t="apiHint">
         Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
         log ind → API Keys → Create. Nøglen gemmes kun i din browser.
       </p>
       <div class="api-row">
         <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
-        <button class="btn-small" onclick="saveApiKey()">Gem</button>
+        <button class="btn-small" onclick="saveApiKey()" data-t="saveBtn">Gem</button>
       </div>
       <div class="api-status" id="apiStatus"></div>
       <div style="margin-top:1rem">
-        <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem">AI Model</label>
+        <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem" data-t="modelLabel">AI Model</label>
         <select id="modelSelect" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.5rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px">
-          <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B (anbefalet — bedst kvalitet)</option>
-          <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B (hurtig, lavere kvalitet)</option>
-          <option value="compound-beta">🔍 Compound Beta (web search — langsom)</option>
-          <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B (ultra-hurtig, lavere kvalitet)</option>
+          <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B</option>
+          <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B</option>
+          <option value="compound-beta">🔍 Compound Beta</option>
+          <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B</option>
         </select>
-        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint">OpenAI's åbne model — bedst til korrekte beskrivelser</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint"></div>
       </div>
     </details>
   </div>
 </div>
 
 <div class="results-section hidden" id="results">
-  <div class="results-header">AI Anbefalinger — baseret på dine favoritter</div>
+  <div class="results-header" data-t="resultsHeader">AI Anbefalinger — baseret på dine favoritter</div>
   <div id="resultsList"></div>
 </div>
 
@@ -239,6 +244,86 @@ const PROXIES = [
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
   url => `https://proxy.cors.sh/${url}`,
 ];
+
+// ═══════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════
+let LANG = 'da';
+const TR = {
+  subtitle:     {da:'24 — 27 Juni 2026 · Refshaleøen · København', en:'24 — 27 June 2026 · Refshaleøen · Copenhagen'},
+  badge:        {da:'AI Band Anbefaler', en:'AI Band Recommender'},
+  loading:      {da:'Henter program fra copenhell.dk...', en:'Loading program from copenhell.dk...'},
+  loadingLineup:{da:'Henter lineup fra copenhell.dk', en:'Loading lineup from copenhell.dk'},
+  genreHeader:  {da:'🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI\'en med bedre anbefalinger)</span>', en:'🎸 Favourite genres <span class="genre-hint">(optional — helps the AI give better recommendations)</span>'},
+  favHeader:    {da:'🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span>', en:'🎤 Your favourite artists <span class="genre-hint">(optional — up to 3, comma-separated)</span>'},
+  favPlaceholder:{da:'F.eks. Metallica, Slayer, Pantera', en:'E.g. Metallica, Slayer, Pantera'},
+  instructions: {da:'Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>AI\'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.', en:'Tap <strong>💀</strong> on bands you know and like, and choose your <strong>favourite genres</strong>.<br>The AI will then recommend which <strong>other bands</strong> you should see.'},
+  favDefault:   {da:'Vælg bands, genrer og/eller egne favoritter', en:'Select bands, genres and/or your favourites'},
+  recBtn:       {da:'🤘 Find anbefalinger baseret på mine favoritter', en:'🤘 Get recommendations based on my favourites'},
+  clearBtn:     {da:'Nulstil valg', en:'Reset selection'},
+  clearRecBtn:  {da:'Fjern anbefalinger', en:'Clear recommendations'},
+  apiSummary:   {da:'⚙ AI Indstillinger (API Key og valg af AI Model)', en:'⚙ AI Settings (API Key and AI Model)'},
+  apiHint:      {da:'Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — log ind → API Keys → Create. Nøglen gemmes kun i din browser.', en:'Free AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — sign in → API Keys → Create. The key is stored only in your browser.'},
+  saveBtn:      {da:'Gem', en:'Save'},
+  modelLabel:   {da:'AI Model', en:'AI Model'},
+  resultsHeader:{da:'AI Anbefalinger — baseret på dine favoritter', en:'AI Recommendations — based on your favourites'},
+  // Dynamic strings
+  bands:        {da:'bands', en:'bands'},
+  artists:      {da:'kunstnere', en:'artists'},
+  selected:     {da:'Valgte', en:'Selected'},
+  genres:       {da:'genrer', en:'genres'},
+  ownFavs:      {da:'egne favoritter', en:'own favourites'},
+  sortTime:     {da:'↓ Sorteret efter starttid', en:'↓ Sorted by start time'},
+  sortAlpha:    {da:'↓ Alfabetisk', en:'↓ Alphabetical'},
+  listView:     {da:'☰ Liste', en:'☰ List'},
+  timeline:     {da:'🕐 Tidsplan', en:'🕐 Timeline'},
+  sceneTBA:     {da:'Scene TBA', en:'Stage TBA'},
+  boneyardTBA:  {da:'Boneyard · Scene TBA', en:'Boneyard · Stage TBA'},
+  dayTBA:       {da:'Dag ikke annonceret', en:'Day not announced'},
+  withTime:     {da:'med spilletid', en:'with play time'},
+  enriching:    {da:'Vent lidt... henter spilletider', en:'Please wait... fetching play times'},
+  keySaved:     {da:t('keySaved'), en:'✓ Key saved'},
+  keyError:     {da:t('keyError'), en:'✗ Key must start with gsk_'},
+  enterKey:     {da:t('enterKey'), en:'✗ Enter Groq API key'},
+  analyzing:    {da:t('analyzing'), en:'💀 AI is analysing your music taste...'},
+  searching:    {da:t('searching'), en:'🔍 AI is searching the web...'},
+  switching:    {da:t('switching'), en:'⚡ Switching to Llama 3.3...'},
+  waiting:      {da:'⏳ Venter', en:'⏳ Waiting'},
+  favToggle:    {da:'Vælg som favorit', en:'Select as favourite'},
+  openSpotify:  {da:'Åbn på Spotify', en:'Open on Spotify'},
+  openSite:     {da:'Se på copenhell.dk', en:'View on copenhell.dk'},
+  dayNames:     {da:{ons:'Onsdag',tor:'Torsdag',fre:'Fredag',lor:'Lørdag'}, en:{ons:'Wednesday',tor:'Thursday',fre:'Friday',lor:'Saturday'}},
+  dayDates:     {da:{ons:'24. juni',tor:'25. juni',fre:'26. juni',lor:'27. juni'}, en:{ons:'June 24',tor:'June 25',fre:'June 26',lor:'June 27'}},
+  deathMetal:   {da:'Dødsmetal', en:'Death Metal'},
+  altMetal:     {da:'Alternativ Metal', en:'Alternative Metal'},
+  progMetal:    {da:'Progressiv Metal', en:'Progressive Metal'},
+};
+
+function t(key){ return (TR[key]&&TR[key][LANG]) || (TR[key]&&TR[key]['da']) || key; }
+
+function setLang(lang){
+  LANG=lang;
+  try{localStorage.setItem('ch_lang',lang)}catch(e){}
+  // Update toggle buttons
+  document.querySelectorAll('.lang-btn').forEach(b=>{b.classList.toggle('active',b.dataset.lang===lang)});
+  // Update all data-t elements
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key=el.dataset.t;
+    if(TR[key])el.innerHTML=TR[key][lang]||TR[key]['da'];
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-t-ph]').forEach(el=>{
+    const key=el.dataset.tPh;
+    if(TR[key])el.placeholder=TR[key][lang]||TR[key]['da'];
+  });
+  // Update genre chips that differ
+  document.querySelectorAll('.genre-chip[data-t-da]').forEach(el=>{
+    if(lang==='da')el.textContent=el.dataset.tDa;
+    else el.textContent=el.dataset.genre;
+  });
+  // Re-render days with new language
+  if(Object.keys(LINEUP).length>0){renderDays();updateCounter()}
+}
 
 const DAYS_CONFIG = [
   { key: 'ons', en: 'Wed', name: 'Onsdag', date: '24. juni' },
@@ -478,12 +563,12 @@ async function enrichArtistData() {
     } catch (e) { /* try next */ }
   }
   if (!workingProxy) {
-    src.textContent = `✓ ${Object.keys(LINEUP).length} bands — spilletider ikke tilgængelige`;
+    src.textContent = `✓ ${Object.keys(LINEUP).length} bands — play times not available`;
     src.className = 'data-source live';
     return;
   }
 
-  src.textContent = `🔄 Vent lidt... henter spilletider`;
+  src.textContent = `🔄 ${t('enriching')}`;
   src.className = 'data-source updating';
 
   const BATCH = 5;
@@ -528,7 +613,7 @@ async function enrichArtistData() {
 
     // Update progress
     const done = Math.min(i + BATCH, stillNeeds.length);
-    src.textContent = `🔄 Vent lidt... henter spilletider ${done}/${stillNeeds.length}`;
+    src.textContent = `🔄 ${t('enriching')} ${done}/${stillNeeds.length}`;
     
     if (fetched > 0) renderDays();
     if (i + BATCH < stillNeeds.length) await new Promise(ok => setTimeout(ok, 300));
@@ -760,10 +845,10 @@ function renderDays() {
     const headerHTML = `
       <div class="day-header">
         <div class="day-dot"></div>
-        <div class="day-name">${day.name}</div>
-        <div class="day-date">${day.date}</div>
-        <div class="day-count"><span>${dayBands.length}</span> bands</div>
-        ${dayHasTime ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? '☰ Liste' : '🕐 Tidsplan'}</div>` : ''}
+        <div class="day-name">${t('dayNames')[day.key]||day.name}</div>
+        <div class="day-date">${t('dayDates')[day.key]||day.date}</div>
+        <div class="day-count"><span>${dayBands.length}</span> ${t('bands')}</div>
+        ${dayHasTime ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? t('listView') : t('timeline')}</div>` : ''}
       </div>
     `;
     section.innerHTML = headerHTML;
@@ -798,7 +883,7 @@ function renderDays() {
       label.className = 'scene-header';
       label.style.cssText = 'margin-top:6px;color:var(--text-dim);font-style:italic';
       const hasBoneyard = extraBands.some(b => b.stage === 'Boneyard');
-      label.textContent = hasBoneyard ? 'Boneyard · Scene TBA' : 'Scene TBA';
+      label.textContent = hasBoneyard ? t('boneyardTBA') : t('sceneTBA');
       section.appendChild(label);
       const extraGrid = document.createElement('div');
       extraGrid.className = 'band-grid';
@@ -818,9 +903,9 @@ function renderDays() {
     section.innerHTML = `
       <div class="day-header">
         <div class="day-dot" style="background:#555"></div>
-        <div class="day-name">Dag ikke annonceret</div>
+        <div class="day-name">${t('dayTBA')}</div>
         <div class="day-date">TBA</div>
-        <div class="day-count"><span>${unassigned.length}</span> bands</div>
+        <div class="day-count"><span>${unassigned.length}</span> ${t('bands')}</div>
       </div>
       <div class="band-grid"></div>
     `;
@@ -834,7 +919,7 @@ function renderClassicDay(section, day, dayBands) {
   const dayHasTime = dayBands.some(([_, info]) => info.time);
   const sortDiv = document.createElement('div');
   sortDiv.className = 'sort-indicator';
-  sortDiv.textContent = dayHasTime ? '↓ Sorteret efter starttid' : '↓ Alfabetisk';
+  sortDiv.textContent = dayHasTime ? t('sortTime') : t('sortAlpha');
   section.appendChild(sortDiv);
   const sceneGrid = document.createElement('div');
   sceneGrid.className = 'scene-grid';
@@ -894,14 +979,14 @@ function renderBandCard(band, grid) {
   const spotifyUrl = getSpotifyUrl(band.name);
 
   card.innerHTML = `
-    <div class="band-skull" title="Vælg som favorit">💀</div>
+    <div class="band-skull" title="${t('favToggle')}">💀</div>
     <div class="band-info">
       <div class="band-text">
         ${band.time ? `<span class="band-time">${band.time}</span>` : ''}
-        <div class="band-name"><a href="${artistUrl}" target="_blank" rel="noopener" title="Se på copenhell.dk">${band.name}</a></div>
+        <div class="band-name"><a href="${artistUrl}" target="_blank" rel="noopener" title="${t('openSite')}">${band.name}</a></div>
       </div>
       <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
-         title="Åbn på Spotify">${SPOTIFY_SVG}</a>
+         title="${t('openSpotify')}">${SPOTIFY_SVG}</a>
     </div>
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
@@ -940,12 +1025,12 @@ function updateCounter() {
   const b = selected.size, g = selectedGenres.size;
   const p = (document.getElementById('personalFavs')?.value||'').split(',').map(s=>s.trim()).filter(s=>s).length;
   const parts = [];
-  if (b > 0) parts.push(`${b} band${b > 1 ? 's' : ''}`);
-  if (g > 0) parts.push(`${g} genre${g > 1 ? 'r' : ''}`);
-  if (p > 0) parts.push(`${p} egne favorit${p > 1 ? 'ter' : ''}`);
+  if (b > 0) parts.push(`${b} ${t('bands')}`);
+  if (g > 0) parts.push(`${g} ${t('genres')}`);
+  if (p > 0) parts.push(`${p} ${t('ownFavs')}`);
   document.getElementById('favText').textContent = parts.length > 0 
-    ? `Valgte: ${parts.join(' · ')}` 
-    : 'Vælg bands, genrer og/eller egne favoritter';
+    ? `${t('selected')}: ${parts.join(' · ')}` 
+    : t('favDefault');
   document.getElementById('recBtn').disabled = b < 1 && g < 1 && p < 1;
 }
 
@@ -974,12 +1059,12 @@ function clearRecommendations() {
 function saveApiKey() {
   const key = document.getElementById('apiKey').value.trim();
   if (!key.startsWith('gsk_')) {
-    document.getElementById('apiStatus').textContent = '✗ Nøglen skal starte med gsk_';
+    document.getElementById('apiStatus').textContent = t('keyError');
     document.getElementById('apiStatus').style.color = '#c23c2c';
     return;
   }
   localStorage.setItem('groq_api_key', key);
-  document.getElementById('apiStatus').textContent = '✓ Nøgle gemt';
+  document.getElementById('apiStatus').textContent = t('keySaved');
   document.getElementById('apiStatus').style.color = '#3ddc84';
 }
 
@@ -1005,7 +1090,7 @@ async function getRecommendations() {
   const isSmallLimit = model.includes('gpt-oss') || model === 'compound-beta';
   const btn = document.getElementById('recBtn');
   btn.classList.add('loading');
-  btn.textContent = model === 'compound-beta' ? '🔍 AI søger på nettet og analyserer...' : '💀 AI analyserer din musiksmag...';
+  btn.textContent = model === 'compound-beta' ? t('searching') : t('analyzing');
 
   // Compact list (names only) for models with low TPM limits
   const remainingWithDays = isSmallLimit
@@ -1100,7 +1185,7 @@ JSON array, INGEN anden tekst: [{"rank":1,"band":"PRÆCIST NAVN","reason":"beskr
     alert('Fejl: ' + err.message);
   } finally {
     btn.classList.remove('loading');
-    btn.textContent = '🤘 Find anbefalinger baseret på mine favoritter';
+    btn.textContent = t('recBtn');
   }
 }
 
@@ -1174,11 +1259,13 @@ function displayRecommendations(recs) {
 // BOOT
 // ═══════════════════════════════════════════════════════
 async function init() {
+  // Restore language
+  try{const sl=localStorage.getItem('ch_lang');if(sl)setLang(sl)}catch(e){}
   // Load API key
   const savedKey = localStorage.getItem('groq_api_key');
   if (savedKey) {
     document.getElementById('apiKey').value = savedKey;
-    document.getElementById('apiStatus').textContent = '✓ Nøgle gemt';
+    document.getElementById('apiStatus').textContent = t('keySaved');
     document.getElementById('apiStatus').style.color = '#3ddc84';
     document.getElementById('apiBox').removeAttribute('open');
   }
