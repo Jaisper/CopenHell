@@ -9,6 +9,7 @@
 <style>
 :root{--bg:#0a0a0a;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--border:rgba(255,255,255,.1);--text:#f0ebe4;--text-dim:rgba(255,255,255,.5);--accent:#c23c2c;--accent-glow:#ff4433;--gold:#d4a843}
 *{margin:0;padding:0;box-sizing:border-box}
+a,button,input,select,[class*="band"],[class*="skull"],[class*="plan-icon"],[class*="timeline-band"],[class*="genre-chip"],[class*="toggle"],[class*="lang-btn"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
 .header{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
