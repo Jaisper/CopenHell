@@ -61,7 +61,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .band-card.planned.recommended-gold,.band-card.planned.recommended-green{border-color:#fff}
 .plan-icon{font-size:.7rem;opacity:.2;cursor:pointer;flex-shrink:0;transition:all .2s;-webkit-tap-highlight-color:transparent;padding:0 .2rem}
 .plan-icon:hover{opacity:.7}
+.planned .plan-icon{opacity:1}
 .timeline-band.planned{border-color:#fff;border-width:2px;box-shadow:0 0 6px rgba(255,255,255,.2)}
+.timeline-band .plan-icon{font-size:.6rem;display:flex;align-items:center;padding:0 .15rem}
 .band-skull{font-size:1rem;opacity:.2;transform:scale(.85);transition:all .2s ease;flex-shrink:0;width:2rem;height:1.5rem;text-align:center;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;border-radius:3px;-webkit-tap-highlight-color:transparent;border-right:1px solid rgba(255,255,255,.08);margin-right:.3rem;padding-right:.3rem}
 .band-skull:hover{opacity:.7;transform:scale(1);background:rgba(255,255,255,.05)}
 .band-card:hover .band-skull{opacity:.5;transform:scale(.95)}
@@ -825,7 +827,7 @@ function renderTimelineDay(section, day, dayBands, stages) {
         const el = document.createElement('div');
         el.className = cls;
         el.style.height = `calc(${heightRem}rem - 2px)`;
-        el.innerHTML = `<div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span></div>`;
+        el.innerHTML = `<div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span></div><span class="plan-icon">${isPlanned?'📅':'📅'}</span>`;
 
         // Click = toggle dayplan
         el.addEventListener('click', e => {
