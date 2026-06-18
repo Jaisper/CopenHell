@@ -51,10 +51,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .band-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:3px}
 .band-card{background:var(--surface);border:1px solid var(--border);padding:.55rem .7rem;cursor:default;display:flex;align-items:center;gap:.4rem;transition:all .15s ease;user-select:none;border-radius:3px;overflow:hidden;min-width:0}
 .band-card:hover{background:var(--surface2);border-color:rgba(255,255,255,.2)}
+.band-card.planned{border-color:#fff;border-width:2px;box-shadow:0 0 8px rgba(255,255,255,.15)}
+.band-card.planned .plan-icon{opacity:1;color:#fff}
 .band-card.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
 .band-card.selected .band-skull{opacity:1;transform:scale(1)}.band-card.selected .band-skull::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.6rem;color:var(--accent);font-weight:700}.band-card.selected .band-name{color:#fff}
+.band-card.planned.selected{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.15),inset 0 0 0 1px var(--accent)}
 .band-card.recommended-gold{background:rgba(212,168,67,.1);border-color:var(--gold);border-width:2px;box-shadow:0 0 10px rgba(212,168,67,.2)}.band-card.recommended-gold .rec-badge{display:flex;background:var(--gold)}.band-card.recommended-gold .band-name{color:var(--gold)}
 .band-card.recommended-green{background:rgba(61,220,132,.08);border-color:#3ddc84;border-width:2px;box-shadow:0 0 10px rgba(61,220,132,.15)}.band-card.recommended-green .rec-badge{display:flex;background:#3ddc84}.band-card.recommended-green .band-name{color:#3ddc84}
+.band-card.planned.recommended-gold,.band-card.planned.recommended-green{border-color:#fff}
+.plan-icon{font-size:.7rem;opacity:.2;cursor:pointer;flex-shrink:0;transition:all .2s;-webkit-tap-highlight-color:transparent;padding:0 .2rem}
+.plan-icon:hover{opacity:.7}
+.timeline-band.planned{border-color:#fff;border-width:2px;box-shadow:0 0 6px rgba(255,255,255,.2)}
 .band-skull{font-size:1rem;opacity:.2;transform:scale(.85);transition:all .2s ease;flex-shrink:0;width:2rem;height:1.5rem;text-align:center;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;border-radius:3px;-webkit-tap-highlight-color:transparent;border-right:1px solid rgba(255,255,255,.08);margin-right:.3rem;padding-right:.3rem}
 .band-skull:hover{opacity:.7;transform:scale(1);background:rgba(255,255,255,.05)}
 .band-card:hover .band-skull{opacity:.5;transform:scale(.95)}
@@ -148,6 +155,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="subtitle" data-t="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
   <div class="year-badge" data-t="badge">AI Band Anbefaler</div>
   <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
+  <div id="planCount" style="text-align:center;font-size:.85rem;color:#fff;margin-top:.4rem;font-family:'Oswald',sans-serif;letter-spacing:.05em"></div>
 </div>
 
 <div class="day-container" id="dayContainer">
@@ -292,6 +300,8 @@ const TR = {
   favToggle:    {da:'Vælg som favorit', en:'Select as favourite'},
   openSpotify:  {da:'Åbn på Spotify', en:'Open on Spotify'},
   openSite:     {da:'Se på copenhell.dk', en:'View on copenhell.dk'},
+  mySchedule:   {da:'Min dagsplan', en:'My schedule'},
+  addPlan:      {da:'Tilføj til dagsplan', en:'Add to schedule'},
   dayNames:     {da:{ons:'Onsdag',tor:'Torsdag',fre:'Fredag',lor:'Lørdag'}, en:{ons:'Wednesday',tor:'Thursday',fre:'Friday',lor:'Saturday'}},
   dayDates:     {da:{ons:'24. juni',tor:'25. juni',fre:'26. juni',lor:'27. juni'}, en:{ons:'June 24',tor:'June 25',fre:'June 26',lor:'June 27'}},
   deathMetal:   {da:'Dødsmetal', en:'Death Metal'},
@@ -437,6 +447,17 @@ const CACHED_LINEUP = {
 let LINEUP = {};     // active lineup data
 let dataIsLive = false;
 const selected = new Set();
+const dayPlan = new Set();
+// Restore dayplan from localStorage
+try{const dp=JSON.parse(localStorage.getItem('ch26_dayplan')||'[]');dp.forEach(b=>dayPlan.add(b))}catch(e){}
+function saveDayPlan(){try{localStorage.setItem('ch26_dayplan',JSON.stringify([...dayPlan]))}catch(e){}}
+function togglePlan(name,el){
+  if(dayPlan.has(name)){dayPlan.delete(name);if(el)el.classList.remove('planned')}
+  else{dayPlan.add(name);if(el)el.classList.add('planned')}
+  saveDayPlan();
+  const pc=document.getElementById('planCount');
+  if(pc)pc.textContent=dayPlan.size>0?`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`:'';
+}
 const selectedGenres = new Set();
 const recommended = new Map();
 
@@ -789,15 +810,16 @@ function renderTimelineDay(section, day, dayBands, stages) {
         const artistUrl = getArtistUrl(band.name);
         const isSelected = selected.has(band.name);
         const recRank = recommended.get(band.name);
+        const isPlanned = dayPlan.has(band.name);
         let cls = 'timeline-band';
         if (isSelected) cls += ' selected';
+        if (isPlanned) cls += ' planned';
         if (recRank && recRank <= 10) cls += ' rec-gold';
         else if (recRank) cls += ' rec-green';
 
         // Duration: Helvíti = 90 min, others = 60 min
         const durationMin = (stage === 'Helvíti') ? 90 : 60;
         const slotsSpan = durationMin / SLOT_SIZE;
-        // Height = number of slots * slot height (1.8rem) - 2px for gap
         const heightRem = slotsSpan * 1.8;
 
         const el = document.createElement('div');
@@ -805,11 +827,10 @@ function renderTimelineDay(section, day, dayBands, stages) {
         el.style.height = `calc(${heightRem}rem - 2px)`;
         el.innerHTML = `<div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span></div>`;
 
+        // Click = toggle dayplan
         el.addEventListener('click', e => {
           if(e.target.closest('a')) return;
-          if (selected.has(band.name)) { selected.delete(band.name); el.classList.remove('selected'); }
-          else { selected.add(band.name); el.classList.add('selected'); }
-          updateCounter();
+          togglePlan(band.name, el);
         });
 
         cell.appendChild(el);
@@ -970,6 +991,7 @@ function renderBandCard(band, grid) {
   card.className = 'band-card';
   card.dataset.band = band.name;
   if (selected.has(band.name)) card.classList.add('selected');
+  if (dayPlan.has(band.name)) card.classList.add('planned');
   if (recommended.has(band.name)) {
     const rank = recommended.get(band.name);
     card.classList.add(rank <= 10 ? 'recommended-gold' : 'recommended-green');
@@ -987,6 +1009,7 @@ function renderBandCard(band, grid) {
       </div>
       <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
          title="${t('openSpotify')}">${SPOTIFY_SVG}</a>
+      <span class="plan-icon" title="📅">📅</span>
     </div>
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
@@ -997,11 +1020,15 @@ function renderBandCard(band, grid) {
     toggleBand(band.name, card);
   });
 
-  // Card click (not on links or skull) = also toggle favorite
+  // Plan icon click = toggle dayplan
+  card.querySelector('.plan-icon').addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePlan(band.name, card);
+  });
+
+  // Card click (not on links, skull, or plan) = toggle favorite
   card.addEventListener('click', (e) => {
-    const link = e.target.closest('a');
-    const skull = e.target.closest('.band-skull');
-    if (link || skull) return;
+    if (e.target.closest('a') || e.target.closest('.band-skull') || e.target.closest('.plan-icon')) return;
     toggleBand(band.name, card);
   });
 
@@ -1347,6 +1374,10 @@ async function init() {
 
   renderDays();
   updateCounter();
+
+  // Initialize plan counter
+  const pc=document.getElementById('planCount');
+  if(pc&&dayPlan.size>0)pc.textContent=`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`;
 
   // Genre chip click handlers
   document.querySelectorAll('.genre-chip').forEach(chip => {
