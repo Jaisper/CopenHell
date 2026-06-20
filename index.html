@@ -159,6 +159,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="year-badge" data-t="badge">AI Band Anbefaler</div>
   <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
   <div id="planCount" style="text-align:center;font-size:.85rem;color:#fff;margin-top:.4rem;font-family:'Oswald',sans-serif;letter-spacing:.05em"></div>
+  <div id="planShare" style="text-align:center;margin-top:.3rem;display:none"><button onclick="sharePlan()" style="background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:.3rem .8rem;font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.05em;border-radius:3px;cursor:pointer;touch-action:manipulation" data-t="shareBtn">📤 Del dagsplan</button></div>
 </div>
 
 <div class="day-container" id="dayContainer">
@@ -305,6 +306,9 @@ const TR = {
   openSite:     {da:'Se på copenhell.dk', en:'View on copenhell.dk'},
   mySchedule:   {da:'Min dagsplan', en:'My schedule'},
   addPlan:      {da:'Tilføj til dagsplan', en:'Add to schedule'},
+  shareBtn:     {da:'📤 Del dagsplan', en:'📤 Share schedule'},
+  shareCopied:  {da:'✓ Kopieret!', en:'✓ Copied!'},
+  shareTitle:   {da:'Min Copenhell 2026 dagsplan', en:'My Copenhell 2026 schedule'},
   dayNames:     {da:{ons:'Onsdag',tor:'Torsdag',fre:'Fredag',lor:'Lørdag'}, en:{ons:'Wednesday',tor:'Thursday',fre:'Friday',lor:'Saturday'}},
   dayDates:     {da:{ons:'24. juni',tor:'25. juni',fre:'26. juni',lor:'27. juni'}, en:{ons:'June 24',tor:'June 25',fre:'June 26',lor:'June 27'}},
   deathMetal:   {da:'Dødsmetal', en:'Death Metal'},
@@ -459,7 +463,44 @@ function togglePlan(name,el){
   else{dayPlan.add(name);if(el)el.classList.add('planned')}
   saveDayPlan();
   const pc=document.getElementById('planCount');
+  const ps=document.getElementById('planShare');
   if(pc)pc.textContent=dayPlan.size>0?`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`:'';
+  if(ps)ps.style.display=dayPlan.size>0?'block':'none';
+}
+
+function sharePlan(){
+  const dayOrder=['ons','tor','fre','lor'];
+  const dayLabels=t('dayNames');
+  const lines=[t('shareTitle'),''];
+  dayOrder.forEach(dk=>{
+    const bands=[...dayPlan].filter(name=>{
+      const info=LINEUP[name];return info&&info.day===dk;
+    }).map(name=>{
+      const info=LINEUP[name];
+      return{name,time:info.time||'??:??',stage:info.stage||'TBA'};
+    }).sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));
+    if(!bands.length)return;
+    lines.push(`🎸 ${dayLabels[dk]||dk}`);
+    bands.forEach(b=>lines.push(`  ${b.time} ${b.name} (${b.stage})`));
+    lines.push('');
+  });
+  // Bands without day
+  const noDayBands=[...dayPlan].filter(n=>!LINEUP[n]||!LINEUP[n].day);
+  if(noDayBands.length){lines.push('❓ TBA');noDayBands.forEach(n=>lines.push(`  ${n}`));lines.push('')}
+  const text=lines.join('\n').trim();
+  // Try Web Share API first (mobile), fallback to clipboard
+  if(navigator.share){
+    navigator.share({title:t('shareTitle'),text:text}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn=document.querySelector('#planShare button');
+      const orig=btn.textContent;btn.textContent=t('shareCopied');
+      setTimeout(()=>btn.textContent=orig,2000);
+    }).catch(()=>{
+      // Final fallback: prompt
+      prompt(t('shareTitle'),text);
+    });
+  }
 }
 const selectedGenres = new Set();
 const recommended = new Map();
@@ -1380,7 +1421,9 @@ async function init() {
 
   // Initialize plan counter
   const pc=document.getElementById('planCount');
+  const ps=document.getElementById('planShare');
   if(pc&&dayPlan.size>0)pc.textContent=`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`;
+  if(ps&&dayPlan.size>0)ps.style.display='block';
 
   // Genre chip click handlers
   document.querySelectorAll('.genre-chip').forEach(chip => {
