@@ -167,6 +167,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
   <div id="planCount" style="text-align:center;font-size:.85rem;color:#fff;margin-top:.4rem;font-family:'Oswald',sans-serif;letter-spacing:.05em"></div>
   <div id="planShare" style="text-align:center;margin-top:.3rem;display:none"><button onclick="sharePlan()" style="background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:.3rem .8rem;font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.05em;border-radius:3px;cursor:pointer;touch-action:manipulation" data-t="shareBtn">📤 Del dagsplan</button></div>
+  <div style="text-align:center;margin-top:.3rem"><a href="#" id="forceRefresh" style="font-size:.6rem;color:rgba(255,255,255,.2);text-decoration:none">↻ Tving opdatering</a></div>
+<script>document.getElementById('forceRefresh').addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('ch26_times_v6');localStorage.removeItem('ch26_times_ts')}catch(ex){}location.reload()})</script>
 </div>
 
 <div class="day-container" id="dayContainer">
@@ -599,22 +601,28 @@ async function enrichArtistData() {
     return;
   }
 
-  // Check sessionStorage cache
-  const cacheKey = 'ch26_artist_times_v5';
-  try {
-    const cached = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
+  // Check localStorage cache (persists across sessions, refreshes daily)
+  const cacheKey = 'ch26_times_v6';
+  const cacheTs = 'ch26_times_ts';
+  let cached = {};
+  try { cached = JSON.parse(localStorage.getItem(cacheKey) || '{}') } catch(e) {}
+  
+  // Check if cache is from today
+  const today = new Date().toDateString();
+  let cacheDate = '';
+  try { cacheDate = localStorage.getItem(cacheTs) || '' } catch(e) {}
+  const cacheIsToday = cacheDate === today;
+  
+  if (cacheIsToday) {
+    // Restore from today's cache
     let usedCache = 0;
     for (const [name, info] of needsFetch) {
-      if (cached[name]) {
-        if (cached[name].time) { LINEUP[name].time = cached[name].time; usedCache++; }
-      }
+      if (cached[name] && cached[name].time) { LINEUP[name].time = cached[name].time; usedCache++; }
     }
-    if (usedCache > 0) {
-      renderDays();
-    }
-  } catch (e) { /* ignore cache errors */ }
-
-  // Re-filter after cache restore
+    if (usedCache > 0) renderDays();
+  }
+  
+  // Only fetch bands still missing time
   const stillNeeds = Object.entries(LINEUP).filter(([_, info]) => !info.time && info._slug);
   if (stillNeeds.length === 0) return;
 
@@ -691,10 +699,11 @@ async function enrichArtistData() {
     if (i + BATCH < stillNeeds.length) await new Promise(ok => setTimeout(ok, 300));
   }
 
-  // Save to sessionStorage
+  // Save to localStorage with today's date
   try {
-    const existing = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
-    sessionStorage.setItem(cacheKey, JSON.stringify({ ...existing, ...cacheData }));
+    const existing = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+    localStorage.setItem(cacheKey, JSON.stringify({ ...existing, ...cacheData }));
+    localStorage.setItem(cacheTs, new Date().toDateString());
   } catch (e) { /* ignore */ }
 
   const total = Object.keys(LINEUP).length;
