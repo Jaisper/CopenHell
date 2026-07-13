@@ -3,7 +3,7 @@ name: Copenhell Artist Monitor
 on:
   schedule:
     # Kører hver dag kl. 08:00 UTC (= 09:00 dansk tid / 10:00 sommertid)
-    - cron: '0 8 * * *'
+    # - cron: '0 8 * * *'
   workflow_dispatch:  # Gør det muligt at køre manuelt fra GitHub UI
 
 jobs:
