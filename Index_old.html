@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-
 <html lang="da">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Copenhell 2026 — Band Anbefaler</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Copenhell">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text y='.9em' font-size='90' x='5'>💀</text></svg>">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Copenhell%202026%22%2C%22short_name%22%3A%22Copenhell%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a0a0a%22%2C%22theme_color%22%3A%22%230a0a0a%22%2C%22icons%22%3A%5B%5D%7D">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0a0a0a;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--border:rgba(255,255,255,.1);--text:#f0ebe4;--text-dim:rgba(255,255,255,.5);--accent:#c23c2c;--accent-glow:#ff4433;--gold:#d4a843}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh;overflow-x:hidden}
+a,button,input,select,[class*="band"],[class*="skull"],[class*="plan-icon"],[class*="timeline-band"],[class*="genre-chip"],[class*="toggle"],[class*="lang-btn"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh;overflow-x:hidden;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
 .header{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
 .logo{font-family:'Oswald',sans-serif;font-size:clamp(2.5rem,8vw,5rem);font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;color:var(--text)}
@@ -52,10 +59,18 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .band-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:3px}
 .band-card{background:var(--surface);border:1px solid var(--border);padding:.55rem .7rem;cursor:default;display:flex;align-items:center;gap:.4rem;transition:all .15s ease;user-select:none;border-radius:3px;overflow:hidden;min-width:0}
 .band-card:hover{background:var(--surface2);border-color:rgba(255,255,255,.2)}
+.band-card.planned{border-color:#fff;border-width:2px;box-shadow:0 0 8px rgba(255,255,255,.15)}
+.band-card.planned .plan-icon{opacity:1;color:#fff}
 .band-card.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
 .band-card.selected .band-skull{opacity:1;transform:scale(1)}.band-card.selected .band-skull::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.6rem;color:var(--accent);font-weight:700}.band-card.selected .band-name{color:#fff}
+.band-card.planned.selected{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.15),inset 0 0 0 1px var(--accent)}
 .band-card.recommended-gold{background:rgba(212,168,67,.1);border-color:var(--gold);border-width:2px;box-shadow:0 0 10px rgba(212,168,67,.2)}.band-card.recommended-gold .rec-badge{display:flex;background:var(--gold)}.band-card.recommended-gold .band-name{color:var(--gold)}
 .band-card.recommended-green{background:rgba(61,220,132,.08);border-color:#3ddc84;border-width:2px;box-shadow:0 0 10px rgba(61,220,132,.15)}.band-card.recommended-green .rec-badge{display:flex;background:#3ddc84}.band-card.recommended-green .band-name{color:#3ddc84}
+.band-card.planned.recommended-gold,.band-card.planned.recommended-green{border-color:#fff}
+.plan-icon{font-size:.7rem;opacity:.2;cursor:pointer;flex-shrink:0;transition:all .2s;-webkit-tap-highlight-color:transparent;padding:0 .2rem}
+.plan-icon:hover{opacity:.7}
+.planned .plan-icon{opacity:1}
+.timeline-band .plan-icon{font-size:.6rem;display:flex;align-items:center;padding:0 .15rem}
 .band-skull{font-size:1rem;opacity:.2;transform:scale(.85);transition:all .2s ease;flex-shrink:0;width:2rem;height:1.5rem;text-align:center;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;border-radius:3px;-webkit-tap-highlight-color:transparent;border-right:1px solid rgba(255,255,255,.08);margin-right:.3rem;padding-right:.3rem}
 .band-skull:hover{opacity:.7;transform:scale(1);background:rgba(255,255,255,.05)}
 .band-card:hover .band-skull{opacity:.5;transform:scale(.95)}
@@ -78,15 +93,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .genre-chip{background:var(--surface);border:2px solid var(--border);color:var(--text-dim);padding:.5rem 1.1rem;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:500;cursor:pointer;transition:all .15s ease;user-select:none;border-radius:3px;letter-spacing:.05em}
 .genre-chip:hover{border-color:var(--accent);color:var(--text)}
 .genre-chip.active{background:rgba(194,60,44,.15);border-color:var(--accent);color:var(--accent);font-weight:700}
-.timeline-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.timeline-grid{display:grid;gap:1px;min-width:600px}
-.timeline-header{position:sticky;top:0;z-index:10;font-family:'Oswald',sans-serif;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:.4rem .3rem;text-align:center;background:var(--surface2);border:1px solid var(--border);font-weight:600}
+.timeline-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -.5rem;padding:0 .5rem}
+.timeline-grid{display:grid;gap:1px}
+.timeline-header{position:sticky;top:0;z-index:12;font-family:'Oswald',sans-serif;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:.5rem .3rem;text-align:center;background:var(--bg);border:1px solid var(--border);font-weight:600;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.timeline-header:first-child{position:sticky;left:0;top:0;z-index:15;background:var(--bg)}
 .timeline-header.main-stage{color:var(--accent);border-color:rgba(194,60,44,.3)}
-.timeline-time{font-family:'Source Sans 3',sans-serif;font-size:.7rem;color:var(--text-dim);padding:.2rem .3rem;text-align:right;background:rgba(255,255,255,.02);border-right:1px solid var(--border);font-weight:600;white-space:nowrap;position:sticky;left:0;z-index:5}
-.timeline-time.hour{color:var(--gold);font-weight:700;font-size:.75rem;border-top:1px solid rgba(255,255,255,.06)}
+.timeline-time{font-family:'Source Sans 3',sans-serif;font-size:.55rem;color:var(--text-dim);padding:.1rem .15rem;text-align:right;background:var(--bg);border-right:1px solid var(--border);font-weight:600;white-space:nowrap;position:sticky;left:0;z-index:5}
+.timeline-time.hour{color:var(--gold);font-weight:700;font-size:.6rem;border-top:1px solid rgba(255,255,255,.06)}
 .timeline-slot{min-height:1.8rem;position:relative}
-.timeline-band{position:absolute;left:2px;right:2px;top:1px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.2rem .4rem;display:flex;align-items:stretch;gap:.3rem;overflow:hidden;cursor:default;transition:all .15s;z-index:2}
+.timeline-band{position:absolute;left:2px;right:2px;top:1px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.2rem .4rem;display:flex;align-items:stretch;gap:.3rem;overflow:hidden;cursor:pointer;z-index:2}
 .timeline-band:hover{background:var(--surface2);border-color:rgba(255,255,255,.2);z-index:3}
+.timeline-band.planned,.timeline-band.planned:hover{border-color:#fff!important;border-width:2px;box-shadow:0 0 6px rgba(255,255,255,.2)}
 .timeline-band.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
 .timeline-band.selected .tl-skull::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.5rem;color:var(--accent);font-weight:700}
 .timeline-band.rec-gold{background:rgba(212,168,67,.1);border-color:var(--gold)}.timeline-band.rec-gold .tl-name a{color:var(--gold)}
@@ -134,46 +151,55 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @media(max-width:800px){.scene-grid{grid-template-columns:repeat(2,1fr)}.band-name{font-size:.95rem}}
 @media(max-width:480px){.scene-grid{grid-template-columns:1fr}.header{padding:2rem 1rem 1.5rem}.genre-chip{font-size:.9rem;padding:.4rem .8rem}}
 .hidden{display:none!important}
+.lang-toggle{position:absolute;top:1rem;right:1.5rem;display:flex;gap:2px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;font-size:.75rem;font-family:'Oswald',sans-serif;letter-spacing:.05em}
+.lang-btn{padding:.3rem .6rem;cursor:pointer;color:rgba(255,255,255,.4);transition:all .2s;border:none;background:none;font-family:inherit;font-size:inherit;letter-spacing:inherit}
+.lang-btn.active{background:var(--accent);color:#fff}
+.lang-btn:hover{color:rgba(255,255,255,.7)}
 </style>
 </head>
 <body>
 
-<div class="header">
+<div class="header" style="position:relative">
+  <div class="lang-toggle"><button class="lang-btn active" data-lang="da" onclick="setLang('da')">DA</button><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button></div>
   <div class="logo">COPEN<span>HELL</span></div>
-  <div class="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
-  <div class="year-badge">AI Band Anbefaler</div>
+  <div class="subtitle" data-t="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
+  <div class="year-badge" data-t="badge">AI Band Anbefaler</div>
   <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
+  <div id="planCount" style="text-align:center;font-size:.85rem;color:#fff;margin-top:.4rem;font-family:'Oswald',sans-serif;letter-spacing:.05em"></div>
+  <div id="planShare" style="text-align:center;margin-top:.3rem;display:none"><button onclick="sharePlan()" style="background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:.3rem .8rem;font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.05em;border-radius:3px;cursor:pointer;touch-action:manipulation" data-t="shareBtn">📤 Del dagsplan</button></div>
+  <div style="text-align:center;margin-top:.3rem"><a href="#" id="forceRefresh" style="font-size:.6rem;color:rgba(255,255,255,.2);text-decoration:none">↻ Tving opdatering</a></div>
+<script>document.getElementById('forceRefresh').addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('ch26_times_v6');localStorage.removeItem('ch26_times_ts')}catch(ex){}location.reload()})</script>
 </div>
 
 <div class="day-container" id="dayContainer">
-  <div class="loading-indicator" id="loadingIndicator">Henter lineup fra copenhell.dk</div>
+  <div class="loading-indicator" id="loadingIndicator" data-t="loadingLineup">Henter lineup fra copenhell.dk</div>
 </div>
 
 <div class="genre-section">
-  <div class="genre-header">🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
+  <div class="genre-header" data-t="genreHeader">🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
   <div class="genre-grid" id="genreGrid">
     <div class="genre-chip" data-genre="Heavy Metal (Trad)">Heavy Metal (Trad)</div>
     <div class="genre-chip" data-genre="Hard Rock">Hard Rock</div>
     <div class="genre-chip" data-genre="Thrash Metal">Thrash Metal</div>
-    <div class="genre-chip" data-genre="Dødsmetal">Dødsmetal</div>
+    <div class="genre-chip" data-genre="Death Metal" data-t-da="Dødsmetal">Dødsmetal</div>
     <div class="genre-chip" data-genre="Black Metal">Black Metal</div>
     <div class="genre-chip" data-genre="Doom Metal">Doom Metal</div>
     <div class="genre-chip" data-genre="Power Metal">Power Metal</div>
     <div class="genre-chip" data-genre="Glam Metal">Glam Metal</div>
     <div class="genre-chip" data-genre="Gothic Metal">Gothic Metal</div>
-    <div class="genre-chip" data-genre="Alternativ Metal">Alternativ Metal</div>
-    <div class="genre-chip" data-genre="Progressiv Metal">Progressiv Metal</div>
+    <div class="genre-chip" data-genre="Alternative Metal" data-t-da="Alternativ Metal">Alternativ Metal</div>
+    <div class="genre-chip" data-genre="Progressive Metal" data-t-da="Progressiv Metal">Progressiv Metal</div>
     <div class="genre-chip" data-genre="Speed Metal">Speed Metal</div>
   </div>
 </div>
 
 <div class="personal-fav-section">
-  <div class="genre-header">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
-  <input type="text" id="personalFavs" placeholder="F.eks. Metallica, Slayer, Pantera" maxlength="200" style="width:100%;max-width:600px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
+  <div class="genre-header" data-t="favHeader">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
+  <input type="search" id="personalFavs" name="band-search" data-t-ph="favPlaceholder" placeholder="F.eks. Metallica, Slayer, Pantera" maxlength="200" autocomplete="off" style="width:100%;max-width:600px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
 </div>
 
 <div class="instructions">
-  <p>
+  <p data-t="instructions">
     Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>
     AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
   </p>
@@ -182,44 +208,44 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <div class="recommend-section">
   <div class="fav-counter" id="favCounter">
     <span class="skull">💀</span>
-    <span id="favText">Valgte: 0 bands · 0 genrer</span>
+    <span id="favText" data-t="favDefault">Valgte: 0 bands · 0 genrer</span>
   </div>
   <br>
-  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>
+  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled data-t="recBtn">
     🤘 Find anbefalinger baseret på mine favoritter
   </button>
   <div class="action-bar">
-    <button class="btn-ghost" onclick="clearSelections()">Nulstil valg</button>
-    <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()">Fjern anbefalinger</button>
+    <button class="btn-ghost" onclick="clearSelections()" data-t="clearBtn">Nulstil valg</button>
+    <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()" data-t="clearRecBtn">Fjern anbefalinger</button>
   </div>
   <div class="api-section" style="margin-top:1.5rem">
     <details class="api-box" id="apiBox">
-      <summary>⚙ AI Indstillinger (API Key og valg af AI Model)</summary>
-      <p class="api-hint">
+      <summary data-t="apiSummary">⚙ AI Indstillinger (API Key og valg af AI Model)</summary>
+      <p class="api-hint" data-t="apiHint">
         Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
         log ind → API Keys → Create. Nøglen gemmes kun i din browser.
       </p>
       <div class="api-row">
         <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
-        <button class="btn-small" onclick="saveApiKey()">Gem</button>
+        <button class="btn-small" onclick="saveApiKey()" data-t="saveBtn">Gem</button>
       </div>
       <div class="api-status" id="apiStatus"></div>
       <div style="margin-top:1rem">
-        <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem">AI Model</label>
+        <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem" data-t="modelLabel">AI Model</label>
         <select id="modelSelect" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.5rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px">
-          <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B (anbefalet — bedst kvalitet)</option>
-          <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B (hurtig, lavere kvalitet)</option>
-          <option value="compound-beta">🔍 Compound Beta (web search — langsom)</option>
-          <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B (ultra-hurtig, lavere kvalitet)</option>
+          <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B</option>
+          <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B</option>
+          <option value="compound-beta">🔍 Compound Beta</option>
+          <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B</option>
         </select>
-        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint">OpenAI's åbne model — bedst til korrekte beskrivelser</div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint"></div>
       </div>
     </details>
   </div>
 </div>
 
 <div class="results-section hidden" id="results">
-  <div class="results-header">AI Anbefalinger — baseret på dine favoritter</div>
+  <div class="results-header" data-t="resultsHeader">AI Anbefalinger — baseret på dine favoritter</div>
   <div id="resultsList"></div>
 </div>
 
@@ -239,6 +265,91 @@ const PROXIES = [
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
   url => `https://proxy.cors.sh/${url}`,
 ];
+
+// ═══════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════
+let LANG = 'da';
+const TR = {
+  subtitle:     {da:'24 — 27 Juni 2026 · Refshaleøen · København', en:'24 — 27 June 2026 · Refshaleøen · Copenhagen'},
+  badge:        {da:'AI Band Anbefaler', en:'AI Band Recommender'},
+  loading:      {da:'Henter program fra copenhell.dk...', en:'Loading program from copenhell.dk...'},
+  loadingLineup:{da:'Henter lineup fra copenhell.dk', en:'Loading lineup from copenhell.dk'},
+  genreHeader:  {da:'🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI\'en med bedre anbefalinger)</span>', en:'🎸 Favourite genres <span class="genre-hint">(optional — helps the AI give better recommendations)</span>'},
+  favHeader:    {da:'🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span>', en:'🎤 Your favourite artists <span class="genre-hint">(optional — up to 3, comma-separated)</span>'},
+  favPlaceholder:{da:'F.eks. Metallica, Slayer, Pantera', en:'E.g. Metallica, Slayer, Pantera'},
+  instructions: {da:'Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>AI\'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.', en:'Tap <strong>💀</strong> on bands you know and like, and choose your <strong>favourite genres</strong>.<br>The AI will then recommend which <strong>other bands</strong> you should see.'},
+  favDefault:   {da:'Vælg bands, genrer og/eller egne favoritter', en:'Select bands, genres and/or your favourites'},
+  recBtn:       {da:'🤘 Find anbefalinger baseret på mine favoritter', en:'🤘 Get recommendations based on my favourites'},
+  clearBtn:     {da:'Nulstil valg', en:'Reset selection'},
+  clearRecBtn:  {da:'Fjern anbefalinger', en:'Clear recommendations'},
+  apiSummary:   {da:'⚙ AI Indstillinger (API Key og valg af AI Model)', en:'⚙ AI Settings (API Key and AI Model)'},
+  apiHint:      {da:'Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — log ind → API Keys → Create. Nøglen gemmes kun i din browser.', en:'Free AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — sign in → API Keys → Create. The key is stored only in your browser.'},
+  saveBtn:      {da:'Gem', en:'Save'},
+  modelLabel:   {da:'AI Model', en:'AI Model'},
+  resultsHeader:{da:'AI Anbefalinger — baseret på dine favoritter', en:'AI Recommendations — based on your favourites'},
+  // Dynamic strings
+  bands:        {da:'bands', en:'bands'},
+  artists:      {da:'kunstnere', en:'artists'},
+  selected:     {da:'Valgte', en:'Selected'},
+  genres:       {da:'genrer', en:'genres'},
+  ownFavs:      {da:'egne favoritter', en:'own favourites'},
+  sortTime:     {da:'↓ Sorteret efter starttid', en:'↓ Sorted by start time'},
+  sortAlpha:    {da:'↓ Alfabetisk', en:'↓ Alphabetical'},
+  listView:     {da:'☰ Liste', en:'☰ List'},
+  timeline:     {da:'🕐 Tidsplan', en:'🕐 Timeline'},
+  sceneTBA:     {da:'Scene TBA', en:'Stage TBA'},
+  boneyardTBA:  {da:'Boneyard · Scene TBA', en:'Boneyard · Stage TBA'},
+  dayTBA:       {da:'Dag ikke annonceret', en:'Day not announced'},
+  withTime:     {da:'med spilletid', en:'with play time'},
+  enriching:    {da:'Vent lidt... henter spilletider', en:'Please wait... fetching play times'},
+  keySaved:     {da:'✓ Nøgle gemt', en:'✓ Key saved'},
+  keyError:     {da:'✗ Nøglen skal starte med gsk_', en:'✗ Key must start with gsk_'},
+  enterKey:     {da:'✗ Indtast Groq API nøgle', en:'✗ Enter Groq API key'},
+  analyzing:    {da:'💀 AI analyserer din musiksmag...', en:'💀 AI is analysing your music taste...'},
+  searching:    {da:'🔍 AI søger på nettet og analyserer...', en:'🔍 AI is searching the web...'},
+  switching:    {da:'⚡ Skifter til Llama 3.3...', en:'⚡ Switching to Llama 3.3...'},
+  waiting:      {da:'⏳ Venter', en:'⏳ Waiting'},
+  favToggle:    {da:'Vælg som favorit', en:'Select as favourite'},
+  openSpotify:  {da:'Åbn på Spotify', en:'Open on Spotify'},
+  openSite:     {da:'Se på copenhell.dk', en:'View on copenhell.dk'},
+  mySchedule:   {da:'Min dagsplan', en:'My schedule'},
+  addPlan:      {da:'Tilføj til dagsplan', en:'Add to schedule'},
+  shareBtn:     {da:'📤 Del dagsplan', en:'📤 Share schedule'},
+  shareCopied:  {da:'✓ Kopieret!', en:'✓ Copied!'},
+  shareTitle:   {da:'Min Copenhell 2026 dagsplan', en:'My Copenhell 2026 schedule'},
+  dayNames:     {da:{ons:'Onsdag',tor:'Torsdag',fre:'Fredag',lor:'Lørdag'}, en:{ons:'Wednesday',tor:'Thursday',fre:'Friday',lor:'Saturday'}},
+  dayDates:     {da:{ons:'24. juni',tor:'25. juni',fre:'26. juni',lor:'27. juni'}, en:{ons:'June 24',tor:'June 25',fre:'June 26',lor:'June 27'}},
+  deathMetal:   {da:'Dødsmetal', en:'Death Metal'},
+  altMetal:     {da:'Alternativ Metal', en:'Alternative Metal'},
+  progMetal:    {da:'Progressiv Metal', en:'Progressive Metal'},
+};
+
+function t(key){ return (TR[key]&&TR[key][LANG]) || (TR[key]&&TR[key]['da']) || key; }
+
+function setLang(lang){
+  LANG=lang;
+  try{localStorage.setItem('ch_lang',lang)}catch(e){}
+  // Update toggle buttons
+  document.querySelectorAll('.lang-btn').forEach(b=>{b.classList.toggle('active',b.dataset.lang===lang)});
+  // Update all data-t elements
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key=el.dataset.t;
+    if(TR[key])el.innerHTML=TR[key][lang]||TR[key]['da'];
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-t-ph]').forEach(el=>{
+    const key=el.dataset.tPh;
+    if(TR[key])el.placeholder=TR[key][lang]||TR[key]['da'];
+  });
+  // Update genre chips that differ
+  document.querySelectorAll('.genre-chip[data-t-da]').forEach(el=>{
+    if(lang==='da')el.textContent=el.dataset.tDa;
+    else el.textContent=el.dataset.genre;
+  });
+  // Re-render days with new language
+  if(Object.keys(LINEUP).length>0){renderDays();updateCounter()}
+}
 
 const DAYS_CONFIG = [
   { key: 'ons', en: 'Wed', name: 'Onsdag', date: '24. juni' },
@@ -352,6 +463,54 @@ const CACHED_LINEUP = {
 let LINEUP = {};     // active lineup data
 let dataIsLive = false;
 const selected = new Set();
+const dayPlan = new Set();
+// Restore dayplan from localStorage
+try{const dp=JSON.parse(localStorage.getItem('ch26_dayplan')||'[]');dp.forEach(b=>dayPlan.add(b))}catch(e){}
+function saveDayPlan(){try{localStorage.setItem('ch26_dayplan',JSON.stringify([...dayPlan]))}catch(e){}}
+function togglePlan(name,el){
+  if(dayPlan.has(name)){dayPlan.delete(name);if(el)el.classList.remove('planned')}
+  else{dayPlan.add(name);if(el)el.classList.add('planned')}
+  saveDayPlan();
+  const pc=document.getElementById('planCount');
+  const ps=document.getElementById('planShare');
+  if(pc)pc.textContent=dayPlan.size>0?`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`:'';
+  if(ps)ps.style.display=dayPlan.size>0?'block':'none';
+}
+
+function sharePlan(){
+  const dayOrder=['ons','tor','fre','lor'];
+  const dayLabels=t('dayNames');
+  const lines=[t('shareTitle'),''];
+  dayOrder.forEach(dk=>{
+    const bands=[...dayPlan].filter(name=>{
+      const info=LINEUP[name];return info&&info.day===dk;
+    }).map(name=>{
+      const info=LINEUP[name];
+      return{name,time:info.time||'??:??',stage:info.stage||'TBA'};
+    }).sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));
+    if(!bands.length)return;
+    lines.push(`🎸 ${dayLabels[dk]||dk}`);
+    bands.forEach(b=>lines.push(`  ${b.time} ${b.name} (${b.stage})`));
+    lines.push('');
+  });
+  // Bands without day
+  const noDayBands=[...dayPlan].filter(n=>!LINEUP[n]||!LINEUP[n].day);
+  if(noDayBands.length){lines.push('❓ TBA');noDayBands.forEach(n=>lines.push(`  ${n}`));lines.push('')}
+  const text=lines.join('\n').trim();
+  // Try Web Share API first (mobile), fallback to clipboard
+  if(navigator.share){
+    navigator.share({title:t('shareTitle'),text:text}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn=document.querySelector('#planShare button');
+      const orig=btn.textContent;btn.textContent=t('shareCopied');
+      setTimeout(()=>btn.textContent=orig,2000);
+    }).catch(()=>{
+      // Final fallback: prompt
+      prompt(t('shareTitle'),text);
+    });
+  }
+}
 const selectedGenres = new Set();
 const recommended = new Map();
 
@@ -442,22 +601,28 @@ async function enrichArtistData() {
     return;
   }
 
-  // Check sessionStorage cache
-  const cacheKey = 'ch26_artist_times_v5';
-  try {
-    const cached = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
+  // Check localStorage cache (persists across sessions, refreshes daily)
+  const cacheKey = 'ch26_times_v6';
+  const cacheTs = 'ch26_times_ts';
+  let cached = {};
+  try { cached = JSON.parse(localStorage.getItem(cacheKey) || '{}') } catch(e) {}
+  
+  // Check if cache is from today
+  const today = new Date().toDateString();
+  let cacheDate = '';
+  try { cacheDate = localStorage.getItem(cacheTs) || '' } catch(e) {}
+  const cacheIsToday = cacheDate === today;
+  
+  if (cacheIsToday) {
+    // Restore from today's cache
     let usedCache = 0;
     for (const [name, info] of needsFetch) {
-      if (cached[name]) {
-        if (cached[name].time) { LINEUP[name].time = cached[name].time; usedCache++; }
-      }
+      if (cached[name] && cached[name].time) { LINEUP[name].time = cached[name].time; usedCache++; }
     }
-    if (usedCache > 0) {
-      renderDays();
-    }
-  } catch (e) { /* ignore cache errors */ }
-
-  // Re-filter after cache restore
+    if (usedCache > 0) renderDays();
+  }
+  
+  // Only fetch bands still missing time
   const stillNeeds = Object.entries(LINEUP).filter(([_, info]) => !info.time && info._slug);
   if (stillNeeds.length === 0) return;
 
@@ -478,12 +643,12 @@ async function enrichArtistData() {
     } catch (e) { /* try next */ }
   }
   if (!workingProxy) {
-    src.textContent = `✓ ${Object.keys(LINEUP).length} bands — spilletider ikke tilgængelige`;
+    src.textContent = `✓ ${Object.keys(LINEUP).length} bands`;
     src.className = 'data-source live';
     return;
   }
 
-  src.textContent = `🔄 Vent lidt... henter spilletider`;
+  src.textContent = `🔄 ${t('enriching')}`;
   src.className = 'data-source updating';
 
   const BATCH = 5;
@@ -528,21 +693,22 @@ async function enrichArtistData() {
 
     // Update progress
     const done = Math.min(i + BATCH, stillNeeds.length);
-    src.textContent = `🔄 Vent lidt... henter spilletider ${done}/${stillNeeds.length}`;
+    src.textContent = `🔄 ${t('enriching')} ${done}/${stillNeeds.length}`;
     
     if (fetched > 0) renderDays();
     if (i + BATCH < stillNeeds.length) await new Promise(ok => setTimeout(ok, 300));
   }
 
-  // Save to sessionStorage
+  // Save to localStorage with today's date
   try {
-    const existing = JSON.parse(sessionStorage.getItem(cacheKey) || '{}');
-    sessionStorage.setItem(cacheKey, JSON.stringify({ ...existing, ...cacheData }));
+    const existing = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+    localStorage.setItem(cacheKey, JSON.stringify({ ...existing, ...cacheData }));
+    localStorage.setItem(cacheTs, new Date().toDateString());
   } catch (e) { /* ignore */ }
 
   const total = Object.keys(LINEUP).length;
   const withTime = Object.values(LINEUP).filter(i => i.time).length;
-  src.textContent = `✓ ${total} bands — ${withTime} med spilletid`;
+  src.textContent = `✓ ${total} bands — ${withTime} ${t('withTime')}`;
   src.className = 'data-source live';
 }
 
@@ -569,9 +735,11 @@ async function fetchLiveLineup() {
       
 
       if (bandCount >= 20) {
+        const NOT_BANDS = new Set(['METAL BINGO','POWER HOUR','MUAY THAI','OPENHELL','ST. DIGUE','TEATER LUX','THE BOBBY TENDERLOIN SHOW','METAL YOGA','METAL KARAOKE','METAL QUIZ','MUSIC QUIZ','TATTOO','SIGNING','MEET & GREET','WARM UP','AFTERPARTY','DJ','FOOD','BAR','VIP','PRESS','DISABLED','BACKSTAGE','CREW','STAFF','CAMPING','PARKING','TOILETS','SHOWERS','LOCKERS','LOST & FOUND','INFO','FIRST AID','SECURITY','VOLUNTEER','MERCH','NORDIC ELITE WRESTLING','DRAGS FROM HELL','COLD CULTURE','THE BOBBY TENDERLOIN']);
         const musicBands = {};
         for (const [name, info] of Object.entries(parsed)) {
           if (name.length > 60) continue;
+          if (NOT_BANDS.has(name.toUpperCase())) continue;
           musicBands[name] = info;
         }
         return musicBands;
@@ -660,7 +828,11 @@ function renderTimelineDay(section, day, dayBands, stages) {
   const colCount = stages.length + 1; // +1 for time column
   const grid = document.createElement('div');
   grid.className = 'timeline-grid';
-  grid.style.gridTemplateColumns = `3.5rem repeat(${stages.length}, 1fr)`;
+  if(window.innerWidth>=900){
+    grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, 1fr)`;
+  }else{
+    grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, minmax(160px, 1fr))`;
+  }
 
   // Header row
   const timeH = document.createElement('div');
@@ -698,27 +870,27 @@ function renderTimelineDay(section, day, dayBands, stages) {
         const artistUrl = getArtistUrl(band.name);
         const isSelected = selected.has(band.name);
         const recRank = recommended.get(band.name);
+        const isPlanned = dayPlan.has(band.name);
         let cls = 'timeline-band';
         if (isSelected) cls += ' selected';
+        if (isPlanned) cls += ' planned';
         if (recRank && recRank <= 10) cls += ' rec-gold';
         else if (recRank) cls += ' rec-green';
 
         // Duration: Helvíti = 90 min, others = 60 min
         const durationMin = (stage === 'Helvíti') ? 90 : 60;
         const slotsSpan = durationMin / SLOT_SIZE;
-        // Height = number of slots * slot height (1.8rem) - 2px for gap
         const heightRem = slotsSpan * 1.8;
 
         const el = document.createElement('div');
         el.className = cls;
         el.style.height = `calc(${heightRem}rem - 2px)`;
-        el.innerHTML = `<span class="tl-skull" title="Vælg som favorit">💀</span><div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span></div><span class="tl-spotify"><a href="${getSpotifyUrl(band.name)}" target="_blank">${SPOTIFY_SVG}</a></span>`;
+        el.innerHTML = `<div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span></div><span class="plan-icon">${isPlanned?'📅':'📅'}</span>`;
 
-        el.querySelector('.tl-skull').addEventListener('click', e => {
-          e.stopPropagation();
-          if (selected.has(band.name)) { selected.delete(band.name); el.classList.remove('selected'); }
-          else { selected.add(band.name); el.classList.add('selected'); }
-          updateCounter();
+        // Click = toggle dayplan
+        el.addEventListener('click', e => {
+          if(e.target.closest('a')) return;
+          togglePlan(band.name, el);
         });
 
         cell.appendChild(el);
@@ -754,10 +926,10 @@ function renderDays() {
     const headerHTML = `
       <div class="day-header">
         <div class="day-dot"></div>
-        <div class="day-name">${day.name}</div>
-        <div class="day-date">${day.date}</div>
-        <div class="day-count"><span>${dayBands.length}</span> bands</div>
-        ${dayHasTime ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? '☰ Liste' : '🕐 Tidsplan'}</div>` : ''}
+        <div class="day-name">${t('dayNames')[day.key]||day.name}</div>
+        <div class="day-date">${t('dayDates')[day.key]||day.date}</div>
+        <div class="day-count"><span>${dayBands.length}</span> ${t('bands')}</div>
+        ${dayHasTime ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? t('listView') : t('timeline')}</div>` : ''}
       </div>
     `;
     section.innerHTML = headerHTML;
@@ -788,9 +960,14 @@ function renderDays() {
       .map(([name, info]) => ({ name, stage: info.stage || '', time: info.time || '' }))
       .sort((a, b) => a.name.localeCompare(b.name, 'da'));
     if (extraBands.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'scene-header';
+      label.style.cssText = 'margin-top:6px;color:var(--text-dim);font-style:italic';
+      const hasBoneyard = extraBands.some(b => b.stage === 'Boneyard');
+      label.textContent = hasBoneyard ? t('boneyardTBA') : t('sceneTBA');
+      section.appendChild(label);
       const extraGrid = document.createElement('div');
       extraGrid.className = 'band-grid';
-      extraGrid.style.marginTop = '4px';
       extraBands.forEach(band => renderBandCard(band, extraGrid));
       section.appendChild(extraGrid);
     }
@@ -807,9 +984,9 @@ function renderDays() {
     section.innerHTML = `
       <div class="day-header">
         <div class="day-dot" style="background:#555"></div>
-        <div class="day-name">Dag ikke annonceret</div>
+        <div class="day-name">${t('dayTBA')}</div>
         <div class="day-date">TBA</div>
-        <div class="day-count"><span>${unassigned.length}</span> bands</div>
+        <div class="day-count"><span>${unassigned.length}</span> ${t('bands')}</div>
       </div>
       <div class="band-grid"></div>
     `;
@@ -823,7 +1000,7 @@ function renderClassicDay(section, day, dayBands) {
   const dayHasTime = dayBands.some(([_, info]) => info.time);
   const sortDiv = document.createElement('div');
   sortDiv.className = 'sort-indicator';
-  sortDiv.textContent = dayHasTime ? '↓ Sorteret efter starttid' : '↓ Alfabetisk';
+  sortDiv.textContent = dayHasTime ? t('sortTime') : t('sortAlpha');
   section.appendChild(sortDiv);
   const sceneGrid = document.createElement('div');
   sceneGrid.className = 'scene-grid';
@@ -874,6 +1051,7 @@ function renderBandCard(band, grid) {
   card.className = 'band-card';
   card.dataset.band = band.name;
   if (selected.has(band.name)) card.classList.add('selected');
+  if (dayPlan.has(band.name)) card.classList.add('planned');
   if (recommended.has(band.name)) {
     const rank = recommended.get(band.name);
     card.classList.add(rank <= 10 ? 'recommended-gold' : 'recommended-green');
@@ -883,14 +1061,15 @@ function renderBandCard(band, grid) {
   const spotifyUrl = getSpotifyUrl(band.name);
 
   card.innerHTML = `
-    <div class="band-skull" title="Vælg som favorit">💀</div>
+    <div class="band-skull" title="${t('favToggle')}">💀</div>
     <div class="band-info">
       <div class="band-text">
         ${band.time ? `<span class="band-time">${band.time}</span>` : ''}
-        <div class="band-name"><a href="${artistUrl}" target="_blank" rel="noopener" title="Se på copenhell.dk">${band.name}</a></div>
+        <div class="band-name"><a href="${artistUrl}" target="_blank" rel="noopener" title="${t('openSite')}">${band.name}</a></div>
       </div>
       <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
-         title="Åbn på Spotify">${SPOTIFY_SVG}</a>
+         title="${t('openSpotify')}">${SPOTIFY_SVG}</a>
+      <span class="plan-icon" title="📅">📅</span>
     </div>
     <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
   `;
@@ -901,11 +1080,15 @@ function renderBandCard(band, grid) {
     toggleBand(band.name, card);
   });
 
-  // Card click (not on links or skull) = also toggle favorite
+  // Plan icon click = toggle dayplan
+  card.querySelector('.plan-icon').addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePlan(band.name, card);
+  });
+
+  // Card click (not on links, skull, or plan) = toggle favorite
   card.addEventListener('click', (e) => {
-    const link = e.target.closest('a');
-    const skull = e.target.closest('.band-skull');
-    if (link || skull) return;
+    if (e.target.closest('a') || e.target.closest('.band-skull') || e.target.closest('.plan-icon')) return;
     toggleBand(band.name, card);
   });
 
@@ -929,12 +1112,12 @@ function updateCounter() {
   const b = selected.size, g = selectedGenres.size;
   const p = (document.getElementById('personalFavs')?.value||'').split(',').map(s=>s.trim()).filter(s=>s).length;
   const parts = [];
-  if (b > 0) parts.push(`${b} band${b > 1 ? 's' : ''}`);
-  if (g > 0) parts.push(`${g} genre${g > 1 ? 'r' : ''}`);
-  if (p > 0) parts.push(`${p} egne favorit${p > 1 ? 'ter' : ''}`);
+  if (b > 0) parts.push(`${b} ${t('bands')}`);
+  if (g > 0) parts.push(`${g} ${t('genres')}`);
+  if (p > 0) parts.push(`${p} ${t('ownFavs')}`);
   document.getElementById('favText').textContent = parts.length > 0 
-    ? `Valgte: ${parts.join(' · ')}` 
-    : 'Vælg bands, genrer og/eller egne favoritter';
+    ? `${t('selected')}: ${parts.join(' · ')}` 
+    : t('favDefault');
   document.getElementById('recBtn').disabled = b < 1 && g < 1 && p < 1;
 }
 
@@ -963,12 +1146,12 @@ function clearRecommendations() {
 function saveApiKey() {
   const key = document.getElementById('apiKey').value.trim();
   if (!key.startsWith('gsk_')) {
-    document.getElementById('apiStatus').textContent = '✗ Nøglen skal starte med gsk_';
+    document.getElementById('apiStatus').textContent = t('keyError');
     document.getElementById('apiStatus').style.color = '#c23c2c';
     return;
   }
   localStorage.setItem('groq_api_key', key);
-  document.getElementById('apiStatus').textContent = '✓ Nøgle gemt';
+  document.getElementById('apiStatus').textContent = t('keySaved');
   document.getElementById('apiStatus').style.color = '#3ddc84';
 }
 
@@ -994,7 +1177,7 @@ async function getRecommendations() {
   const isSmallLimit = model.includes('gpt-oss') || model === 'compound-beta';
   const btn = document.getElementById('recBtn');
   btn.classList.add('loading');
-  btn.textContent = model === 'compound-beta' ? '🔍 AI søger på nettet og analyserer...' : '💀 AI analyserer din musiksmag...';
+  btn.textContent = model === 'compound-beta' ? t('searching') : t('analyzing');
 
   // Compact list (names only) for models with low TPM limits
   const remainingWithDays = isSmallLimit
@@ -1012,21 +1195,40 @@ async function getRecommendations() {
 
   let introText;
   const parts = [];
-  if (hasFavs) parts.push(`Favoritter fra Copenhell: ${favorites.join(', ')}`);
-  if (hasPersonal) parts.push(`Brugerens yndlingskunstnere generelt (IKKE på festivalen): ${personalFavs.join(', ')}`);
-  if (hasGenres) parts.push(`Foretrukne genrer: ${genreList}`);
-  
-  if (hasPersonal && !hasFavs && !hasGenres) {
-    introText = `${parts.join('\n')}
-Anbefal bands der ligner disse kunstnere i lyd, stil og genre.`;
-  } else if (parts.length > 0) {
-    introText = `${parts.join('\n')}
-Anbefal bands der matcher ovenstående præferencer (inkl. nært beslægtede subgenrer).`;
+  if (LANG === 'en') {
+    if (hasFavs) parts.push(`Favourites from Copenhell: ${favorites.join(', ')}`);
+    if (hasPersonal) parts.push(`User's favourite artists in general (NOT at the festival): ${personalFavs.join(', ')}`);
+    if (hasGenres) parts.push(`Preferred genres: ${genreList}`);
+    if (hasPersonal && !hasFavs && !hasGenres) {
+      introText = `${parts.join('\n')}\nRecommend bands similar to these artists in sound, style and genre.`;
+    } else if (parts.length > 0) {
+      introText = `${parts.join('\n')}\nRecommend bands matching the above preferences (incl. closely related subgenres).`;
+    } else { introText = ''; }
   } else {
-    introText = '';
+    if (hasFavs) parts.push(`Favoritter fra Copenhell: ${favorites.join(', ')}`);
+    if (hasPersonal) parts.push(`Brugerens yndlingskunstnere generelt (IKKE på festivalen): ${personalFavs.join(', ')}`);
+    if (hasGenres) parts.push(`Foretrukne genrer: ${genreList}`);
+    if (hasPersonal && !hasFavs && !hasGenres) {
+      introText = `${parts.join('\n')}\nAnbefal bands der ligner disse kunstnere i lyd, stil og genre.`;
+    } else if (parts.length > 0) {
+      introText = `${parts.join('\n')}\nAnbefal bands der matcher ovenstående præferencer (inkl. nært beslægtede subgenrer).`;
+    } else { introText = ''; }
   }
 
-  const prompt = `Copenhell 2026 metal/rock koncertanbefaler.
+  const promptLang = LANG === 'en' ? `Copenhell 2026 metal/rock concert recommender.
+${introText}
+
+Bands to choose from (USE EXACT NAMES FROM THIS LIST):
+${remainingWithDays}
+
+RULES:
+1. Only recommend bands you KNOW and that match the selected genres (incl. subgenres and related music)
+2. Think BROADLY — a band doesn't need to be 100% within the genre, just overlap or appeal to the same audience
+3. Aim for 10-20 recommendations — the more relevant the better
+4. 2-3 sentences in English per band, NEVER invent facts
+5. The "band" field MUST be copied EXACTLY from the list
+JSON array, NO other text: [{"rank":1,"band":"EXACT NAME","reason":"description","match":"95%"}]`
+  : `Copenhell 2026 metal/rock koncertanbefaler.
 ${introText}
 
 Bands at vælge fra (BRUG PRÆCIS DISSE NAVNE):
@@ -1039,6 +1241,8 @@ REGLER:
 4. 2-3 sætninger dansk per band, OPFIND ALDRIG fakta
 5. "band" feltet SKAL kopieres PRÆCIST fra listen
 JSON array, INGEN anden tekst: [{"rank":1,"band":"PRÆCIST NAVN","reason":"beskrivelse","match":"95%"}]`;
+
+  const prompt = promptLang;
 
   async function callGroq(m, retries) {
     if (retries === undefined) retries = 2;
@@ -1089,7 +1293,7 @@ JSON array, INGEN anden tekst: [{"rank":1,"band":"PRÆCIST NAVN","reason":"beskr
     alert('Fejl: ' + err.message);
   } finally {
     btn.classList.remove('loading');
-    btn.textContent = '🤘 Find anbefalinger baseret på mine favoritter';
+    btn.textContent = t('recBtn');
   }
 }
 
@@ -1163,11 +1367,13 @@ function displayRecommendations(recs) {
 // BOOT
 // ═══════════════════════════════════════════════════════
 async function init() {
+  // Restore language
+  try{const sl=localStorage.getItem('ch_lang');if(sl)setLang(sl)}catch(e){}
   // Load API key
   const savedKey = localStorage.getItem('groq_api_key');
   if (savedKey) {
     document.getElementById('apiKey').value = savedKey;
-    document.getElementById('apiStatus').textContent = '✓ Nøgle gemt';
+    document.getElementById('apiStatus').textContent = t('keySaved');
     document.getElementById('apiStatus').style.color = '#3ddc84';
     document.getElementById('apiBox').removeAttribute('open');
   }
@@ -1187,7 +1393,7 @@ async function init() {
 
   // Try to fetch live lineup
   const src = document.getElementById('dataSource');
-  src.textContent = '🔄 Vent lidt... opdaterer program fra copenhell.dk';
+  src.textContent = LANG==='en'?'🔄 Updating program from copenhell.dk...':'🔄 Vent lidt... opdaterer program fra copenhell.dk';
   src.className = 'data-source updating';
   const cachedCount = Object.keys(CACHED_LINEUP).length;
   const live = await fetchLiveLineup();
@@ -1229,6 +1435,12 @@ async function init() {
   renderDays();
   updateCounter();
 
+  // Initialize plan counter
+  const pc=document.getElementById('planCount');
+  const ps=document.getElementById('planShare');
+  if(pc&&dayPlan.size>0)pc.textContent=`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`;
+  if(ps&&dayPlan.size>0)ps.style.display='block';
+
   // Genre chip click handlers
   document.querySelectorAll('.genre-chip').forEach(chip => {
     chip.addEventListener('click', () => {
@@ -1253,7 +1465,5 @@ async function init() {
 
 init();
 </script>
-
 </body>
 </html>
-
