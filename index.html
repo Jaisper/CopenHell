@@ -3,774 +3,1466 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ROS 2026 — Kunstner Anbefaler</title>
-<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAACZ0lEQVR42u2Xz0tUURTHP/f9csYfJZYiCRNIP1AoyMIoK2xR/QFtbJFkJFG4D4JWSu2CSiowiVa1aBmVRItqjAI3IhiERqXmr/HXqOPM3PfeaS2ZvKEns8gDd3UP937u95x7zr1KRMinGeTZNgE2AXICcBcnJTPzTfIHkBhi+X1n/hQwPI3/sZvs4viaKuiZ75Ls7ZINA/CSv5BEktTrjjXnU58fIUNvN06B7NgAVkThxh+y+Kl71UkzY/2S6bmNn5rJCcDKxVlG+sAQTNsm8/Qy3vgXcfafxZvsJ/2qHUuvILM/cgJQQXuBTiUkebMWY2kaTBsQvLSLYRr4vo/lWGAoXDHYcq0fp2KvCjUEejiOzE2jLBvEBxR21MHzfTBAZ118rTHTWdyRvvBzINP/HCUgKFAK5fto7WE1tlF05Q2R84/xY4dxVwQ9/CHcEOiFUVm4tQ8zswCGhQK0FiLN3ZQcal4l9ezdUyJTA2zrmAgvBMvxB6j5eZTpgFK4KU3BybY/NgcobnmCl14iPfhSQgFwF0bF6+3CjFqICGiNKq+i8MyNNf2dkh0q0nCJdPx+ODkw/6wVmZhGDMBQ+BnBPtqKVVj2V4mjx6+SHY6TTnyVfwJIz/4Up+4ckQv30HYRuC4UFxE52LTuovb2Pcoqi5HpaQ9QXEQCjcV3dyTRgsx1NkoQ/+SL6zJ1EUmND67rH/gaFtQ3I1sjWNXHgsW2ogazoYloZY0KpRTbkVJl7DwgZlVdsBq/+wRO7elwe4GK1WOW7wqmWGks3FIMYFXVYZZU5u9B4lQfwSwuV2ECqM2f0SbAfw/wG6AmSXi/F/vqAAAAAElFTkSuQmCC">
+<title>Copenhell 2026 — Band Anbefaler</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ROS 2026">
+<meta name="apple-mobile-web-app-title" content="Copenhell">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#e8621e">
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Roskilde%202026%22%2C%22short_name%22%3A%22ROS%202026%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23e8621e%22%2C%22theme_color%22%3A%22%23e8621e%22%2C%22icons%22%3A%5B%5D%7D">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text y='.9em' font-size='90' x='5'>💀</text></svg>">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Copenhell%202026%22%2C%22short_name%22%3A%22Copenhell%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230a0a0a%22%2C%22theme_color%22%3A%22%230a0a0a%22%2C%22icons%22%3A%5B%5D%7D">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e8621e;--surface:rgba(0,0,0,.08);--surface2:rgba(0,0,0,.12);--border:rgba(0,0,0,.15);--text:#fff;--text-dim:rgba(255,255,255,.7)}
+:root{--bg:#0a0a0a;--surface:rgba(255,255,255,.04);--surface2:rgba(255,255,255,.07);--border:rgba(255,255,255,.1);--text:#f0ebe4;--text-dim:rgba(255,255,255,.5);--accent:#c23c2c;--accent-glow:#ff4433;--gold:#d4a843}
 *{margin:0;padding:0;box-sizing:border-box}
-a,button,input,select,div[class]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+a,button,input,select,[class*="band"],[class*="skull"],[class*="plan-icon"],[class*="timeline-band"],[class*="genre-chip"],[class*="toggle"],[class*="lang-btn"]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh;overflow-x:hidden;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
-.header{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:2px solid rgba(0,0,0,.1)}
-.logo{font-family:'Oswald',sans-serif;font-size:clamp(2.5rem,8vw,5rem);font-weight:700;letter-spacing:.05em;text-transform:uppercase;line-height:1;color:#fff}
-.subtitle{font-size:.9rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-top:.5rem;font-weight:600}
-.year-badge{display:inline-block;margin-top:1rem;padding:.3rem 1.2rem;border:2px solid #fff;color:#fff;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600}
-.data-source{font-size:.95rem;color:var(--text-dim);margin-top:.75rem;font-weight:600;transition:all .3s ease}.data-source.live{color:rgba(255,255,255,.8)}.data-source.cached{color:rgba(255,255,255,.5)}.data-source.updating{animation:pulse 1.2s ease-in-out infinite}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+.header{text-align:center;padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
+.logo{font-family:'Oswald',sans-serif;font-size:clamp(2.5rem,8vw,5rem);font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;color:var(--text)}
+.logo span{color:var(--accent)}
+.subtitle{font-size:.9rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);margin-top:.6rem;font-weight:600}
+.year-badge{display:inline-block;margin-top:1rem;padding:.3rem 1.2rem;border:2px solid var(--accent);color:var(--accent);font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.25em;text-transform:uppercase;font-weight:600}
+.data-source{font-size:.95rem;color:var(--text-dim);margin-top:.75rem;font-weight:600;transition:all .3s ease}.data-source.live{color:#3ddc84}.data-source.cached{color:var(--gold)}.data-source.updating{animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .api-section{max-width:600px;margin:2rem auto;padding:0 1.5rem}
-.api-box{background:var(--surface);border:1px solid var(--border);padding:1.25rem;border-radius:4px}
+.api-box{background:var(--surface);border:1px solid var(--border);padding:1.25rem;border-radius:3px}
 .api-box summary{font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);cursor:pointer;list-style:none;display:flex;align-items:center;gap:.5rem;font-weight:600}
 .api-box summary::before{content:''}.api-box summary::-webkit-details-marker{display:none}
-.api-box[open] summary{margin-bottom:1rem;color:#fff}
-.api-hint{font-size:.85rem;color:var(--text-dim);line-height:1.6;margin-bottom:.75rem}.api-hint a{color:#fff;text-decoration:underline}
+.api-box[open] summary{margin-bottom:1rem;color:var(--text)}
+.api-hint{font-size:.85rem;color:var(--text-dim);line-height:1.6;margin-bottom:.75rem}.api-hint a{color:var(--gold);text-decoration:none}
 .api-row{display:flex;gap:.5rem}
-.api-row input{flex:1;background:rgba(0,0,0,.2);border:1px solid var(--border);color:#fff;padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px}
-.api-row input::placeholder{color:rgba(255,255,255,.4)}
-.api-row input:focus{outline:none;border-color:#fff}
-.btn-small{background:#fff;color:var(--bg);border:none;padding:.6rem 1.2rem;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;border-radius:3px;font-weight:600}.btn-small:hover{opacity:.85}
+.api-row input{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px}
+.api-row input:focus{outline:none;border-color:var(--accent)}
+.btn-small{background:var(--accent);color:#fff;border:none;padding:.6rem 1.2rem;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;border-radius:3px;font-weight:600}.btn-small:hover{background:var(--accent-glow)}
 .api-status{font-size:.8rem;margin-top:.5rem}
 .instructions{max-width:900px;margin:1.5rem auto;padding:0 1.5rem;text-align:center}
-.instructions p{font-size:1.05rem;color:var(--text-dim);line-height:1.8}.instructions strong{color:#fff}
-.fav-counter{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.25rem;padding:.6rem 1.5rem;background:var(--surface);border:2px solid rgba(255,255,255,.3);font-size:1.05rem;border-radius:4px;max-width:400px;margin-left:auto;margin-right:auto}
-.fav-counter .icon{font-size:1.1rem}.fav-counter .count{color:#fff;font-weight:700}
-.loading-indicator{text-align:center;padding:3rem;color:var(--text-dim);font-size:.95rem}
-.loading-indicator::after{content:'';display:inline-block;width:1em;height:1em;border:2px solid #fff;border-top-color:transparent;border-radius:50%;margin-left:.5rem;animation:spin .6s linear infinite;vertical-align:middle}
+.instructions p{font-size:1.05rem;color:var(--text-dim);line-height:1.8}.instructions strong{color:var(--text)}
+.fav-counter{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.25rem;padding:.6rem 1.5rem;background:var(--surface);border:1px solid var(--border);font-size:1.05rem;border-radius:3px;max-width:400px;margin-left:auto;margin-right:auto}
+.fav-counter .skull{color:var(--accent);font-size:1.1rem}.fav-counter .count{color:var(--gold);font-weight:700}
+.loading-indicator{text-align:center;padding:3rem;color:var(--text-dim);font-size:.9rem}
+.loading-indicator::after{content:'';display:inline-block;width:1em;height:1em;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;margin-left:.5rem;animation:spin .6s linear infinite;vertical-align:middle}
 .day-container{max-width:1200px;margin:0 auto;padding:0 1rem}
 .day-section{margin-bottom:2.5rem}
-.day-section.day-fd_son,.day-section.day-fd_man,.day-section.day-fd_tir,.day-section.day-first_days{background:rgba(255,255,255,.06);border-radius:6px;padding:1rem;margin-left:-.5rem;margin-right:-.5rem}
-.day-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:2px solid rgba(0,0,0,.1)}
-.day-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;background:#fff}
-.day-first_days .day-dot{background:#ffaa44}
-.day-fd_son .day-dot{background:#ffaa44}
-.day-fd_man .day-dot{background:#ffbb55}
-.day-fd_tir .day-dot{background:#ffcc66}
-.day-name{font-family:'Oswald',sans-serif;font-size:1.8rem;color:#fff;font-weight:700;text-transform:uppercase}
+.day-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.day-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.day-ons .day-dot{background:#8b5cf6}.day-tor .day-dot{background:#3b82f6}.day-fre .day-dot{background:#ef4444}.day-lor .day-dot{background:#f59e0b}
+.day-name{font-family:'Oswald',sans-serif;font-size:1.8rem;color:var(--text);font-weight:700;text-transform:uppercase}
 .day-date{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
-.day-count{margin-left:auto;font-size:.85rem;color:var(--text-dim);font-weight:600}.day-count span{color:#fff}
+.day-count{margin-left:auto;font-size:.85rem;color:var(--text-dim);font-weight:600}.day-count span{color:var(--gold)}
 .sort-indicator{font-size:.75rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;text-align:right;margin-bottom:.4rem}
-.band-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:3px}
-.scene-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -.5rem;padding:0 .5rem}
-.scene-grid{display:grid;gap:3px}
+.scene-grid{display:grid;grid-template-columns:repeat(var(--stage-count,4),1fr);gap:3px}
 .scene-column{display:flex;flex-direction:column;gap:3px;min-width:0}
-.scene-header{background:rgba(0,0,0,.12);border:1px solid var(--border);padding:.45rem .5rem;text-align:center;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:600;position:sticky;top:0;z-index:10}
-.scene-header.main-stage{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(0,0,0,.18)}
-.stage-block{margin-bottom:1rem}
-.stage-label{font-family:'Oswald',sans-serif;font-size:.95rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);padding:.5rem .75rem;background:rgba(0,0,0,.1);border:1px solid var(--border);margin-bottom:3px;font-weight:600;border-radius:3px}
-.stage-label.main-stage{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(0,0,0,.18)}
-.stage-label.unknown-label{color:rgba(255,255,255,.4);font-style:italic;border-style:dashed;font-family:'Source Sans 3',sans-serif;font-weight:400;font-size:.9rem}
+.scene-header{background:var(--surface2);border:1px solid var(--border);padding:.45rem .5rem;text-align:center;font-family:'Oswald',sans-serif;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);font-weight:600;position:sticky;top:0;z-index:10}
+.scene-header.main-stage{color:var(--accent);border-color:rgba(194,60,44,.3)}
+.band-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:3px}
 .band-card{background:var(--surface);border:1px solid var(--border);padding:.55rem .7rem;cursor:default;display:flex;align-items:center;gap:.4rem;transition:all .15s ease;user-select:none;border-radius:3px;overflow:hidden;min-width:0}
-.band-card:hover{background:var(--surface2);border-color:rgba(0,0,0,.25)}
+.band-card:hover{background:var(--surface2);border-color:rgba(255,255,255,.2)}
 .band-card.planned{border-color:#fff;border-width:2px;box-shadow:0 0 8px rgba(255,255,255,.15)}
-.band-card.planned .plan-icon{opacity:1}
-.band-card.selected{background:rgba(0,0,0,.2);border-color:#fff;border-width:2px}
-.band-card.selected .band-icon{opacity:1;transform:scale(1)}.band-card.selected .band-icon::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.6rem;color:#fff;font-weight:700}.band-card.selected .band-name{color:#fff}
-.band-card.planned.selected{box-shadow:0 0 8px rgba(255,255,255,.15),inset 0 0 0 1px rgba(255,255,255,.3)}
-.plan-icon{font-size:.7rem;opacity:.2;cursor:pointer;flex-shrink:0;transition:opacity .1s;-webkit-tap-highlight-color:transparent;padding:0 .2rem}
+.band-card.planned .plan-icon{opacity:1;color:#fff}
+.band-card.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
+.band-card.selected .band-skull{opacity:1;transform:scale(1)}.band-card.selected .band-skull::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.6rem;color:var(--accent);font-weight:700}.band-card.selected .band-name{color:#fff}
+.band-card.planned.selected{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.15),inset 0 0 0 1px var(--accent)}
+.band-card.recommended-gold{background:rgba(212,168,67,.1);border-color:var(--gold);border-width:2px;box-shadow:0 0 10px rgba(212,168,67,.2)}.band-card.recommended-gold .rec-badge{display:flex;background:var(--gold)}.band-card.recommended-gold .band-name{color:var(--gold)}
+.band-card.recommended-green{background:rgba(61,220,132,.08);border-color:#3ddc84;border-width:2px;box-shadow:0 0 10px rgba(61,220,132,.15)}.band-card.recommended-green .rec-badge{display:flex;background:#3ddc84}.band-card.recommended-green .band-name{color:#3ddc84}
+.band-card.planned.recommended-gold,.band-card.planned.recommended-green{border-color:#fff}
+.plan-icon{font-size:.7rem;opacity:.2;cursor:pointer;flex-shrink:0;transition:all .2s;-webkit-tap-highlight-color:transparent;padding:0 .2rem}
 .plan-icon:hover{opacity:.7}
 .planned .plan-icon{opacity:1}
-.band-card.recommended-green{background:rgba(61,220,132,.08);border-color:#3ddc84;border-width:2px;box-shadow:0 0 10px rgba(61,220,132,.15)}.band-card.recommended-green .rec-badge{display:flex;background:#3ddc84;color:#000}.band-card.recommended-green .band-name{color:#3ddc84}
-.band-card.recommended-gold{background:rgba(255,215,0,.08);border-color:#ffd700;border-width:2px;box-shadow:0 0 10px rgba(255,215,0,.2)}.band-card.recommended-gold .rec-badge{display:flex;background:#ffd700;color:#000}.band-card.recommended-gold .band-name{color:#ffd700}
-.band-icon{font-size:1rem;opacity:.3;transform:scale(.85);transition:all .2s ease;flex-shrink:0;width:2rem;height:1.5rem;text-align:center;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;border-radius:3px;-webkit-tap-highlight-color:transparent;border-right:1px solid rgba(255,255,255,.1);margin-right:.3rem;padding-right:.3rem}
-.band-icon:hover{opacity:.7;transform:scale(1);background:rgba(255,255,255,.05)}
-.band-card:hover .band-icon{opacity:.6;transform:scale(.95)}
+.timeline-band .plan-icon{font-size:.6rem;display:flex;align-items:center;padding:0 .15rem}
+.band-skull{font-size:1rem;opacity:.2;transform:scale(.85);transition:all .2s ease;flex-shrink:0;width:2rem;height:1.5rem;text-align:center;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;border-radius:3px;-webkit-tap-highlight-color:transparent;border-right:1px solid rgba(255,255,255,.08);margin-right:.3rem;padding-right:.3rem}
+.band-skull:hover{opacity:.7;transform:scale(1);background:rgba(255,255,255,.05)}
+.band-card:hover .band-skull{opacity:.5;transform:scale(.95)}
 .band-info{flex:1;min-width:0;display:flex;align-items:center;gap:.4rem}
 .band-text{flex:1;min-width:0}
-.band-time{font-size:.8rem;color:#ffd700;display:block;margin-bottom:1px;font-weight:700}
-.band-name{font-family:'Oswald',sans-serif;font-size:1.05rem;font-weight:600;color:rgba(255,255,255,.8);transition:color .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.band-time{font-size:.8rem;color:var(--gold);display:block;margin-bottom:1px;font-weight:700}
+.band-name{font-family:'Oswald',sans-serif;font-size:1.05rem;font-weight:600;color:rgba(255,255,255,.7);transition:color .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .band-name a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
 .band-name a:hover{text-decoration:underline;text-underline-offset:2px}
-.band-card:hover .band-name{color:#fff}
-.spotify-link{flex-shrink:0;width:32px;height:32px;opacity:.4;transition:opacity .2s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.band-card:hover .band-name{color:var(--text)}
+.spotify-link{flex-shrink:0;width:32px;height:32px;opacity:.3;transition:opacity .2s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .spotify-link:hover,.spotify-link:active{opacity:.9}
 .spotify-link svg{width:18px;height:18px;fill:#1DB954;pointer-events:none}
-.rec-badge{display:none;align-items:center;justify-content:center;background:#ffd700;color:#000;font-size:.65rem;font-weight:700;padding:.15rem .4rem;flex-shrink:0;border-radius:2px}
-.headliner-tag{font-family:'Oswald',sans-serif;font-size:.65rem;letter-spacing:.1em;color:var(--bg);text-transform:uppercase;flex-shrink:0;background:#fff;padding:.2rem .5rem;font-weight:600;border-radius:2px}
+.rec-badge{display:none;align-items:center;justify-content:center;background:var(--gold);color:var(--bg);font-size:.6rem;font-weight:700;padding:.15rem .4rem;flex-shrink:0;border-radius:2px}
 .genre-section{max-width:1200px;margin:2rem auto 0;padding:0 1.5rem}
 .personal-fav-section{max-width:1200px;margin:1.5rem auto 0;padding:0 1.5rem;text-align:center}
-.genre-header{font-family:'Oswald',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:.75rem;text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+.genre-header{font-family:'Oswald',sans-serif;font-size:1.15rem;color:var(--text);margin-bottom:.75rem;text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
 .genre-hint{font-family:'Source Sans 3',sans-serif;font-size:.9rem;color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0}
 .genre-grid{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center}
-.genre-chip{background:rgba(0,0,0,.1);border:2px solid rgba(255,255,255,.25);color:rgba(255,255,255,.75);padding:.5rem 1.1rem;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:500;cursor:pointer;transition:all .15s ease;user-select:none;border-radius:3px;letter-spacing:.05em}
-.genre-chip:hover{border-color:#fff;color:#fff;background:rgba(0,0,0,.15)}
-.genre-chip.active{background:rgba(0,0,0,.25);border-color:#fff;color:#fff;font-weight:700}
+.genre-chip{background:var(--surface);border:2px solid var(--border);color:var(--text-dim);padding:.5rem 1.1rem;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:500;cursor:pointer;transition:all .15s ease;user-select:none;border-radius:3px;letter-spacing:.05em}
+.genre-chip:hover{border-color:var(--accent);color:var(--text)}
+.genre-chip.active{background:rgba(194,60,44,.15);border-color:var(--accent);color:var(--accent);font-weight:700}
 .timeline-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -.5rem;padding:0 .5rem}
 .timeline-grid{display:grid;gap:1px}
 .timeline-header{position:sticky;top:0;z-index:12;font-family:'Oswald',sans-serif;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:.5rem .3rem;text-align:center;background:var(--bg);border:1px solid var(--border);font-weight:600;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .timeline-header:first-child{position:sticky;left:0;top:0;z-index:15;background:var(--bg)}
-.timeline-header.main-stage{color:#fff;border-color:rgba(255,255,255,.3)}
+.timeline-header.main-stage{color:var(--accent);border-color:rgba(194,60,44,.3)}
 .timeline-time{font-family:'Source Sans 3',sans-serif;font-size:.55rem;color:var(--text-dim);padding:.1rem .15rem;text-align:right;background:var(--bg);border-right:1px solid var(--border);font-weight:600;white-space:nowrap;position:sticky;left:0;z-index:5}
-.timeline-time.hour{color:#ffd700;font-weight:700;font-size:.6rem;border-top:1px solid rgba(255,255,255,.06)}
+.timeline-time.hour{color:var(--gold);font-weight:700;font-size:.6rem;border-top:1px solid rgba(255,255,255,.06)}
 .timeline-slot{min-height:1.8rem;position:relative}
-.timeline-band{position:absolute;left:2px;right:2px;top:1px;background:rgba(0,0,0,.08);border:1px solid var(--border);border-radius:3px;padding:.2rem .4rem;display:flex;align-items:stretch;gap:.3rem;overflow:hidden;cursor:pointer;z-index:2}
-.timeline-band:hover{background:rgba(0,0,0,.15);border-color:rgba(255,255,255,.2);z-index:3}
+.timeline-band{position:absolute;left:2px;right:2px;top:1px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.2rem .4rem;display:flex;align-items:stretch;gap:.3rem;overflow:hidden;cursor:pointer;z-index:2}
+.timeline-band:hover{background:var(--surface2);border-color:rgba(255,255,255,.2);z-index:3}
 .timeline-band.planned,.timeline-band.planned:hover{border-color:#fff!important;border-width:2px;box-shadow:0 0 6px rgba(255,255,255,.2)}
-.timeline-band .plan-icon{font-size:.6rem;display:flex;align-items:center;padding:0 .15rem}
-.timeline-band.selected{background:rgba(0,0,0,.2);border-color:#fff;border-width:2px}
-.timeline-band.selected .tl-icon::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.5rem;color:#fff;font-weight:700}
+.timeline-band.selected{background:rgba(194,60,44,.12);border-color:var(--accent);border-width:2px}
+.timeline-band.selected .tl-skull::after{content:'✓';position:absolute;top:-2px;right:-4px;font-size:.5rem;color:var(--accent);font-weight:700}
+.timeline-band.rec-gold{background:rgba(212,168,67,.1);border-color:var(--gold)}.timeline-band.rec-gold .tl-name a{color:var(--gold)}
 .timeline-band.rec-green{background:rgba(61,220,132,.08);border-color:#3ddc84}.timeline-band.rec-green .tl-name a{color:#3ddc84}
-.timeline-band.rec-gold{background:rgba(255,215,0,.08);border-color:#ffd700}.timeline-band.rec-gold .tl-name a{color:#ffd700}
-.tl-icon{font-size:.75rem;opacity:.25;cursor:pointer;position:relative;flex-shrink:0;width:1.2rem;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.1);padding-right:.3rem;margin-right:.2rem;-webkit-tap-highlight-color:transparent}
-.tl-icon:hover{opacity:.7}
-.timeline-band.selected .tl-icon{opacity:1}
+.tl-skull{font-size:.75rem;opacity:.25;cursor:pointer;position:relative;flex-shrink:0;width:1.2rem;display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.08);padding-right:.3rem;margin-right:.2rem;-webkit-tap-highlight-color:transparent}
+.tl-skull:hover{opacity:.7}
+.timeline-band.selected .tl-skull{opacity:1}
 .tl-content{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
-.tl-name{font-family:'Oswald',sans-serif;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-name{font-family:'Oswald',sans-serif;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tl-name a{color:inherit;text-decoration:none}.tl-name a:hover{text-decoration:underline}
-.tl-time{font-size:.6rem;color:#ffd700;font-weight:700}
+.tl-time{font-size:.6rem;color:var(--gold);font-weight:700}
 .tl-spotify{flex-shrink:0;opacity:.3;width:18px;display:flex;align-items:center}.tl-spotify:hover{opacity:.9}
 .tl-spotify a{display:flex}.tl-spotify svg{width:14px;height:14px;fill:#1DB954;pointer-events:none}
 .timeline-toggle{font-size:.75rem;color:var(--text-dim);cursor:pointer;margin-left:auto;padding:.2rem .6rem;border:1px solid var(--border);border-radius:3px;font-family:'Oswald',sans-serif;letter-spacing:.05em;text-transform:uppercase}
-.timeline-toggle:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.timeline-toggle:hover{color:var(--text);border-color:var(--text-dim)}
 .recommend-section{max-width:1200px;margin:2rem auto;padding:0 1.5rem;text-align:center}
-.btn-recommend{background:#fff;color:var(--bg);border:none;padding:1rem 2.5rem;font-family:'Oswald',sans-serif;font-size:1.15rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s ease;font-weight:700;border-radius:4px}
-.btn-recommend:hover:not(:disabled){transform:scale(1.02);box-shadow:0 4px 20px rgba(0,0,0,.2)}
-.btn-recommend:disabled{opacity:.35;cursor:not-allowed}.btn-recommend.loading{pointer-events:none;opacity:.6}
-.btn-recommend.loading::after{content:'';display:inline-block;width:1em;height:1em;border:2px solid var(--bg);border-top-color:transparent;border-radius:50%;margin-left:.75rem;animation:spin .6s linear infinite;vertical-align:middle}
+.btn-recommend{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:1rem 2.5rem;font-family:'Oswald',sans-serif;font-size:1.1rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s ease;font-weight:700;border-radius:3px}
+.btn-recommend:hover:not(:disabled){background:var(--accent);color:#fff;box-shadow:0 0 30px rgba(194,60,44,.3)}
+.btn-recommend:disabled{opacity:.3;cursor:not-allowed}.btn-recommend.loading{pointer-events:none;opacity:.6}
+.btn-recommend.loading::after{content:'';display:inline-block;width:1em;height:1em;border:2px solid var(--accent);border-top-color:transparent;border-radius:50%;margin-left:.75rem;animation:spin .6s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .action-bar{display:flex;justify-content:center;gap:1rem;margin-top:1.5rem;flex-wrap:wrap}
-.btn-ghost{background:none;border:2px solid rgba(255,255,255,.25);color:var(--text-dim);padding:.5rem 1.2rem;font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:3px;font-weight:500}.btn-ghost:hover{border-color:#fff;color:#fff}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--text-dim);padding:.5rem 1.2rem;font-family:'Oswald',sans-serif;font-size:.9rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;border-radius:3px;font-weight:500}.btn-ghost:hover{border-color:var(--text-dim);color:var(--text)}
 .results-section{max-width:900px;margin:2rem auto;padding:0 1.5rem 4rem}
-.results-header{font-family:'Oswald',sans-serif;font-size:1.1rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:2px solid rgba(0,0,0,.1);text-align:center;font-weight:600}
+.results-header{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid rgba(212,168,67,.2);text-align:center;font-weight:600}
 .result-item{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 0;border-bottom:1px solid var(--border);animation:fadeIn .3s ease}
-.result-item.top-10{border-left:3px solid #3ddc84;padding-left:1rem}
-.result-item.top-20{border-left:3px solid #ffd700;padding-left:1rem}
+.result-item.top-10{border-left:3px solid var(--gold);padding-left:1rem}
+.result-item.top-20{border-left:3px solid #3ddc84;padding-left:1rem}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.result-rank{font-family:'Oswald',sans-serif;font-size:2rem;color:#fff;min-width:2.5rem;text-align:right;line-height:1.2;font-weight:700}
+.result-rank{font-family:'Oswald',sans-serif;font-size:2rem;color:var(--accent);min-width:2.5rem;text-align:right;line-height:1.2;font-weight:700}
 .result-content{flex:1}
-.result-name{font-family:'Oswald',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;margin-bottom:.3rem}
-.result-name a{color:#fff;text-decoration:none;border-bottom:2px solid rgba(255,255,255,.3);transition:border-color .2s}
-.result-name a:hover{border-color:#fff}
+.result-name{font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.3rem}
+.result-name a{color:#fff;text-decoration:none;border-bottom:2px solid rgba(255,255,255,.2);transition:border-color .2s}
+.result-name a:hover{border-color:var(--accent);color:var(--accent)}
 .result-day-stage{font-size:.85rem;color:var(--text-dim);margin-bottom:.4rem;font-weight:600}
-.result-day-stage .day-label{padding:.15rem .4rem;font-weight:700;border-radius:2px;font-size:.8rem;background:rgba(0,0,0,.15);color:#fff}
+.result-day-stage .day-label{padding:.15rem .4rem;font-weight:700;border-radius:2px;font-size:.8rem}
+.result-day-stage .day-ons{background:rgba(139,92,246,.2);color:#8b5cf6}
+.result-day-stage .day-tor{background:rgba(59,130,246,.2);color:#3b82f6}
+.result-day-stage .day-fre{background:rgba(239,68,68,.2);color:#ef4444}
+.result-day-stage .day-lor{background:rgba(245,158,11,.2);color:#f59e0b}
 .result-reason{font-size:1rem;color:var(--text-dim);line-height:1.7}
-.result-match{font-size:.85rem;color:#fff;margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
-.footer{text-align:center;padding:2rem;border-top:2px solid rgba(0,0,0,.1);font-size:.85rem;color:var(--text-dim)}
-.footer a{color:#fff;text-decoration:none}.footer a:hover{text-decoration:underline}
-@media(max-width:480px){.header{padding:2rem 1rem 1.5rem}.genre-chip{font-size:.9rem;padding:.4rem .8rem}.day-name{font-size:1.3rem}}
+.result-match{font-size:.85rem;color:var(--gold);margin-top:.3rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--text-dim)}
+.footer a{color:var(--text-dim);text-decoration:none}.footer a:hover{color:var(--text)}
+@media(max-width:800px){.scene-grid{grid-template-columns:repeat(2,1fr)}.band-name{font-size:.95rem}}
+@media(max-width:480px){.scene-grid{grid-template-columns:1fr}.header{padding:2rem 1rem 1.5rem}.genre-chip{font-size:.9rem;padding:.4rem .8rem}}
 .hidden{display:none!important}
+.lang-toggle{position:absolute;top:1rem;right:1.5rem;display:flex;gap:2px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;font-size:.75rem;font-family:'Oswald',sans-serif;letter-spacing:.05em}
+.lang-btn{padding:.3rem .6rem;cursor:pointer;color:rgba(255,255,255,.4);transition:all .2s;border:none;background:none;font-family:inherit;font-size:inherit;letter-spacing:inherit}
+.lang-btn.active{background:var(--accent);color:#fff}
+.lang-btn:hover{color:rgba(255,255,255,.7)}
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="logo">ROS <span>2026</span></div>
-  <div class="subtitle">28 Juni — 4 Juli 2026 · Roskilde · Danmark</div>
-  <div class="year-badge">AI Kunstner Anbefaler</div>
-  <div class="data-source" id="dataSource">Henter program...</div>
+
+<div class="header" style="position:relative">
+  <div class="lang-toggle"><button class="lang-btn active" data-lang="da" onclick="setLang('da')">DA</button><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button></div>
+  <div class="logo">COPEN<span>HELL</span></div>
+  <div class="subtitle" data-t="subtitle">24 — 27 Juni 2026 · Refshaleøen · København</div>
+  <div class="year-badge" data-t="badge">AI Band Anbefaler</div>
+  <div class="data-source" id="dataSource">Henter program fra copenhell.dk...</div>
   <div id="planCount" style="text-align:center;font-size:.85rem;color:#fff;margin-top:.4rem;font-family:'Oswald',sans-serif;letter-spacing:.05em"></div>
-  <div id="planShare" style="text-align:center;margin-top:.3rem;display:none"><button onclick="sharePlan()" style="background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:.3rem .8rem;font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.05em;border-radius:3px;cursor:pointer;touch-action:manipulation">📤 Del dagsplan</button></div>
-  <div style="text-align:center;margin-top:.3rem"><a href="#" id="forceRefresh" style="font-size:.65rem;color:rgba(255,255,255,.3);text-decoration:none">↻ Tving opdatering</a></div>
-<script>document.getElementById('forceRefresh').addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('rf26_times_v3');localStorage.removeItem('rf26_times_ts');localStorage.removeItem('rf26_times_v2');localStorage.removeItem('rf26_v15');localStorage.removeItem('rf26_v15_ts')}catch(ex){}location.reload()})</script>
+  <div id="planShare" style="text-align:center;margin-top:.3rem;display:none"><button onclick="sharePlan()" style="background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);padding:.3rem .8rem;font-family:'Oswald',sans-serif;font-size:.7rem;letter-spacing:.05em;border-radius:3px;cursor:pointer;touch-action:manipulation" data-t="shareBtn">📤 Del dagsplan</button></div>
+  <div style="text-align:center;margin-top:.3rem"><a href="#" id="forceRefresh" style="font-size:.6rem;color:rgba(255,255,255,.2);text-decoration:none">↻ Tving opdatering</a></div>
+<script>document.getElementById('forceRefresh').addEventListener('click',function(e){e.preventDefault();try{localStorage.removeItem('ch26_times_v6');localStorage.removeItem('ch26_times_ts')}catch(ex){}location.reload()})</script>
 </div>
-<div class="day-container" id="dayContainer"><div class="loading-indicator">Henter lineup</div></div>
+
+<div class="day-container" id="dayContainer">
+  <div class="loading-indicator" id="loadingIndicator" data-t="loadingLineup">Henter lineup fra copenhell.dk</div>
+</div>
+
 <div class="genre-section">
-  <div class="genre-header">🎶 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
+  <div class="genre-header" data-t="genreHeader">🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI'en med bedre anbefalinger)</span></div>
   <div class="genre-grid" id="genreGrid">
-    <div class="genre-chip" data-genre="Pop">Pop</div>
-    <div class="genre-chip" data-genre="Rock">Rock</div>
-    <div class="genre-chip" data-genre="R&B">R&B</div>
-    <div class="genre-chip" data-genre="Indie Rock">Indie Rock</div>
-    <div class="genre-chip" data-genre="Hip-hop/Rap">Hip-hop/Rap</div>
-    <div class="genre-chip" data-genre="Elektronisk">Elektronisk</div>
-    <div class="genre-chip" data-genre="Punk">Punk</div>
-    <div class="genre-chip" data-genre="Heavy">Heavy</div>
-    <div class="genre-chip" data-genre="Singer-songwriter">Singer-songwriter</div>
-    <div class="genre-chip" data-genre="Folk/Traditional">Folk/Traditional</div>
-    <div class="genre-chip" data-genre="Latin">Latin</div>
-    <div class="genre-chip" data-genre="Global/Afro">Global/Afro</div>
-    <div class="genre-chip" data-genre="Eksperimentel">Eksperimentel</div>
+    <div class="genre-chip" data-genre="Heavy Metal (Trad)">Heavy Metal (Trad)</div>
+    <div class="genre-chip" data-genre="Hard Rock">Hard Rock</div>
+    <div class="genre-chip" data-genre="Thrash Metal">Thrash Metal</div>
+    <div class="genre-chip" data-genre="Death Metal" data-t-da="Dødsmetal">Dødsmetal</div>
+    <div class="genre-chip" data-genre="Black Metal">Black Metal</div>
+    <div class="genre-chip" data-genre="Doom Metal">Doom Metal</div>
+    <div class="genre-chip" data-genre="Power Metal">Power Metal</div>
+    <div class="genre-chip" data-genre="Glam Metal">Glam Metal</div>
+    <div class="genre-chip" data-genre="Gothic Metal">Gothic Metal</div>
+    <div class="genre-chip" data-genre="Alternative Metal" data-t-da="Alternativ Metal">Alternativ Metal</div>
+    <div class="genre-chip" data-genre="Progressive Metal" data-t-da="Progressiv Metal">Progressiv Metal</div>
+    <div class="genre-chip" data-genre="Speed Metal">Speed Metal</div>
   </div>
 </div>
+
 <div class="personal-fav-section">
-  <div class="genre-header">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
-  <input type="search" id="personalFavs" name="band-search" autocomplete="off" placeholder="F.eks. Radiohead, Björk, Kendrick Lamar" maxlength="200" style="width:100%;max-width:600px;background:rgba(0,0,0,.1);border:2px solid rgba(255,255,255,.25);color:#fff;padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
+  <div class="genre-header" data-t="favHeader">🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span></div>
+  <input type="search" id="personalFavs" name="band-search" data-t-ph="favPlaceholder" placeholder="F.eks. Metallica, Slayer, Pantera" maxlength="200" autocomplete="off" style="width:100%;max-width:600px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.95rem;border-radius:3px;text-align:center">
 </div>
+
 <div class="instructions">
-  <p>Tryk <strong>🎵</strong> på de kunstnere du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>AI'en anbefaler derefter hvilke <strong>andre kunstnere</strong> du bør opleve.</p>
+  <p data-t="instructions">
+    Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>
+    AI'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.
+  </p>
 </div>
+
 <div class="recommend-section">
-  <div class="fav-counter"><span class="icon">🎵</span><span id="favText">Vælg kunstnere og/eller genrer ovenfor</span></div>
+  <div class="fav-counter" id="favCounter">
+    <span class="skull">💀</span>
+    <span id="favText" data-t="favDefault">Valgte: 0 bands · 0 genrer</span>
+  </div>
   <br>
-  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled>🎪 Find anbefalinger baseret på mine favoritter</button>
-  <div class="action-bar"><button class="btn-ghost" onclick="clearSelections()">Nulstil valg</button><button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()">Fjern anbefalinger</button></div>
-  <div class="api-section" style="margin-top:1.5rem"><details class="api-box" id="apiBox"><summary>⚙ AI Indstillinger (API Key og valg af AI Model)</summary>
-    <p class="api-hint">Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — log ind → API Keys → Create.</p>
-    <div class="api-row"><input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off"><button class="btn-small" onclick="saveApiKey()">Gem</button></div>
-    <div class="api-status" id="apiStatus"></div>
-    <div style="margin-top:1rem">
-      <label style="font-size:.85rem;color:rgba(255,255,255,.7);display:block;margin-bottom:.4rem">AI Model</label>
-      <select id="modelSelect" style="width:100%;background:rgba(0,0,0,.2);border:1px solid rgba(0,0,0,.15);color:#fff;padding:.5rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px">
-        <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B (anbefalet — bedst kvalitet)</option>
-        <option value="compound-beta">🔍 Compound Beta (web search — langsom)</option>
-        <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B (hurtig, lavere kvalitet)</option>
-        
-        <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B (ultra-hurtig, lavere kvalitet)</option>
-      </select>
-      <div style="font-size:.75rem;color:rgba(255,255,255,.45);margin-top:.3rem" id="modelHint">OpenAI's åbne model — bedst til korrekte beskrivelser</div>
-    </div>
-  </details></div>
+  <button class="btn-recommend" id="recBtn" onclick="getRecommendations()" disabled data-t="recBtn">
+    🤘 Find anbefalinger baseret på mine favoritter
+  </button>
+  <div class="action-bar">
+    <button class="btn-ghost" onclick="clearSelections()" data-t="clearBtn">Nulstil valg</button>
+    <button class="btn-ghost hidden" id="clearRecBtn" onclick="clearRecommendations()" data-t="clearRecBtn">Fjern anbefalinger</button>
+  </div>
+  <div class="api-section" style="margin-top:1.5rem">
+    <details class="api-box" id="apiBox">
+      <summary data-t="apiSummary">⚙ AI Indstillinger (API Key og valg af AI Model)</summary>
+      <p class="api-hint" data-t="apiHint">
+        Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — 
+        log ind → API Keys → Create. Nøglen gemmes kun i din browser.
+      </p>
+      <div class="api-row">
+        <input type="password" id="apiKey" placeholder="gsk_..." autocomplete="off">
+        <button class="btn-small" onclick="saveApiKey()" data-t="saveBtn">Gem</button>
+      </div>
+      <div class="api-status" id="apiStatus"></div>
+      <div style="margin-top:1rem">
+        <label style="font-size:.85rem;color:rgba(255,255,255,.5);display:block;margin-bottom:.4rem" data-t="modelLabel">AI Model</label>
+        <select id="modelSelect" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.5rem .75rem;font-family:'Source Sans 3',sans-serif;font-size:.9rem;border-radius:3px">
+          <option value="openai/gpt-oss-120b" selected>🧠 GPT-OSS 120B</option>
+          <option value="llama-3.3-70b-versatile">⚡ Llama 3.3 70B</option>
+          <option value="compound-beta">🔍 Compound Beta</option>
+          <option value="llama-3.1-8b-instant">💨 Llama 3.1 8B</option>
+        </select>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.35);margin-top:.3rem" id="modelHint"></div>
+      </div>
+    </details>
+  </div>
 </div>
-<div class="results-section hidden" id="results"><div class="results-header">AI Anbefalinger — baseret på dine favoritter</div><div id="resultsList"></div></div>
-<div class="footer">Powered by <a href="https://groq.com" target="_blank">Groq</a> · Data fra <a href="https://www.roskilde-festival.dk/program" target="_blank">roskilde-festival.dk</a> · Ikke-kommerciel fan-side</div>
+
+<div class="results-section hidden" id="results">
+  <div class="results-header" data-t="resultsHeader">AI Anbefalinger — baseret på dine favoritter</div>
+  <div id="resultsList"></div>
+</div>
+
+<div class="footer">
+  Powered by <a href="https://groq.com" target="_blank">Groq</a> · 
+  Data fra <a href="https://copenhell.dk/program/" target="_blank">copenhell.dk</a>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════════════════════
-const PROGRAM_URL='https://www.roskilde-festival.dk/program';
-const PROXIES=[u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`];
-const DAYS_CONFIG=[
-  {key:'fd_son',name:'Søndag (First Days)',date:'28. juni'},
-  {key:'fd_man',name:'Mandag (First Days)',date:'29. juni'},
-  {key:'fd_tir',name:'Tirsdag (First Days)',date:'30. juni'},
-  {key:'first_days',name:'First Days',date:'28-30. juni'},
-  {key:'ons',name:'Onsdag',date:'1. juli'},
-  {key:'tor',name:'Torsdag',date:'2. juli'},
-  {key:'fre',name:'Fredag',date:'3. juli'},
-  {key:'lor',name:'Lørdag',date:'4. juli'}
+const PROGRAM_URL = 'https://copenhell.dk/en/program/';
+const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+  url => `https://proxy.cors.sh/${url}`,
 ];
-const DAY_MAP={onsdag:'ons',torsdag:'tor',fredag:'fre',lørdag:'lor',søndag:'fd_son',mandag:'fd_man',tirsdag:'fd_tir'};
-const STAGES_ORDER=['Orange','Arena','Gloria','Eos','Fauna','Lagune','Platform'];
-const SPOTIFY_SVG='<svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.52 17.34c-.24.36-.66.48-1.02.24-2.82-1.74-6.36-2.1-10.56-1.14-.42.12-.78-.18-.9-.54-.12-.42.18-.78.54-.9 4.56-1.02 8.52-.6 11.7 1.32.42.18.48.66.24 1.02zm1.44-3.3c-.3.42-.84.6-1.26.3-3.24-1.98-8.16-2.58-11.94-1.38-.48.12-.99-.12-1.11-.6-.12-.48.12-.99.6-1.11 4.38-1.32 9.78-.66 13.5 1.62.36.18.54.78.21 1.17zm.12-3.36C15.24 8.4 8.88 8.16 5.16 9.3c-.6.18-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.72 1.62.54.3.72 1.02.42 1.56-.3.42-1.02.6-1.56.3z"/></svg>';
 
-const CACHED_LINEUP = {
-  "Gorillaz":{day:"tor",stage:"Orange",time:"22:00",_slug:"gorillaz"},
-  "Jennie":{day:"",stage:"",time:"",_slug:"jennie"},
-  "The Cure":{day:"ons",stage:"Orange",time:"22:00",_slug:"the-cure"},
-  "Zara Larsson":{day:"",stage:"",time:"",_slug:"zara-larsson"},
-  "Addison Rae":{day:"fre",stage:"Orange",time:"19:00",_slug:"addison-rae"},
-  "Aphaca":{day:"fre",stage:"Arena",time:"01:00",_slug:"aphaca"},
-  "Bad Gyal":{day:"",stage:"",time:"",_slug:"bad-gyal"},
-  "Clipse":{day:"",stage:"",time:"",_slug:"clipse"},
-  "David Byrne":{day:"",stage:"",time:"",_slug:"david-byrne"},
-  "EsDeeKid":{day:"",stage:"",time:"",_slug:"esdeekid"},
-  "Ethel Cain":{day:"",stage:"",time:"",_slug:"ethel-cain"},
-  "Ken Carson":{day:"",stage:"",time:"",_slug:"ken-carson"},
-  "Kneecap":{day:"",stage:"",time:"",_slug:"kneecap"},
-  "Lily Allen":{day:"",stage:"",time:"",_slug:"lily-allen"},
-  "Little Simz":{day:"",stage:"",time:"",_slug:"little-simz"},
-  "Tessa":{day:"fre",stage:"Orange",time:"16:00",_slug:"tessa"},
-  "Tobias Rahim":{day:"",stage:"",time:"",_slug:"tobias-rahim"},
-  "TV-2":{day:"",stage:"",time:"",_slug:"tv-2"},
-  "Wolf Alice":{day:"",stage:"",time:"",_slug:"wolf-alice"},
-  "Yung Lean & Bladee":{day:"",stage:"",time:"",_slug:"yung-lean-bladee"},
-  "Audrey Nuna":{day:"",stage:"",time:"",_slug:"audrey-nuna"},
-  "BB Trickz":{day:"",stage:"",time:"",_slug:"bb-trickz"},
-  "BIA":{day:"",stage:"",time:"",_slug:"bia"},
-  "Brutalismus 3000":{day:"",stage:"",time:"",_slug:"brutalismus-3000"},
-  "Cobrah":{day:"",stage:"",time:"",_slug:"cobrah"},
-  "DBN Gogo":{day:"",stage:"",time:"",_slug:"dbn-gogo"},
-  "Guldimund":{day:"",stage:"",time:"",_slug:"guldimund"},
-  "Igorrr":{day:"",stage:"",time:"",_slug:"igorrr"},
-  "Jade":{day:"",stage:"",time:"",_slug:"jade"},
-  "JALEN NGONDA":{day:"",stage:"",time:"",_slug:"jalen-ngonda"},
-  "Jane Remover":{day:"",stage:"",time:"",_slug:"jane-remover"},
-  "Jim Legxacy":{day:"",stage:"",time:"",_slug:"jim-legxacy"},
-  "Kettama":{day:"",stage:"",time:"",_slug:"kettama"},
-  "KWN":{day:"",stage:"",time:"",_slug:"kwn"},
-  "Liniker":{day:"",stage:"",time:"",_slug:"liniker"},
-  "Lojay":{day:"",stage:"",time:"",_slug:"lojay"},
-  "Los Mirlos":{day:"",stage:"",time:"",_slug:"los-mirlos"},
-  "Los Thuthanaka":{day:"",stage:"",time:"",_slug:"los-thuthanaka"},
-  "Lykke Li":{day:"",stage:"",time:"",_slug:"lykke-li"},
-  "Malk De Koijn":{day:"",stage:"",time:"",_slug:"malk-de-koijn"},
-  "Marwan Moussa":{day:"",stage:"",time:"",_slug:"marwan-moussa"},
-  "MAS":{day:"",stage:"",time:"",_slug:"mas"},
-  "Mille":{day:"",stage:"",time:"",_slug:"mille"},
-  "Napalm Death":{day:"",stage:"",time:"",_slug:"napalm-death"},
-  "Oklou":{day:"",stage:"",time:"",_slug:"oklou"},
-  "Pa Salieu":{day:"",stage:"",time:"",_slug:"pa-salieu"},
-  "PANDA BEAR & SONIC BOOM":{day:"",stage:"",time:"",_slug:"panda-bear-sonic-boom"},
-  "Pil":{day:"ons",stage:"Orange",time:"17:30",_slug:"pil"},
-  "Rizwan-Muazzam Qawwali":{day:"",stage:"",time:"",_slug:"rizwan-muazzam-qawwali"},
-  "Rochelle Jordan":{day:"",stage:"",time:"",_slug:"rochelle-jordan"},
-  "Royel Otis":{day:"",stage:"",time:"",_slug:"royel-otis"},
-  "Sama' Abdulhadi":{day:"",stage:"",time:"",_slug:"sama-abdulhadi"},
-  "Sammy Virji":{day:"",stage:"",time:"",_slug:"sammy-virji"},
-  "Sierra Ferrell":{day:"",stage:"",time:"",_slug:"sierra-ferrell"},
-  "Smerz":{day:"",stage:"",time:"",_slug:"smerz"},
-  "The Savage Rose":{day:"fre",stage:"Eos",time:"15:00",_slug:"the-savage-rose"},
-  "Uncle Acid & The Deadbeats":{day:"",stage:"",time:"",_slug:"uncle-acid-the-deadbeats"},
-  "YOUNG MIKO":{day:"",stage:"",time:"",_slug:"young-miko"},
-  "¥ØU$UK€ ¥UK1MAT$U":{day:"",stage:"",time:"",_slug:"yousuke-yukimatsu"},
-  "Zar Paulo":{day:"",stage:"",time:"",_slug:"zar-paulo"},
-  "1111":{day:"",stage:"",time:"",_slug:"1111"},
-  "Abdullah Miniawy Trio":{day:"",stage:"",time:"",_slug:"abdullah-miniawy-trio"},
-  "Adrian Quesada":{day:"",stage:"",time:"",_slug:"adrian-quesada"},
-  "Albertslund Terror Korps":{day:"",stage:"",time:"",_slug:"albertslund-terror-korps"},
-  "ANGÅENDE MIG":{day:"",stage:"",time:"",_slug:"angaaende-mig"},
-  "Annie & the Caldwells":{day:"",stage:"",time:"",_slug:"annie-and-the-caldwells"},
-  "Ata Kak":{day:"",stage:"",time:"",_slug:"ata-kak"},
-  "AySay":{day:"",stage:"",time:"",_slug:"aysay"},
-  "BLAWAN":{day:"",stage:"",time:"",_slug:"blawan"},
-  "Bruno Berle":{day:"",stage:"",time:"",_slug:"bruno-berle"},
-  "Cat Clyde":{day:"",stage:"",time:"",_slug:"cat-clyde"},
-  "Chezile":{day:"",stage:"",time:"",_slug:"chezile"},
-  "Cortisa Star":{day:"",stage:"",time:"",_slug:"cortisa-star"},
-  "CRRDR":{day:"",stage:"",time:"",_slug:"crrdr"},
-  "CUIRASS":{day:"",stage:"",time:"",_slug:"cuirass"},
-  "Dean Johnson":{day:"",stage:"",time:"",_slug:"dean-johnson"},
-  "Djrum":{day:"",stage:"",time:"",_slug:"djrum"},
-  "Dying Wish":{day:"",stage:"",time:"",_slug:"dying-wish"},
-  "Ecca Vandal":{day:"",stage:"",time:"",_slug:"ecca-vandal"},
-  "EEE GEE":{day:"",stage:"",time:"",_slug:"eee-gee"},
-  "Ela Lung":{day:"",stage:"",time:"",_slug:"ela-lung"},
-  "Folk Bitch Trio":{day:"",stage:"",time:"",_slug:"folk-bitch-trio"},
-  "Frost Children":{day:"",stage:"",time:"",_slug:"frost-children"},
-  "Getdown Services":{day:"",stage:"",time:"",_slug:"getdown-services"},
-  "Gwenifer Raymond":{day:"",stage:"",time:"",_slug:"gwenifer-raymond"},
-  "HEINALI & ANDRIANA-YAROSLAVA SAIENKO":{day:"",stage:"",time:"",_slug:"heinali-andriana-yaroslava-saienko"},
-  "Hemlocke Springs":{day:"",stage:"",time:"",_slug:"hemlocke-springs"},
-  "Honningbarna":{day:"",stage:"",time:"",_slug:"honningbarna"},
-  "Hypnosis Therapy":{day:"",stage:"",time:"",_slug:"hypnosis-therapy"},
-  "Iglooghost":{day:"",stage:"",time:"",_slug:"iglooghost"},
-  "Indus":{day:"",stage:"",time:"",_slug:"indus"},
-  "Jorjiana":{day:"",stage:"",time:"",_slug:"jorjiana"},
-  "Joshua Idehen":{day:"",stage:"",time:"",_slug:"joshua-idehen"},
-  "Khana Bierbood":{day:"",stage:"",time:"",_slug:"khana-bierbood"},
-  "Kin'Gongolo Kiniata":{day:"",stage:"",time:"",_slug:"kin-gongolo-kiniata"},
-  "Krøyer":{day:"",stage:"",time:"",_slug:"kroeyer"},
-  "Lamisi":{day:"",stage:"",time:"",_slug:"lamisi"},
-  "LECHUGA ZAFIRO & VERRACO":{day:"",stage:"",time:"",_slug:"lechuga-zafiro-verraco"},
-  "Lord Snow":{day:"",stage:"",time:"",_slug:"lord-snow"},
-  "Luisa Almaguer":{day:"fre",stage:"Gloria",time:"18:30",_slug:"luisa-almaguer"},
-  "Madra Salach":{day:"",stage:"",time:"",_slug:"madra-salach"},
-  "Mark William Lewis":{day:"",stage:"",time:"",_slug:"mark-william-lewis"},
-  "Maruja":{day:"",stage:"",time:"",_slug:"maruja"},
-  "Milkweed":{day:"",stage:"",time:"",_slug:"milkweed"},
-  "Naïka":{day:"",stage:"",time:"",_slug:"naika"},
-  "Nick León":{day:"",stage:"",time:"",_slug:"nick-leon"},
-  "No Joy":{day:"",stage:"",time:"",_slug:"no-joy"},
-  "Nourished By Time":{day:"",stage:"",time:"",_slug:"nourished-by-time"},
-  "PILI PILI GIRLS":{day:"",stage:"",time:"",_slug:"pili-pili-girls"},
-  "POISON RUÏN":{day:"",stage:"",time:"",_slug:"poison-ruin"},
-  "Primitive Man":{day:"",stage:"",time:"",_slug:"primitive-man"},
-  "Sara Parkman":{day:"",stage:"",time:"",_slug:"sara-parkman"},
-  "Sherelle":{day:"",stage:"",time:"",_slug:"sherelle"},
-  "Shovel Dance Collective":{day:"",stage:"",time:"",_slug:"shovel-dance-collective"},
-  "ŠIROM":{day:"",stage:"",time:"",_slug:"sirom"},
-  "SMAG PÅ DIG SELV":{day:"",stage:"",time:"",_slug:"smag-paa-dig-selv"},
-  "Smertegrænsens Toldere":{day:"",stage:"",time:"",_slug:"smertegraensens-toldere"},
-  "Snuggle":{day:"",stage:"",time:"",_slug:"snuggle"},
-  "SOLI CITY x VERTIGO":{day:"",stage:"",time:"",_slug:"soli-city-x-vertigo"},
-  "Sorry":{day:"",stage:"",time:"",_slug:"sorry"},
-  "SUSOBRINO":{day:"",stage:"",time:"",_slug:"susobrino"},
-  "Saad Tiouly":{day:"",stage:"",time:"",_slug:"saad-tiouly"},
-  "TARRAK":{day:"",stage:"",time:"",_slug:"tarrak"},
-  "The Callous Daoboys":{day:"",stage:"",time:"",_slug:"the-callous-daoboys"},
-  "The New Eves":{day:"",stage:"",time:"",_slug:"the-new-eves"},
-  "The Sophs":{day:"",stage:"",time:"",_slug:"the-sophs"},
-  "The Zawose Queens":{day:"",stage:"",time:"",_slug:"the-zawose-queens"},
-  "Tonser":{day:"",stage:"",time:"",_slug:"tonser"},
-  "Truck Violence":{day:"",stage:"",time:"",_slug:"truck-violence"},
-  "Tuvaband":{day:"",stage:"",time:"",_slug:"tuvaband"},
-  "Uld":{day:"",stage:"",time:"",_slug:"uld"},
-  "Vanessa Amara":{day:"",stage:"",time:"",_slug:"vanessa-amara"},
-  "Vgtbl.pl":{day:"",stage:"",time:"",_slug:"vgtblpl"},
-  "Vilde Tuv":{day:"",stage:"",time:"",_slug:"vilde-tuv"},
-  "Wicky":{day:"",stage:"",time:"",_slug:"wicky"},
-  "Yerai Cortés":{day:"",stage:"",time:"",_slug:"yerai-cortes"},
-  "100%Wet":{day:"first_days",stage:"",time:"",_slug:"100wet"},
-  "A Good Year":{day:"first_days",stage:"",time:"",_slug:"a-good-year"},
-  "ALAWARI":{day:"first_days",stage:"",time:"",_slug:"alawari"},
-  "Alice Ai":{day:"first_days",stage:"",time:"",_slug:"alice-ai"},
-  "Ana Juél":{day:"fd_son",stage:"Eos",time:"17:30",_slug:"ana-juel"},
-  "Augusta Schackinger":{day:"first_days",stage:"",time:"",_slug:"augusta-schackinger"},
-  "Berg":{day:"first_days",stage:"",time:"",_slug:"berg"},
-  "Carlina de Place":{day:"fd_son",stage:"Eos",time:"15:45",_slug:"carlina-de-place"},
-  "Club Live":{day:"fd_son",stage:"Lagune",time:"23:00",_slug:"club-live"},
-  "Demersal":{day:"first_days",stage:"",time:"",_slug:"demersal"},
-  "Diket":{day:"first_days",stage:"",time:"",_slug:"diket"},
-  "Dork":{day:"first_days",stage:"",time:"",_slug:"dork"},
-  "Døtre":{day:"first_days",stage:"",time:"",_slug:"doetre"},
-  "Eros For You":{day:"first_days",stage:"",time:"",_slug:"eros-for-you"},
-  "Fauna":{day:"first_days",stage:"",time:"",_slug:"fauna"},
-  "GB":{day:"first_days",stage:"",time:"",_slug:"gb"},
-  "Glayden":{day:"first_days",stage:"",time:"",_slug:"glayden"},
-  "Grande Mahogany":{day:"fd_son",stage:"Eos",time:"19:00",_slug:"grande-mahogany"},
-  "Ida Duelund":{day:"first_days",stage:"",time:"",_slug:"ida-duelund"},
-  "Karoline Mousing":{day:"first_days",stage:"",time:"",_slug:"karoline-mousing"},
-  "Kayak":{day:"first_days",stage:"",time:"",_slug:"kayak"},
-  "Kōya":{day:"fd_son",stage:"Eos",time:"20:30",_slug:"k%C5%8Dya"},
-  "Mami Umami":{day:"first_days",stage:"",time:"",_slug:"mami-umami"},
-  "Masiv":{day:"first_days",stage:"",time:"",_slug:"masiv"},
-  "Miaw":{day:"fd_son",stage:"Eos",time:"23:45",_slug:"miaw"},
-  "Michael Williams":{day:"first_days",stage:"",time:"",_slug:"michael-williams"},
-  "Morild":{day:"first_days",stage:"",time:"",_slug:"morild"},
-  "Muskila + Simona Abdallah":{day:"first_days",stage:"",time:"",_slug:"muskila-plus-simona-abdallah"},
-  "Oskar Witt":{day:"fd_son",stage:"Lagune",time:"18:15",_slug:"oskar-witt"},
-  "Ozzy":{day:"fd_son",stage:"Eos",time:"14:15",_slug:"ozzy"},
-  "Pistol Pistol Pistol":{day:"first_days",stage:"",time:"",_slug:"pistol-pistol-pistol"},
-  "Ponny":{day:"fd_son",stage:"Lagune",time:"15:00",_slug:"ponny"},
-  "Portal Pets":{day:"fd_son",stage:"Lagune",time:"16:30",_slug:"portal-pets"},
-  "Pumpegris":{day:"first_days",stage:"",time:"",_slug:"pumpegris"},
-  "Sa_G":{day:"first_days",stage:"",time:"",_slug:"sa_g"},
-  "Salver":{day:"first_days",stage:"",time:"",_slug:"salver"},
-  "Scam":{day:"fd_son",stage:"Lagune",time:"21:15",_slug:"scam"},
-  "Smøgmænd":{day:"fd_son",stage:"Eos",time:"22:15",_slug:"smoegmaend"},
-  "Spawner":{day:"fd_son",stage:"Lagune",time:"19:45",_slug:"spawner"},
-  "Will":{day:"first_days",stage:"",time:"",_slug:"will"},
-  "Zuloo":{day:"first_days",stage:"",time:"",_slug:"zuloo"},
+// ═══════════════════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════════════════
+let LANG = 'da';
+const TR = {
+  subtitle:     {da:'24 — 27 Juni 2026 · Refshaleøen · København', en:'24 — 27 June 2026 · Refshaleøen · Copenhagen'},
+  badge:        {da:'AI Band Anbefaler', en:'AI Band Recommender'},
+  loading:      {da:'Henter program fra copenhell.dk...', en:'Loading program from copenhell.dk...'},
+  loadingLineup:{da:'Henter lineup fra copenhell.dk', en:'Loading lineup from copenhell.dk'},
+  genreHeader:  {da:'🎸 Favorit genrer <span class="genre-hint">(valgfrit — hjælper AI\'en med bedre anbefalinger)</span>', en:'🎸 Favourite genres <span class="genre-hint">(optional — helps the AI give better recommendations)</span>'},
+  favHeader:    {da:'🎤 Egne favorit-kunstnere <span class="genre-hint">(valgfrit — op til 3, kommasepareret)</span>', en:'🎤 Your favourite artists <span class="genre-hint">(optional — up to 3, comma-separated)</span>'},
+  favPlaceholder:{da:'F.eks. Metallica, Slayer, Pantera', en:'E.g. Metallica, Slayer, Pantera'},
+  instructions: {da:'Tryk <strong>💀</strong> på de bands du kender og kan lide, og vælg dine <strong>favorit genrer</strong>.<br>AI\'en anbefaler derefter hvilke <strong>andre bands</strong> du bør opleve.', en:'Tap <strong>💀</strong> on bands you know and like, and choose your <strong>favourite genres</strong>.<br>The AI will then recommend which <strong>other bands</strong> you should see.'},
+  favDefault:   {da:'Vælg bands, genrer og/eller egne favoritter', en:'Select bands, genres and/or your favourites'},
+  recBtn:       {da:'🤘 Find anbefalinger baseret på mine favoritter', en:'🤘 Get recommendations based on my favourites'},
+  clearBtn:     {da:'Nulstil valg', en:'Reset selection'},
+  clearRecBtn:  {da:'Fjern anbefalinger', en:'Clear recommendations'},
+  apiSummary:   {da:'⚙ AI Indstillinger (API Key og valg af AI Model)', en:'⚙ AI Settings (API Key and AI Model)'},
+  apiHint:      {da:'Gratis AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — log ind → API Keys → Create. Nøglen gemmes kun i din browser.', en:'Free AI via <a href="https://console.groq.com" target="_blank">console.groq.com</a> — sign in → API Keys → Create. The key is stored only in your browser.'},
+  saveBtn:      {da:'Gem', en:'Save'},
+  modelLabel:   {da:'AI Model', en:'AI Model'},
+  resultsHeader:{da:'AI Anbefalinger — baseret på dine favoritter', en:'AI Recommendations — based on your favourites'},
+  // Dynamic strings
+  bands:        {da:'bands', en:'bands'},
+  artists:      {da:'kunstnere', en:'artists'},
+  selected:     {da:'Valgte', en:'Selected'},
+  genres:       {da:'genrer', en:'genres'},
+  ownFavs:      {da:'egne favoritter', en:'own favourites'},
+  sortTime:     {da:'↓ Sorteret efter starttid', en:'↓ Sorted by start time'},
+  sortAlpha:    {da:'↓ Alfabetisk', en:'↓ Alphabetical'},
+  listView:     {da:'☰ Liste', en:'☰ List'},
+  timeline:     {da:'🕐 Tidsplan', en:'🕐 Timeline'},
+  sceneTBA:     {da:'Scene TBA', en:'Stage TBA'},
+  boneyardTBA:  {da:'Boneyard · Scene TBA', en:'Boneyard · Stage TBA'},
+  dayTBA:       {da:'Dag ikke annonceret', en:'Day not announced'},
+  withTime:     {da:'med spilletid', en:'with play time'},
+  enriching:    {da:'Vent lidt... henter spilletider', en:'Please wait... fetching play times'},
+  keySaved:     {da:'✓ Nøgle gemt', en:'✓ Key saved'},
+  keyError:     {da:'✗ Nøglen skal starte med gsk_', en:'✗ Key must start with gsk_'},
+  enterKey:     {da:'✗ Indtast Groq API nøgle', en:'✗ Enter Groq API key'},
+  analyzing:    {da:'💀 AI analyserer din musiksmag...', en:'💀 AI is analysing your music taste...'},
+  searching:    {da:'🔍 AI søger på nettet og analyserer...', en:'🔍 AI is searching the web...'},
+  switching:    {da:'⚡ Skifter til Llama 3.3...', en:'⚡ Switching to Llama 3.3...'},
+  waiting:      {da:'⏳ Venter', en:'⏳ Waiting'},
+  favToggle:    {da:'Vælg som favorit', en:'Select as favourite'},
+  openSpotify:  {da:'Åbn på Spotify', en:'Open on Spotify'},
+  openSite:     {da:'Se på copenhell.dk', en:'View on copenhell.dk'},
+  mySchedule:   {da:'Min dagsplan', en:'My schedule'},
+  addPlan:      {da:'Tilføj til dagsplan', en:'Add to schedule'},
+  shareBtn:     {da:'📤 Del dagsplan', en:'📤 Share schedule'},
+  shareCopied:  {da:'✓ Kopieret!', en:'✓ Copied!'},
+  shareTitle:   {da:'Min Copenhell 2026 dagsplan', en:'My Copenhell 2026 schedule'},
+  dayNames:     {da:{ons:'Onsdag',tor:'Torsdag',fre:'Fredag',lor:'Lørdag'}, en:{ons:'Wednesday',tor:'Thursday',fre:'Friday',lor:'Saturday'}},
+  dayDates:     {da:{ons:'24. juni',tor:'25. juni',fre:'26. juni',lor:'27. juni'}, en:{ons:'June 24',tor:'June 25',fre:'June 26',lor:'June 27'}},
+  deathMetal:   {da:'Dødsmetal', en:'Death Metal'},
+  altMetal:     {da:'Alternativ Metal', en:'Alternative Metal'},
+  progMetal:    {da:'Progressiv Metal', en:'Progressive Metal'},
 };
-// Total: 177 artists
+
+function t(key){ return (TR[key]&&TR[key][LANG]) || (TR[key]&&TR[key]['da']) || key; }
+
+function setLang(lang){
+  LANG=lang;
+  try{localStorage.setItem('ch_lang',lang)}catch(e){}
+  // Update toggle buttons
+  document.querySelectorAll('.lang-btn').forEach(b=>{b.classList.toggle('active',b.dataset.lang===lang)});
+  // Update all data-t elements
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key=el.dataset.t;
+    if(TR[key])el.innerHTML=TR[key][lang]||TR[key]['da'];
+  });
+  // Update placeholders
+  document.querySelectorAll('[data-t-ph]').forEach(el=>{
+    const key=el.dataset.tPh;
+    if(TR[key])el.placeholder=TR[key][lang]||TR[key]['da'];
+  });
+  // Update genre chips that differ
+  document.querySelectorAll('.genre-chip[data-t-da]').forEach(el=>{
+    if(lang==='da')el.textContent=el.dataset.tDa;
+    else el.textContent=el.dataset.genre;
+  });
+  // Re-render days with new language
+  if(Object.keys(LINEUP).length>0){renderDays();updateCounter()}
+}
+
+const DAYS_CONFIG = [
+  { key: 'ons', en: 'Wed', name: 'Onsdag', date: '24. juni' },
+  { key: 'tor', en: 'Thu', name: 'Torsdag', date: '25. juni' },
+  { key: 'fre', en: 'Fri', name: 'Fredag', date: '26. juni' },
+  { key: 'lor', en: 'Sat', name: 'Lørdag', date: '27. juni' },
+];
+
+// Map English day abbreviations → our keys
+const DAY_MAP = { 'Wed': 'ons', 'Thu': 'tor', 'Fri': 'fre', 'Sat': 'lor',
+                  'Ons': 'ons', 'Tor': 'tor', 'Fre': 'fre', 'Lør': 'lor' };
+
+// Known headliners (for HL badge)
+const HEADLINER_NAMES = ["IRON MAIDEN", "BRING ME THE HORIZON", "VOLBEAT"];
+
+// ═══════════════════════════════════════════════════════
+// CACHED FALLBACK — snapshot maj 2026
+// Bruges KUN hvis live-hentning fejler
+// ═══════════════════════════════════════════════════════
+const CACHED_LINEUP = {
+  "(0)":{ day:"tor", stage:"Pandæmonium", time:"15:00", _slug:"0-3" },
+  "15 YEARS IN HELL – ALL STAR SHOW":{ day:"fre", stage:"", _slug:"15-years-in-hell-all-star-show-2" },
+  "A PERFECT CIRCLE":{ day:"fre", stage:"Helvíti", _slug:"a-perfect-circle-2" },
+  "ALESTORM":{ day:"lor", stage:"Helvíti", _slug:"alestorm-2" },
+  "ALICE COOPER":{ day:"ons", stage:"Helvíti", _slug:"alice-cooper-2" },
+  "ALL THEM WITCHES":{ day:"fre", stage:"Pandæmonium", _slug:"all-them-witches-2" },
+  "ANTHRAX":{ day:"fre", stage:"Hades", _slug:"anthrax-2" },
+  "BABYMETAL":{ day:"lor", stage:"Hades", _slug:"baby-metal-2" },
+  "BLACK LABEL SOCIETY":{ day:"tor", stage:"Helvíti", _slug:"black-label-society-2" },
+  "BLACK OAK COUNTY":{ day:"lor", stage:"Hades", _slug:"black-oak-county-2" },
+  "BLOOD FIRE DEATH":{ day:"lor", stage:"Pandæmonium", _slug:"blood-fire-death-2" },
+  "BRING ME THE HORIZON":{ day:"tor", stage:"Helvíti", _slug:"bring-me-the-horizon-2" },
+  "BURY TOMORROW":{ day:"lor", stage:"Hades", _slug:"bury-tomorrow-2" },
+  "CALVA LOUISE":{ day:"tor", stage:"Gehenna", _slug:"calva-louise-2" },
+  "CHOPPER":{ day:"lor", stage:"Gehenna", _slug:"chopper-2" },
+  "DEFECTO":{ day:"fre", stage:"Hades", _slug:"defecto-2" },
+  "DIE SPITZ":{ day:"tor", stage:"Gehenna", _slug:"die-spitz-2" },
+  "DJERV":{ day:"lor", stage:"Hades", _slug:"djerv-2" },
+  "DOGMA":{ day:"ons", stage:"Pandæmonium", _slug:"dogma-2" },
+  "END IT":{ day:"tor", stage:"Gehenna", _slug:"end-it-2" },
+  "EYEHATEGOD":{ day:"lor", stage:"Gehenna", _slug:"eyehategod-2" },
+  "FAETOOTH":{ day:"ons", stage:"Gehenna", _slug:"faetooth-2" },
+  "GAEREA":{ day:"fre", stage:"Pandæmonium", _slug:"gaerea-2" },
+  "GRIDIRON":{ day:"tor", stage:"Gehenna", _slug:"gridiron-2" },
+  "HENRET":{ day:"lor", stage:"Gehenna", _slug:"henret-2" },
+  "HÅNDGEMENG":{ day:"fre", stage:"Pandæmonium", _slug:"handgemeng-2" },
+  "ICE NINE KILLS":{ day:"tor", stage:"Helvíti", _slug:"ice-nine-kills-2" },
+  "IMMINENCE":{ day:"fre", stage:"Hades", _slug:"imminence-2" },
+  "INHUMAN NATURE":{ day:"lor", stage:"Gehenna", _slug:"inhuman-nature-2" },
+  "IOTUNN":{ day:"tor", stage:"Pandæmonium", _slug:"iotunn-2" },
+  "IRON MAIDEN":{ day:"ons", stage:"Helvíti", _slug:"iron-maiden-2" },
+  "JAKOB STEGELMANN AND AARHUS SYMFONIORKESTER":{ day:"fre", stage:"Helvíti", _slug:"jakob-stegelmann-aarhus-symfoniorkester-2" },
+  "KATLA":{ day:"lor", stage:"Pandæmonium", _slug:"katla-2" },
+  "KONVENT":{ day:"ons", stage:"Pandæmonium", _slug:"konvent-2" },
+  "KUBLAI KHAN TX":{ day:"tor", stage:"Pandæmonium", _slug:"kublai-khan-tx-2" },
+  "LIGHTCHAPTER":{ day:"tor", stage:"Hades", _slug:"lightchapter-2" },
+  "LOATHE":{ day:"ons", stage:"Pandæmonium", _slug:"loathe-2" },
+  "MACERATION":{ day:"lor", stage:"Pandæmonium", _slug:"maceration-2" },
+  "MALEVOLENCE":{ day:"lor", stage:"Pandæmonium", _slug:"malevolence-2" },
+  "MAMMOTH":{ day:"ons", stage:"Hades", _slug:"mammoth-2" },
+  "MASTODON":{ day:"ons", stage:"Hades", _slug:"mastodon-2" },
+  "MOR":{ day:"tor", stage:"Gehenna", _slug:"mor-2" },
+  "MORILD":{ day:"fre", stage:"Gehenna", _slug:"morild-2" },
+  "NECKBREAKKER":{ day:"fre", stage:"Hades", _slug:"neckbreakker-2" },
+  "OMSORG":{ day:"fre", stage:"Gehenna", _slug:"omsorg-2" },
+  "P.O.D.":{ day:"fre", stage:"Hades", _slug:"p-o-d-2" },
+  "PALEFACE SWISS":{ day:"fre", stage:"Pandæmonium", _slug:"paleface-swiss-2" },
+  "PAPA ROACH":{ day:"tor", stage:"Helvíti", _slug:"papa-roach-2" },
+  "POWERPLANT":{ day:"fre", stage:"Gehenna", _slug:"powerplant-2" },
+  "PRESIDENT":{ day:"tor", stage:"Pandæmonium", _slug:"president-2" },
+  "PSYCHOMOSHER":{ day:"lor", stage:"Gehenna", _slug:"psycho-mosher-2" },
+  "PUSTULANT FLESH":{ day:"fre", stage:"Gehenna", _slug:"pustulant-flesh-2" },
+  "QUEENSRŸCHE":{ day:"tor", stage:"Hades", _slug:"queensryche-2" },
+  "RAP MARTIN RAP":{ day:"tor", stage:"Gehenna", _slug:"rap-martin-rap-2" },
+  "RIVAL SONS":{ day:"tor", stage:"Hades", _slug:"rival-sons-2" },
+  "SAXON":{ day:"lor", stage:"Hades", _slug:"saxon-2" },
+  "SCIMITAR":{ day:"ons", stage:"Gehenna", _slug:"scimitar-2" },
+  "SEPULTURA":{ day:"tor", stage:"Hades", _slug:"sepultura-2" },
+  "SIX FEET UNDER":{ day:"ons", stage:"Hades", _slug:"six-feet-under-2" },
+  "SLAY SQUAD":{ day:"ons", stage:"Pandæmonium", _slug:"slay-squad-2" },
+  "SOCIAL DISTORTION":{ day:"lor", stage:"Helvíti", _slug:"social-distortion-2" },
+  "SOILWORK":{ day:"fre", stage:"Pandæmonium", _slug:"soilwork-2" },
+  "SPLIT":{ day:"ons", stage:"Gehenna", _slug:"split-2" },
+  "STATIC-X":{ day:"tor", stage:"Hades", _slug:"static-x-2" },
+  "SUICIDAL TENDENCIES":{ day:"ons", stage:"Hades", _slug:"suicidal-tendencies-2" },
+  "THE BROWNING":{ day:"ons", stage:"Gehenna", _slug:"the-browning-2" },
+  "THROWN":{ day:"ons", stage:"Pandæmonium", _slug:"thrown-2" },
+  "TOM MORELLO":{ day:"ons", stage:"Helvíti", _slug:"tom-morello-2" },
+  "TRIVIUM":{ day:"fre", stage:"Helvíti", _slug:"trivium-2" },
+  "TROLLFEST":{ day:"lor", stage:"Pandæmonium", _slug:"trollfest-2" },
+  "TWENTY ONE CHILDREN":{ day:"ons", stage:"Gehenna", _slug:"twenty-one-children-2" },
+  "UNPEOPLE":{ day:"tor", stage:"Pandæmonium", _slug:"unpeople-2" },
+  "VEXED":{ day:"lor", stage:"Gehenna", _slug:"vexed-2" },
+  "VIOLENT MAGIC ORCHESTRA":{ day:"fre", stage:"Gehenna", time:"00:00", _slug:"violent-magic-orchestra-2" },
+  "VOICE OF BACEPROT":{ day:"fre", stage:"Gehenna", _slug:"voice-of-baceprot-2" },
+  "VOLBEAT":{ day:"lor", stage:"Helvíti", _slug:"volbeat-2" },
+  "WARKINGS":{ day:"lor", stage:"Helvíti", _slug:"warkings-2" },
+  "BRAINDEAD":{ day:"", stage:"Boneyard" },
+  "GOING FOR THE ONE":{ day:"", stage:"Boneyard" },
+  "MITE":{ day:"", stage:"Boneyard" },
+  "PERMANOIA":{ day:"", stage:"Boneyard" },
+  "PRESIDENT FETCH":{ day:"", stage:"Boneyard" },
+  "THE ROTTEN LEPRECHAUNS":{ day:"", stage:"Boneyard" },
+  "S.T.A.B.":{ day:"", stage:"Boneyard" },
+  "SLYTTER":{ day:"", stage:"Boneyard" }
+};
 
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
-let LINEUP={},dataIsLive=false;
-const selected=new Set(),selectedGenres=new Set(),recommended=new Map();
-const dayPlan=new Set();
-try{const dp=JSON.parse(localStorage.getItem('rf26_dayplan')||'[]');dp.forEach(b=>dayPlan.add(b))}catch(e){}
-function saveDayPlan(){try{localStorage.setItem('rf26_dayplan',JSON.stringify([...dayPlan]))}catch(e){}}
+let LINEUP = {};     // active lineup data
+let dataIsLive = false;
+const selected = new Set();
+const dayPlan = new Set();
+// Restore dayplan from localStorage
+try{const dp=JSON.parse(localStorage.getItem('ch26_dayplan')||'[]');dp.forEach(b=>dayPlan.add(b))}catch(e){}
+function saveDayPlan(){try{localStorage.setItem('ch26_dayplan',JSON.stringify([...dayPlan]))}catch(e){}}
 function togglePlan(name,el){
   if(dayPlan.has(name)){dayPlan.delete(name);if(el)el.classList.remove('planned')}
   else{dayPlan.add(name);if(el)el.classList.add('planned')}
   saveDayPlan();
-  const pc=document.getElementById('planCount'),ps=document.getElementById('planShare');
-  if(pc)pc.textContent=dayPlan.size>0?`📅 Min dagsplan: ${dayPlan.size} kunstnere`:'';
+  const pc=document.getElementById('planCount');
+  const ps=document.getElementById('planShare');
+  if(pc)pc.textContent=dayPlan.size>0?`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`:'';
   if(ps)ps.style.display=dayPlan.size>0?'block':'none';
 }
 
 function sharePlan(){
-  const dayOrder=['fd_son','fd_man','fd_tir','first_days','ons','tor','fre','lor'];
-  const dayLabels={fd_son:'Søndag 28/6',fd_man:'Mandag 29/6',fd_tir:'Tirsdag 30/6',first_days:'First Days',ons:'Onsdag 1/7',tor:'Torsdag 2/7',fre:'Fredag 3/7',lor:'Lørdag 4/7'};
-  const lines=['Min Roskilde 2026 dagsplan',''];
+  const dayOrder=['ons','tor','fre','lor'];
+  const dayLabels=t('dayNames');
+  const lines=[t('shareTitle'),''];
   dayOrder.forEach(dk=>{
-    const bands=[...dayPlan].filter(name=>{const i=LINEUP[name];return i&&i.day===dk}).map(name=>{const i=LINEUP[name];return{name,time:i.time||'??:??',stage:i.stage||'TBA'}}).sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));
+    const bands=[...dayPlan].filter(name=>{
+      const info=LINEUP[name];return info&&info.day===dk;
+    }).map(name=>{
+      const info=LINEUP[name];
+      return{name,time:info.time||'??:??',stage:info.stage||'TBA'};
+    }).sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));
     if(!bands.length)return;
-    lines.push(`🎵 ${dayLabels[dk]||dk}`);
+    lines.push(`🎸 ${dayLabels[dk]||dk}`);
     bands.forEach(b=>lines.push(`  ${b.time} ${b.name} (${b.stage})`));
     lines.push('');
   });
+  // Bands without day
   const noDayBands=[...dayPlan].filter(n=>!LINEUP[n]||!LINEUP[n].day);
   if(noDayBands.length){lines.push('❓ TBA');noDayBands.forEach(n=>lines.push(`  ${n}`));lines.push('')}
   const text=lines.join('\n').trim();
-  if(navigator.share){navigator.share({title:'Min Roskilde 2026 dagsplan',text:text}).catch(()=>{})}
-  else{navigator.clipboard.writeText(text).then(()=>{const btn=document.querySelector('#planShare button');const o=btn.textContent;btn.textContent='✓ Kopieret!';setTimeout(()=>btn.textContent=o,2000)}).catch(()=>{prompt('Kopiér din dagsplan:',text)})}
-}
-
-// ═══════════════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════════════
-function fetchWithTimeout(u,ms=10000){return new Promise((ok,fail)=>{const t=setTimeout(()=>fail(new Error('Timeout')),ms);fetch(u).then(r=>{clearTimeout(t);ok(r)}).catch(e=>{clearTimeout(t);fail(e)})})}
-
-function getSpotifyUrl(n){return`https://open.spotify.com/search/${encodeURIComponent(n.replace(/[()%]/g,' ').replace(/\s+/g,' ').trim())}`}
-
-function getArtistUrl(name){
-  const info=LINEUP[name]||{};
-  return`https://www.roskilde-festival.dk/program/musik/${info._slug||name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}/`;
-}
-
-function sortableTime(t){if(!t)return'99:99';const h=parseInt(t.split(':')[0]);if(h>=0&&h<=4)return`${24+h}:${t.split(':')[1]}`;return t}
-function effectiveDay(day,time){return day}
-
-function saveApiKey(){const k=document.getElementById('apiKey').value.trim();if(!k.startsWith('gsk_')){document.getElementById('apiStatus').textContent='✗ Nøglen skal starte med gsk_';document.getElementById('apiStatus').style.color='#c23c2c';return}try{localStorage.setItem('groq_api_key',k)}catch(e){}document.getElementById('apiStatus').textContent='✓ Nøgle gemt';document.getElementById('apiStatus').style.color='#3ddc84'}
-
-function updateCounter(){
-  const b=selected.size,g=selectedGenres.size;
-  const pf=(document.getElementById('personalFavs')||{}).value||'';
-  const pc=pf?pf.split(',').map(s=>s.trim()).filter(s=>s).length:0;
-  const p=[];
-  if(b>0)p.push(b+' kunstner'+(b>1?'e':''));
-  if(g>0)p.push(g+' genre'+(g>1?'r':''));
-  if(pc>0)p.push(pc+' egne favorit'+(pc>1?'ter':''));
-  document.getElementById('favText').textContent=p.length>0?'Valgte: '+p.join(' · '):'Vælg kunstnere, genrer og/eller egne favoritter';
-  document.getElementById('recBtn').disabled=b<1&&g<1&&pc<1;
-}
-
-function clearSelections(){selected.clear();selectedGenres.clear();recommended.clear();document.querySelectorAll('.genre-chip').forEach(c=>c.classList.remove('active'));if(document.getElementById('personalFavs'))document.getElementById('personalFavs').value='';renderDays();updateCounter();document.getElementById('results').classList.add('hidden');document.getElementById('clearRecBtn').classList.add('hidden')}
-
-function clearRecommendations(){recommended.clear();renderDays();document.getElementById('results').classList.add('hidden');document.getElementById('clearRecBtn').classList.add('hidden')}
-
-function toggleBand(b,c){if(selected.has(b)){selected.delete(b);c.classList.remove('selected')}else{selected.add(b);c.classList.add('selected');c.style.transform='scale(1.03)';setTimeout(()=>c.style.transform='',150)}updateCounter()}
-
-// ═══════════════════════════════════════════════════════
-// PARSE ARTIST PAGE (for enrichment)
-// ═══════════════════════════════════════════════════════
-function parseArtistPage(html){
-  let day='',stage='',time='';
-  // Time+Stage together first (most reliable): "15.00, Eos"
-  const tsm=html.match(/(\d{1,2})[.:](\d{2})\s*,\s*(Orange|Arena|Avalon|Gloria|Eos|Pavillon|Lagune|Fauna|Platform)(?:\s+Scene)?/i);
-  if(tsm){
-    const h=parseInt(tsm[1]),m=parseInt(tsm[2]);
-    if((h>=10&&h<=23)||(h>=0&&h<=4)){time=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;stage=tsm[3].charAt(0).toUpperCase()+tsm[3].slice(1).toLowerCase()}
+  // Try Web Share API first (mobile), fallback to clipboard
+  if(navigator.share){
+    navigator.share({title:t('shareTitle'),text:text}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn=document.querySelector('#planShare button');
+      const orig=btn.textContent;btn.textContent=t('shareCopied');
+      setTimeout(()=>btn.textContent=orig,2000);
+    }).catch(()=>{
+      // Final fallback: prompt
+      prompt(t('shareTitle'),text);
+    });
   }
-  if(!stage){const sm=html.match(/(Orange|Arena|Gloria|Eos|Fauna|Lagune|Platform)\s+Scene/i);if(sm)stage=sm[1].charAt(0).toUpperCase()+sm[1].slice(1).toLowerCase()}
-  if(!time){const tr=html.match(/(?:kl\.?\s*)?(\d{1,2})[.:](\d{2})\s*[-–]\s*(\d{1,2})[.:](\d{2})/);if(tr){const h=parseInt(tr[1]),m=parseInt(tr[2]);if((h>=10&&h<=23)||(h>=0&&h<=4))time=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}}
-  // Day
-  const dm=html.match(/(onsdag|torsdag|fredag|lørdag|søndag|mandag|tirsdag)\s+\d+\.\s*(juni|july|juli)/i);
-  if(dm){const dn=dm[1].toLowerCase(),mo=dm[2].toLowerCase();if(mo==='juni'||mo==='june'){if(dn==='søndag')day='fd_son';else if(dn==='mandag')day='fd_man';else if(dn==='tirsdag')day='fd_tir';else day='first_days'}else{day=DAY_MAP[dn]||''}}
-  return{day,stage,time};
+}
+const selectedGenres = new Set();
+const recommended = new Map();
+
+// ═══════════════════════════════════════════════════════
+// LIVE SCRAPING
+// ═══════════════════════════════════════════════════════
+
+// Parse the copenhell.dk/en/program/ HTML to extract bands
+function parseProgram(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  const lineup = {};
+
+  // Each band is in an <a> card containing day, stage, and name
+  // Pattern in the HTML: dayAbbrev \n – \n Stage \n ### BAND NAME
+  // We look for all artist links containing h3 headings
+  const cards = doc.querySelectorAll('a[href*="/artist/"]');
+
+  cards.forEach(card => {
+    const text = card.textContent.trim();
+    const nameEl = card.querySelector('h3');
+    if (!nameEl) return;
+
+    const bandName = nameEl.textContent.trim().toUpperCase();
+
+    // Skip Copenhell Con events (non-music)
+    const isCon = text.includes('Copenhell Con');
+    if (isCon) return;
+
+    // Extract day, stage, and optional time from the card text
+    let day = '';
+    let stage = '';
+    let time = '';
+
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+    for (const line of lines) {
+      // Check for time pattern (e.g. "14:30" or "14:30 – 15:45")
+      const timeMatch = line.match(/^(\d{1,2}[:.]\d{2})/);
+      if (timeMatch && !time) {
+        time = timeMatch[1].replace('.', ':');
+        continue;
+      }
+
+      // Check for day abbreviation (may include time: "Fri 17:30")
+      const dayMatch = Object.keys(DAY_MAP).find(d =>
+        line === d || line.startsWith(d + ' ') || line.startsWith(d + '\t')
+      );
+      if (dayMatch && !day) {
+        day = DAY_MAP[dayMatch];
+        // Check if time follows day (e.g. "Fri 17:30")
+        const dayTimeMatch = line.match(/\b(\d{1,2}[:.]\d{2})\b/);
+        if (dayTimeMatch && !time) {
+          time = dayTimeMatch[1].replace('.', ':');
+        }
+        continue;
+      }
+
+      // Check for known stages
+      const stages = ['Helvíti', 'Hades', 'Pandæmonium', 'Gehenna', 'Copenhell Con'];
+      const stageMatch = stages.find(s => line.includes(s));
+      if (stageMatch && !stage && stageMatch !== 'Copenhell Con') {
+        stage = stageMatch;
+      }
+    }
+
+    if (bandName && bandName.length > 0) {
+      // Extract slug from href
+      const href = card.getAttribute('href') || '';
+      const slugMatch = href.match(/\/artist\/([^/]+)/);
+      const slug = slugMatch ? slugMatch[1] : '';
+      lineup[bandName] = { day: day || '', stage: stage || '', time: time || '', _slug: slug };
+    }
+  });
+
+  return lineup;
 }
 
 // ═══════════════════════════════════════════════════════
-// ENRICHMENT (background — adds play times only)
+// ENRICHMENT — fetch individual artist pages for play times
 // ═══════════════════════════════════════════════════════
-async function enrichArtistData(){
-  const src=document.getElementById('dataSource');
-  const allBands=Object.entries(LINEUP);
-  const cacheKey='rf26_times_v3';
-  const cacheTs='rf26_times_ts';
-  let cache={};try{cache=JSON.parse(localStorage.getItem(cacheKey)||'{}')}catch(e){}
+async function enrichArtistData() {
+  const src = document.getElementById('dataSource');
+  const allBands = Object.entries(LINEUP);
+  const needsFetch = allBands.filter(([_, info]) => !info.time && info._slug);
   
-  // Check if cache is from today — if not, clear tried flags to force re-enrich
-  const today=new Date().toDateString();
-  let cacheDate='';try{cacheDate=localStorage.getItem(cacheTs)||''}catch(e){}
-  if(cacheDate!==today){
-    for(const k of Object.keys(cache)){if(cache[k])cache[k].tried=false}
+  if (needsFetch.length === 0) {
+    return;
+  }
+
+  // Check localStorage cache (persists across sessions, refreshes daily)
+  const cacheKey = 'ch26_times_v6';
+  const cacheTs = 'ch26_times_ts';
+  let cached = {};
+  try { cached = JSON.parse(localStorage.getItem(cacheKey) || '{}') } catch(e) {}
+  
+  // Check if cache is from today
+  const today = new Date().toDateString();
+  let cacheDate = '';
+  try { cacheDate = localStorage.getItem(cacheTs) || '' } catch(e) {}
+  const cacheIsToday = cacheDate === today;
+  
+  if (cacheIsToday) {
+    // Restore from today's cache
+    let usedCache = 0;
+    for (const [name, info] of needsFetch) {
+      if (cached[name] && cached[name].time) { LINEUP[name].time = cached[name].time; usedCache++; }
+    }
+    if (usedCache > 0) renderDays();
   }
   
-  // Restore cached data
-  let restored=0;
-  for(const[name,info]of allBands){
-    if(cache[name]&&cache[name].time&&!info.time){LINEUP[name].time=cache[name].time;restored++}
-    if(cache[name]&&cache[name].stage&&!info.stage){LINEUP[name].stage=cache[name].stage;restored++}
-    if(cache[name]&&cache[name].day&&(!info.day||info.day==='first_days')){LINEUP[name].day=cache[name].day;restored++}
+  // Only fetch bands still missing time
+  const stillNeeds = Object.entries(LINEUP).filter(([_, info]) => !info.time && info._slug);
+  if (stillNeeds.length === 0) return;
+
+  // Find working proxy - use DANISH pages (correct 24h time format)
+  let workingProxy = null;
+  const testSlug = 'soilwork'; // Danish slug (no -2 suffix)
+  for (const makeUrl of PROXIES) {
+    try {
+      const testUrl = `https://copenhell.dk/artist/${testSlug}/`;
+      const r = await fetchWithTimeout(makeUrl(testUrl), 8000);
+      if (r.ok) {
+        const html = await r.text();
+        if (html.length > 2000 && (html.includes('Tid') || html.includes('Scene'))) {
+          workingProxy = makeUrl;
+          break;
+        }
+      }
+    } catch (e) { /* try next */ }
   }
-  if(restored>0)renderDays();
-  // Only fetch bands without time+stage that have a slug
-  const needsFetch=allBands.filter(([n,i])=>i._slug&&!(cache[n]&&cache[n].tried)&&(!i.time||!i.stage||i.day==='first_days'));
-  if(!needsFetch.length)return;
-  // Find proxy
-  let wp=null;
-  for(const mk of PROXIES){try{const r=await fetchWithTimeout(mk('https://www.roskilde-festival.dk/program/musik/gorillaz'),6000);if(r.ok){const h=await r.text();if(h.includes('Torsdag')||h.includes('TORSDAG')){wp=mk;break}}}catch(e){}}
-  if(!wp)return;
-  src.textContent='🔄 Vent lidt... henter spilletider';src.className='data-source updating';
-  const BATCH=4;let fetched=0;
-  for(let i=0;i<needsFetch.length;i+=BATCH){
-    const batch=needsFetch.slice(i,i+BATCH);
-    await Promise.all(batch.map(async([name,info])=>{
-      try{
-        const r=await fetchWithTimeout(wp(`https://www.roskilde-festival.dk/program/musik/${info._slug}`),8000);
-        if(!r.ok){cache[name]={tried:true};return}
-        const html=await r.text();if(html.length<500){cache[name]={tried:true};return}
-        const p=parseArtistPage(html);
-        // Always update day (overwrite 'first_days' with specific day like 'fd_son')
-        if(p.day) LINEUP[name].day=p.day;
-        if(p.stage) LINEUP[name].stage=p.stage;
-        if(p.time) LINEUP[name].time=p.time;
-        cache[name]={tried:true,day:p.day,stage:p.stage,time:p.time};fetched++;
-      }catch(e){/* network error — don't mark as tried, retry next time */}
+  if (!workingProxy) {
+    src.textContent = `✓ ${Object.keys(LINEUP).length} bands`;
+    src.className = 'data-source live';
+    return;
+  }
+
+  src.textContent = `🔄 ${t('enriching')}`;
+  src.className = 'data-source updating';
+
+  const BATCH = 5;
+  let fetched = 0;
+  const cacheData = {};
+
+  for (let i = 0; i < stillNeeds.length; i += BATCH) {
+    const batch = stillNeeds.slice(i, i + BATCH);
+    await Promise.all(batch.map(async ([name, info]) => {
+      try {
+        // Use Danish page (correct 24h format) — slug without -2 suffix
+        const daSlug = info._slug ? info._slug.replace(/-2$/, '') : '';
+        if (!daSlug) return;
+        const pageUrl = `https://copenhell.dk/artist/${daSlug}/`;
+        const r = await fetchWithTimeout(workingProxy(pageUrl), 8000);
+        if (!r.ok) return;
+        const html = await r.text();
+
+        // Parse time from Danish page: "Tid" header followed by "Ons 15:30"
+        const timePatterns = [
+          // "Tid</h4>...Ons 15:30" (HTML)
+          /Tid<\/h[34]>[\s\S]{0,200}?(?:Ons|Tor|Fre|Lør|Wed|Thu|Fri|Sat)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // "Tid\n\nOns 15:30" or "#### Tid\n\nOns 15:30" (markdown)
+          /(?:#{1,4}\s*)?Tid[\s\n]+(?:Ons|Tor|Fre|Lør|Wed|Thu|Fri|Sat)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // "Time" header (English fallback)
+          /(?:#{1,4}\s*)?Time[\s\n]+(?:Wed|Thu|Fri|Sat)[a-z]*\s+(\d{1,2}[:.]\d{2})/i,
+          // Bare "Ons 15:30" near Tid/Time keyword
+          /(?:Tid|Time)[\s\S]{0,100}?(\d{2}:\d{2})/i
+        ];
+        let parsedTime = '';
+        for (const pat of timePatterns) {
+          const m = html.match(pat);
+          if (m && m[1]) { parsedTime = m[1].replace('.', ':'); break; }
+        }
+        if (parsedTime) {
+          LINEUP[name].time = parsedTime;
+          cacheData[name] = { time: parsedTime };
+          fetched++;
+        }
+      } catch (e) { /* skip */ }
     }));
-    const done=Math.min(i+BATCH,needsFetch.length);
-    src.textContent=`🔄 Vent lidt... opdaterer ${done}/${needsFetch.length}`;
-    if(fetched>0&&(i/BATCH)%3===2){renderDays()}
-    if(i+BATCH<needsFetch.length)await new Promise(r=>setTimeout(r,300));
+
+    // Update progress
+    const done = Math.min(i + BATCH, stillNeeds.length);
+    src.textContent = `🔄 ${t('enriching')} ${done}/${stillNeeds.length}`;
+    
+    if (fetched > 0) renderDays();
+    if (i + BATCH < stillNeeds.length) await new Promise(ok => setTimeout(ok, 300));
   }
-  try{localStorage.setItem(cacheKey,JSON.stringify(cache));localStorage.setItem(cacheTs,new Date().toDateString())}catch(e){}
-  const wt=Object.values(LINEUP).filter(i=>i.time).length;
-  src.textContent=`✓ ${Object.keys(LINEUP).length} kunstnere · ${wt} med spilletid`;
-  src.className='data-source live';
-  renderDays();
+
+  // Save to localStorage with today's date
+  try {
+    const existing = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+    localStorage.setItem(cacheKey, JSON.stringify({ ...existing, ...cacheData }));
+    localStorage.setItem(cacheTs, new Date().toDateString());
+  } catch (e) { /* ignore */ }
+
+  const total = Object.keys(LINEUP).length;
+  const withTime = Object.values(LINEUP).filter(i => i.time).length;
+  src.textContent = `✓ ${total} bands — ${withTime} ${t('withTime')}`;
+  src.className = 'data-source live';
+}
+
+function fetchWithTimeout(url, ms = 10000) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Timeout')), ms);
+    fetch(url).then(r => { clearTimeout(timer); resolve(r); }).catch(e => { clearTimeout(timer); reject(e); });
+  });
+}
+
+async function fetchLiveLineup() {
+  for (const makeUrl of PROXIES) {
+    try {
+      const url = makeUrl(PROGRAM_URL);
+      
+      const resp = await fetchWithTimeout(url, 10000);
+      if (!resp.ok) continue;
+
+      const html = await resp.text();
+      if (!html.includes('artist') || html.length < 5000) continue;
+
+      const parsed = parseProgram(html);
+      const bandCount = Object.keys(parsed).length;
+      
+
+      if (bandCount >= 20) {
+        const NOT_BANDS = new Set(['METAL BINGO','POWER HOUR','MUAY THAI','OPENHELL','ST. DIGUE','TEATER LUX','THE BOBBY TENDERLOIN SHOW','METAL YOGA','METAL KARAOKE','METAL QUIZ','MUSIC QUIZ','TATTOO','SIGNING','MEET & GREET','WARM UP','AFTERPARTY','DJ','FOOD','BAR','VIP','PRESS','DISABLED','BACKSTAGE','CREW','STAFF','CAMPING','PARKING','TOILETS','SHOWERS','LOCKERS','LOST & FOUND','INFO','FIRST AID','SECURITY','VOLUNTEER','MERCH','NORDIC ELITE WRESTLING','DRAGS FROM HELL','COLD CULTURE','THE BOBBY TENDERLOIN']);
+        const musicBands = {};
+        for (const [name, info] of Object.entries(parsed)) {
+          if (name.length > 60) continue;
+          if (NOT_BANDS.has(name.toUpperCase())) continue;
+          musicBands[name] = info;
+        }
+        return musicBands;
+      }
+    } catch (e) {
+      
+    }
+  }
+  return null;
 }
 
 // ═══════════════════════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════════════════════
-let viewMode={};
+const STAGES_ORDER = ['Helvíti', 'Hades', 'Pandæmonium', 'Gehenna'];
 
-function timeToSlot(t){if(!t)return -1;let[h,m]=t.split(':').map(Number);if(h>=0&&h<=4)h+=24;return h*60+m}
+// Sort helper: times 00:00-04:59 sort AFTER 23:59 (late night = same day)
+function sortableTime(t) {
+  if (!t) return '99:99';
+  const h = parseInt(t.split(':')[0]);
+  if (h >= 0 && h <= 4) return `${24 + h}:${t.split(':')[1]}`;
+  return t;
+}
 
-function renderTimelineDay(section,day,dayBands,stages){
-  const bbs={};stages.forEach(s=>bbs[s]=[]);
-  dayBands.forEach(([n,i])=>{if(stages.includes(i.stage)&&i.time)bbs[i.stage].push({name:n,time:i.time,slot:timeToSlot(i.time)})});
-  let mn=Infinity,mx=-Infinity;Object.values(bbs).flat().forEach(b=>{if(b.slot<mn)mn=b.slot;if(b.slot>mx)mx=b.slot});
-  if(mn===Infinity)return false;
-  mn=Math.floor(mn/30)*30;mx=Math.ceil((mx+90)/30)*30;
-  const SZ=15,rows=[];for(let s=mn;s<mx;s+=SZ){const h=Math.floor(s/60)%24,m=s%60;rows.push({slot:s,label:`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`,isHour:m===0})}
-  const grid=document.createElement('div');grid.className='timeline-grid';
-  if(window.innerWidth>=900)grid.style.gridTemplateColumns=`1.8rem repeat(${stages.length},1fr)`;
-  else grid.style.gridTemplateColumns=`1.8rem repeat(${stages.length},minmax(140px,1fr))`;
-  const tH=document.createElement('div');tH.className='timeline-header';tH.textContent='TID';grid.appendChild(tH);
-  stages.forEach(s=>{const h=document.createElement('div');h.className=`timeline-header${s==='Orange'?' main-stage':''}`;h.textContent=s;grid.appendChild(h)});
-  rows.forEach(row=>{
-    const tc=document.createElement('div');tc.className=`timeline-time${row.isHour?' hour':''}`;tc.textContent=row.isHour?row.label:'';grid.appendChild(tc);
-    stages.forEach(stage=>{
-      const cell=document.createElement('div');cell.className='timeline-slot';
-      if(row.isHour)cell.style.borderTop='1px solid rgba(255,255,255,.04)';
-      const band=bbs[stage].find(b=>Math.floor(b.slot/SZ)*SZ===row.slot);
-      if(band){
-        const url=getArtistUrl(band.name),isSel=selected.has(band.name),isPlan=dayPlan.has(band.name),rr=recommended.get(band.name);
-        let cls='timeline-band';if(isSel)cls+=' selected';if(isPlan)cls+=' planned';if(rr&&rr<=10)cls+=' rec-green';else if(rr)cls+=' rec-gold';
-        const dur=(stage==='Orange')?90:60,hr=dur/SZ*1.8;
-        const el=document.createElement('div');el.className=cls;el.style.height=`calc(${hr}rem - 2px)`;
-        el.innerHTML=`<div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${url}" target="_blank">${band.name}</a></span></div><span class="plan-icon">${isPlan?'📅':'📅'}</span>`;
-        el.addEventListener('click',e=>{if(e.target.closest('a'))return;togglePlan(band.name,el)});
+// Day from data is already correct — 00:00 Fri means Friday night, not Thursday
+function effectiveDay(day, time) {
+  return day;
+}
+
+function getBandsForDayStage(dayKey, stage) {
+  const bands = Object.entries(LINEUP)
+    .filter(([_, info]) => effectiveDay(info.day, info.time) === dayKey && info.stage === stage)
+    .map(([name, info]) => ({ name, time: info.time || '' }));
+
+  // Sort by time if available, otherwise alphabetically
+  const hasAnyTime = bands.some(b => b.time);
+  if (hasAnyTime) {
+    bands.sort((a, b) => sortableTime(a.time).localeCompare(sortableTime(b.time)));
+  } else {
+    bands.sort((a, b) => a.name.replace(/^[\(\)0-9\s]+/, '').localeCompare(
+                          b.name.replace(/^[\(\)0-9\s]+/, ''), 'da'));
+  }
+  return { bands, sortedByTime: hasAnyTime };
+}
+
+let viewMode = {}; // per-day: 'timeline' or 'classic'
+
+function timeToSlot(t) {
+  if (!t) return -1;
+  let [h, m] = t.split(':').map(Number);
+  if (h >= 0 && h <= 4) h += 24; // late night
+  return (h * 60 + m);
+}
+
+function renderTimelineDay(section, day, dayBands, stages) {
+  // Collect all bands with times, grouped by stage
+  const bandsByStage = {};
+  stages.forEach(s => bandsByStage[s] = []);
+  dayBands.forEach(([name, info]) => {
+    const s = info.stage;
+    if (stages.includes(s) && info.time) {
+      bandsByStage[s].push({ name, time: info.time, slot: timeToSlot(info.time) });
+    }
+  });
+
+  // Find time range (15-min grid)
+  let minSlot = Infinity, maxSlot = -Infinity;
+  Object.values(bandsByStage).flat().forEach(b => {
+    if (b.slot < minSlot) minSlot = b.slot;
+    if (b.slot > maxSlot) maxSlot = b.slot;
+  });
+  if (minSlot === Infinity) return false;
+
+  // Round to 30-min boundaries, add 90 min for last Helvíti band
+  minSlot = Math.floor(minSlot / 30) * 30;
+  maxSlot = Math.ceil((maxSlot + 90) / 30) * 30;
+
+  const SLOT_SIZE = 15;
+  const rows = [];
+  for (let s = minSlot; s < maxSlot; s += SLOT_SIZE) {
+    const h = Math.floor(s / 60) % 24;
+    const m = s % 60;
+    rows.push({ slot: s, label: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`, isHour: m === 0 });
+  }
+
+  const colCount = stages.length + 1; // +1 for time column
+  const grid = document.createElement('div');
+  grid.className = 'timeline-grid';
+  if(window.innerWidth>=900){
+    grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, 1fr)`;
+  }else{
+    grid.style.gridTemplateColumns = `1.8rem repeat(${stages.length}, minmax(160px, 1fr))`;
+  }
+
+  // Header row
+  const timeH = document.createElement('div');
+  timeH.className = 'timeline-header';
+  timeH.textContent = 'TID';
+  grid.appendChild(timeH);
+  stages.forEach((s, i) => {
+    const h = document.createElement('div');
+    h.className = `timeline-header${i === 0 ? ' main-stage' : ''}`;
+    h.textContent = s;
+    grid.appendChild(h);
+  });
+
+  // Time rows
+  rows.forEach(row => {
+    // Time label
+    const tCell = document.createElement('div');
+    tCell.className = `timeline-time${row.isHour ? ' hour' : ''}`;
+    tCell.textContent = row.isHour ? row.label : '';
+    grid.appendChild(tCell);
+
+    // Stage cells
+    stages.forEach(stage => {
+      const cell = document.createElement('div');
+      cell.className = 'timeline-slot';
+      if (row.isHour) cell.style.borderTop = '1px solid rgba(255,255,255,.04)';
+
+      // Find band starting in this slot
+      const band = bandsByStage[stage].find(b => {
+        const bSlot = Math.floor(b.slot / SLOT_SIZE) * SLOT_SIZE;
+        return bSlot === row.slot;
+      });
+
+      if (band) {
+        const artistUrl = getArtistUrl(band.name);
+        const isSelected = selected.has(band.name);
+        const recRank = recommended.get(band.name);
+        const isPlanned = dayPlan.has(band.name);
+        let cls = 'timeline-band';
+        if (isSelected) cls += ' selected';
+        if (isPlanned) cls += ' planned';
+        if (recRank && recRank <= 10) cls += ' rec-gold';
+        else if (recRank) cls += ' rec-green';
+
+        // Duration: Helvíti = 90 min, others = 60 min
+        const durationMin = (stage === 'Helvíti') ? 90 : 60;
+        const slotsSpan = durationMin / SLOT_SIZE;
+        const heightRem = slotsSpan * 1.8;
+
+        const el = document.createElement('div');
+        el.className = cls;
+        el.style.height = `calc(${heightRem}rem - 2px)`;
+        el.innerHTML = `<div class="tl-content"><span class="tl-time">${band.time}</span><span class="tl-name"><a href="${artistUrl}" target="_blank">${band.name}</a></span></div><span class="plan-icon">${isPlanned?'📅':'📅'}</span>`;
+
+        // Click = toggle dayplan
+        el.addEventListener('click', e => {
+          if(e.target.closest('a')) return;
+          togglePlan(band.name, el);
+        });
+
         cell.appendChild(el);
       }
       grid.appendChild(cell);
     });
   });
-  const wrap=document.createElement('div');wrap.className='timeline-wrap';wrap.appendChild(grid);section.appendChild(wrap);return true;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'timeline-wrap';
+  wrap.appendChild(grid);
+  section.appendChild(wrap);
+  return true;
 }
 
-function renderClassicDay(section,day,dayBands){
-  const ht=dayBands.some(([_,i])=>i.time);
-  const sd=document.createElement('div');sd.className='sort-indicator';sd.textContent=ht?'↓ Sorteret efter starttid':'↓ Alfabetisk';section.appendChild(sd);
-  const activeStages=STAGES_ORDER.filter(s=>dayBands.some(([_,i])=>i.stage===s));
-  if(activeStages.length<=4&&window.innerWidth>=768){
-    const sw=document.createElement('div');sw.className='scene-wrap';
-    const sg=document.createElement('div');sg.className='scene-grid';sg.style.gridTemplateColumns=`repeat(${activeStages.length},1fr)`;
-    sw.appendChild(sg);section.appendChild(sw);
-    activeStages.forEach(stage=>{
-      const col=document.createElement('div');col.className='scene-column';
-      const hd=document.createElement('div');hd.className=`scene-header${stage==='Orange'?' main-stage':''}`;hd.textContent=stage;col.appendChild(hd);
-      const bands=dayBands.filter(([_,i])=>i.stage===stage).map(([n,i])=>({name:n,time:i.time||''}));
-      if(ht)bands.sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));else bands.sort((a,b)=>a.name.localeCompare(b.name,'da'));
-      bands.forEach(b=>renderBandCard({name:b.name,stage,time:b.time},col));sg.appendChild(col);
-    });
-  }else{
-    activeStages.forEach(stage=>{
-      const bands=dayBands.filter(([_,i])=>i.stage===stage).map(([n,i])=>({name:n,time:i.time||''}));
-      if(!bands.length)return;if(ht)bands.sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));else bands.sort((a,b)=>a.name.localeCompare(b.name,'da'));
-      const bl=document.createElement('div');bl.className='stage-block';
-      const lb=document.createElement('div');lb.className=`stage-label${stage==='Orange'?' main-stage':''}`;lb.textContent=stage+' Scene';bl.appendChild(lb);
-      const gr=document.createElement('div');gr.className='band-grid';bands.forEach(b=>renderBandCard({name:b.name,stage,time:b.time},gr));bl.appendChild(gr);section.appendChild(bl);
-    });
-  }
-  const unk=dayBands.filter(([_,i])=>!i.stage||!STAGES_ORDER.includes(i.stage)).map(([n,i])=>({name:n,stage:'',time:i.time||''}));
-  if(unk.length){if(ht)unk.sort((a,b)=>sortableTime(a.time).localeCompare(sortableTime(b.time)));else unk.sort((a,b)=>a.name.localeCompare(b.name,'da'));
-    const lb=document.createElement('div');lb.className='stage-label unknown-label';lb.textContent='Scene ikke annonceret';section.appendChild(lb);
-    const gr=document.createElement('div');gr.className='band-grid';unk.forEach(b=>renderBandCard(b,gr));section.appendChild(gr);
-  }
-}
+function renderDays() {
+  const container = document.getElementById('dayContainer');
+  container.innerHTML = '';
 
-function renderDays(){
-  const c=document.getElementById('dayContainer');c.innerHTML='';
-  DAYS_CONFIG.forEach(day=>{
-    const db=Object.entries(LINEUP).filter(([_,i])=>i.day===day.key);if(!db.length)return;
-    const ht=db.filter(([_,i])=>i.time).length>=2;
-    const as=STAGES_ORDER.filter(s=>db.some(([_,i])=>i.stage===s));
-    if(!viewMode[day.key])viewMode[day.key]='classic';const mode=viewMode[day.key];
-    const s=document.createElement('div');s.className=`day-section day-${day.key}`;
-    s.innerHTML=`<div class="day-header"><div class="day-dot"></div><div class="day-name">${day.name}</div><div class="day-date">${day.date}</div><div class="day-count"><span>${db.length}</span> kunstnere</div>${ht?`<div class="timeline-toggle" data-day="${day.key}">${mode==='timeline'?'☰ Liste':'🕐 Tidsplan'}</div>`:''}</div>`;
-    const tgl=s.querySelector('.timeline-toggle');if(tgl)tgl.addEventListener('click',()=>{viewMode[day.key]=viewMode[day.key]==='timeline'?'classic':'timeline';renderDays()});
-    c.appendChild(s);
-    if(mode==='timeline'){if(!renderTimelineDay(s,day,db,as))renderClassicDay(s,day,db)}else{renderClassicDay(s,day,db)}
+  DAYS_CONFIG.forEach(day => {
+    const dayBands = Object.entries(LINEUP).filter(([_, info]) => effectiveDay(info.day, info.time) === day.key);
+    if (dayBands.length === 0) return;
+
+    const dayHasTime = dayBands.filter(([_, info]) => info.time).length >= 2;
+    const activeStages = STAGES_ORDER.filter(s => dayBands.some(([_, info]) => info.stage === s));
+    const wideEnough = window.innerWidth >= 500;
+    if (!viewMode[day.key]) viewMode[day.key] = 'classic';
+    const mode = viewMode[day.key];
+
+    const section = document.createElement('div');
+    section.className = `day-section day-${day.key}`;
+
+    const headerHTML = `
+      <div class="day-header">
+        <div class="day-dot"></div>
+        <div class="day-name">${t('dayNames')[day.key]||day.name}</div>
+        <div class="day-date">${t('dayDates')[day.key]||day.date}</div>
+        <div class="day-count"><span>${dayBands.length}</span> ${t('bands')}</div>
+        ${dayHasTime ? `<div class="timeline-toggle" data-day="${day.key}">${mode === 'timeline' ? t('listView') : t('timeline')}</div>` : ''}
+      </div>
+    `;
+    section.innerHTML = headerHTML;
+
+    // Toggle button
+    const toggle = section.querySelector('.timeline-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        viewMode[day.key] = viewMode[day.key] === 'timeline' ? 'classic' : 'timeline';
+        renderDays();
+      });
+    }
+
+    container.appendChild(section);
+
+    if (mode === 'timeline') {
+      const ok = renderTimelineDay(section, day, dayBands, activeStages);
+      if (!ok) {
+        renderClassicDay(section, day, dayBands);
+      }
+    } else {
+      renderClassicDay(section, day, dayBands);
+    }
+
+    // Bands without known stage
+    const extraBands = dayBands
+      .filter(([_, info]) => !STAGES_ORDER.includes(info.stage))
+      .map(([name, info]) => ({ name, stage: info.stage || '', time: info.time || '' }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'da'));
+    if (extraBands.length > 0) {
+      const label = document.createElement('div');
+      label.className = 'scene-header';
+      label.style.cssText = 'margin-top:6px;color:var(--text-dim);font-style:italic';
+      const hasBoneyard = extraBands.some(b => b.stage === 'Boneyard');
+      label.textContent = hasBoneyard ? t('boneyardTBA') : t('sceneTBA');
+      section.appendChild(label);
+      const extraGrid = document.createElement('div');
+      extraGrid.className = 'band-grid';
+      extraBands.forEach(band => renderBandCard(band, extraGrid));
+      section.appendChild(extraGrid);
+    }
   });
-  const un=Object.entries(LINEUP).filter(([_,i])=>!i.day).map(([n,i])=>({name:n,stage:i.stage||''})).sort((a,b)=>a.name.localeCompare(b.name,'da'));
-  if(un.length){const s=document.createElement('div');s.className='day-section';s.innerHTML=`<div class="day-header"><div class="day-dot" style="background:#555"></div><div class="day-name">Dag ikke annonceret</div><div class="day-date">TBA</div><div class="day-count"><span>${un.length}</span> kunstnere</div></div><div class="band-grid"></div>`;c.appendChild(s);const g=s.querySelector('.band-grid');un.forEach(a=>renderBandCard(a,g))}
+
+  // Unassigned
+  const unassigned = Object.entries(LINEUP)
+    .filter(([_, info]) => !effectiveDay(info.day, info.time))
+    .map(([name, info]) => ({ name, stage: info.stage }))
+    .sort((a, b) => a.name.localeCompare(b.name, 'da'));
+  if (unassigned.length > 0) {
+    const section = document.createElement('div');
+    section.className = 'day-section';
+    section.innerHTML = `
+      <div class="day-header">
+        <div class="day-dot" style="background:#555"></div>
+        <div class="day-name">${t('dayTBA')}</div>
+        <div class="day-date">TBA</div>
+        <div class="day-count"><span>${unassigned.length}</span> ${t('bands')}</div>
+      </div>
+      <div class="band-grid"></div>
+    `;
+    container.appendChild(section);
+    const grid = section.querySelector('.band-grid');
+    unassigned.forEach(band => renderBandCard(band, grid));
+  }
 }
 
-function renderBandCard(band,parent){
-  const card=document.createElement('div');card.className='band-card';card.dataset.band=band.name;
-  if(selected.has(band.name))card.classList.add('selected');
-  if(dayPlan.has(band.name))card.classList.add('planned');
-  if(recommended.has(band.name)){const rk=recommended.get(band.name);card.classList.add(rk<=10?'recommended-green':'recommended-gold')}
-  const artistUrl=getArtistUrl(band.name);
-  card.innerHTML=`<div class="band-icon" title="Vælg som favorit">🎵</div><div class="band-info"><div class="band-text">${band.time?`<span class="band-time">${band.time}</span>`:''}<div class="band-name"><a href="${artistUrl}" target="_blank" rel="noopener">${band.name}</a></div></div><a href="${getSpotifyUrl(band.name)}" target="_blank" rel="noopener" class="spotify-link" title="Åbn på Spotify">${SPOTIFY_SVG}</a><span class="plan-icon">📅</span></div><div class="rec-badge">${recommended.has(band.name)?'#'+recommended.get(band.name):''}</div>`;
-  card.querySelector('.band-icon').addEventListener('click',e=>{e.stopPropagation();toggleBand(band.name,card)});
-  card.querySelector('.plan-icon').addEventListener('click',e=>{e.stopPropagation();togglePlan(band.name,card)});
-  card.addEventListener('click',e=>{if(e.target.closest('a')||e.target.closest('.band-icon')||e.target.closest('.plan-icon'))return;toggleBand(band.name,card)});
-  parent.appendChild(card);
+function renderClassicDay(section, day, dayBands) {
+  const dayHasTime = dayBands.some(([_, info]) => info.time);
+  const sortDiv = document.createElement('div');
+  sortDiv.className = 'sort-indicator';
+  sortDiv.textContent = dayHasTime ? t('sortTime') : t('sortAlpha');
+  section.appendChild(sortDiv);
+  const sceneGrid = document.createElement('div');
+  sceneGrid.className = 'scene-grid';
+  section.appendChild(sceneGrid);
+
+  STAGES_ORDER.forEach((stage, i) => {
+    const col = document.createElement('div');
+    col.className = 'scene-column';
+    const header = document.createElement('div');
+    header.className = `scene-header${i === 0 ? ' main-stage' : ''}`;
+    header.textContent = stage;
+    col.appendChild(header);
+    const { bands } = getBandsForDayStage(day.key, stage);
+    bands.forEach(b => renderBandCard({ name: b.name, stage, time: b.time }, col));
+    if (bands.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'padding:0.5rem;text-align:center;font-size:0.55rem;color:#333;';
+      empty.textContent = '—';
+      col.appendChild(empty);
+    }
+    sceneGrid.appendChild(col);
+  });
+}
+
+const SPOTIFY_SVG = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`;
+
+// ═══════════════════════════════════════════════════════
+// SPOTIFY LINKS
+// Uses Spotify search with artist filter — reliable, no API needed
+// Opens Spotify with a pre-filtered artist search for each band
+// ═══════════════════════════════════════════════════════
+const ARTIST_URL_OVERRIDES = {"(0)":"https://copenhell.dk/en/program/"};
+function getArtistUrl(name) {
+  if (ARTIST_URL_OVERRIDES[name]) return ARTIST_URL_OVERRIDES[name];
+  const info = LINEUP[name] || {};
+  const slug = info._slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return `https://copenhell.dk/artist/${slug.replace(/-2$/, '')}/`;
+}
+
+function getSpotifyUrl(bandName) {
+  const clean = bandName.replace(/[()]/g, '').trim();
+  // Standard web URL — works in browser and app universal links
+  return `https://open.spotify.com/search/${encodeURIComponent(clean)}`;
+}
+
+function renderBandCard(band, grid) {
+  const card = document.createElement('div');
+  card.className = 'band-card';
+  card.dataset.band = band.name;
+  if (selected.has(band.name)) card.classList.add('selected');
+  if (dayPlan.has(band.name)) card.classList.add('planned');
+  if (recommended.has(band.name)) {
+    const rank = recommended.get(band.name);
+    card.classList.add(rank <= 10 ? 'recommended-gold' : 'recommended-green');
+  }
+
+  const artistUrl = getArtistUrl(band.name);
+  const spotifyUrl = getSpotifyUrl(band.name);
+
+  card.innerHTML = `
+    <div class="band-skull" title="${t('favToggle')}">💀</div>
+    <div class="band-info">
+      <div class="band-text">
+        ${band.time ? `<span class="band-time">${band.time}</span>` : ''}
+        <div class="band-name"><a href="${artistUrl}" target="_blank" rel="noopener" title="${t('openSite')}">${band.name}</a></div>
+      </div>
+      <a href="${spotifyUrl}" target="_blank" rel="noopener" class="spotify-link" data-band="${band.name}"
+         title="${t('openSpotify')}">${SPOTIFY_SVG}</a>
+      <span class="plan-icon" title="📅">📅</span>
+    </div>
+    <div class="rec-badge">${recommended.has(band.name) ? '#' + recommended.get(band.name) : ''}</div>
+  `;
+
+  // Skull click = toggle favorite
+  card.querySelector('.band-skull').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleBand(band.name, card);
+  });
+
+  // Plan icon click = toggle dayplan
+  card.querySelector('.plan-icon').addEventListener('click', (e) => {
+    e.stopPropagation();
+    togglePlan(band.name, card);
+  });
+
+  // Card click (not on links, skull, or plan) = toggle favorite
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('a') || e.target.closest('.band-skull') || e.target.closest('.plan-icon')) return;
+    toggleBand(band.name, card);
+  });
+
+  grid.appendChild(card);
+}
+
+function toggleBand(band, card) {
+  if (selected.has(band)) {
+    selected.delete(band);
+    card.classList.remove('selected');
+  } else {
+    selected.add(band);
+    card.classList.add('selected');
+    card.style.transform = 'scale(1.03)';
+    setTimeout(() => card.style.transform = '', 150);
+  }
+  updateCounter();
+}
+
+function updateCounter() {
+  const b = selected.size, g = selectedGenres.size;
+  const p = (document.getElementById('personalFavs')?.value||'').split(',').map(s=>s.trim()).filter(s=>s).length;
+  const parts = [];
+  if (b > 0) parts.push(`${b} ${t('bands')}`);
+  if (g > 0) parts.push(`${g} ${t('genres')}`);
+  if (p > 0) parts.push(`${p} ${t('ownFavs')}`);
+  document.getElementById('favText').textContent = parts.length > 0 
+    ? `${t('selected')}: ${parts.join(' · ')}` 
+    : t('favDefault');
+  document.getElementById('recBtn').disabled = b < 1 && g < 1 && p < 1;
+}
+
+function clearSelections() {
+  selected.clear();
+  selectedGenres.clear();
+  recommended.clear();
+  document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('personalFavs').value = '';
+  renderDays();
+  updateCounter();
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('clearRecBtn').classList.add('hidden');
+}
+
+function clearRecommendations() {
+  recommended.clear();
+  renderDays();
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('clearRecBtn').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════
+// API KEY
+// ═══════════════════════════════════════════════════════
+function saveApiKey() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key.startsWith('gsk_')) {
+    document.getElementById('apiStatus').textContent = t('keyError');
+    document.getElementById('apiStatus').style.color = '#c23c2c';
+    return;
+  }
+  localStorage.setItem('groq_api_key', key);
+  document.getElementById('apiStatus').textContent = t('keySaved');
+  document.getElementById('apiStatus').style.color = '#3ddc84';
 }
 
 // ═══════════════════════════════════════════════════════
 // AI RECOMMENDATIONS
 // ═══════════════════════════════════════════════════════
-function matchBand(name){
-  if(!name)return null;if(LINEUP[name])return name;
-  const low=name.toLowerCase().trim();
-  let f=Object.keys(LINEUP).find(k=>k.toLowerCase()===low);if(f)return f;
-  const noThe=low.replace(/^the\s+/,'');f=Object.keys(LINEUP).find(k=>k.toLowerCase().replace(/^the\s+/,'')===noThe);if(f)return f;
-  f=Object.keys(LINEUP).find(k=>k.toLowerCase().includes(low)||low.includes(k.toLowerCase()));return f||null;
+async function getRecommendations() {
+  const apiKey = localStorage.getItem('groq_api_key') || document.getElementById('apiKey').value.trim();
+  if (!apiKey) {
+    document.getElementById('apiBox').setAttribute('open', '');
+    document.getElementById('apiStatus').textContent = '✗ Indtast din Groq API nøgle først';
+    document.getElementById('apiStatus').style.color = '#c23c2c';
+    return;
+  }
+  const favorites = Array.from(selected);
+  const remaining = Object.keys(LINEUP).filter(b => !selected.has(b));
+  // Parse personal favorites (max 3, comma-separated)
+  const personalRaw = document.getElementById('personalFavs').value.trim();
+  const personalFavs = personalRaw ? personalRaw.split(',').map(s=>s.trim()).filter(s=>s).slice(0,3) : [];
+  if (favorites.length < 1 && selectedGenres.size < 1 && personalFavs.length < 1) return;
+
+  const model = document.getElementById('modelSelect').value;
+  const isSmallLimit = model.includes('gpt-oss') || model === 'compound-beta';
+  const btn = document.getElementById('recBtn');
+  btn.classList.add('loading');
+  btn.textContent = model === 'compound-beta' ? t('searching') : t('analyzing');
+
+  // Compact list (names only) for models with low TPM limits
+  const remainingWithDays = isSmallLimit
+    ? remaining.map(b => b).join(', ')
+    : remaining.map(b => {
+        const info = LINEUP[b];
+        const dayObj = DAYS_CONFIG.find(d => d.key === info.day);
+        return `• ${b} (${dayObj ? dayObj.name : 'dag TBA'} — ${info.stage || 'scene TBA'})`;
+      }).join('\n');
+
+  const hasFavs = favorites.length > 0;
+  const hasGenres = selectedGenres.size > 0;
+  const hasPersonal = personalFavs.length > 0;
+  const genreList = Array.from(selectedGenres).map(g => g).join(', ');
+
+  let introText;
+  const parts = [];
+  if (LANG === 'en') {
+    if (hasFavs) parts.push(`Favourites from Copenhell: ${favorites.join(', ')}`);
+    if (hasPersonal) parts.push(`User's favourite artists in general (NOT at the festival): ${personalFavs.join(', ')}`);
+    if (hasGenres) parts.push(`Preferred genres: ${genreList}`);
+    if (hasPersonal && !hasFavs && !hasGenres) {
+      introText = `${parts.join('\n')}\nRecommend bands similar to these artists in sound, style and genre.`;
+    } else if (parts.length > 0) {
+      introText = `${parts.join('\n')}\nRecommend bands matching the above preferences (incl. closely related subgenres).`;
+    } else { introText = ''; }
+  } else {
+    if (hasFavs) parts.push(`Favoritter fra Copenhell: ${favorites.join(', ')}`);
+    if (hasPersonal) parts.push(`Brugerens yndlingskunstnere generelt (IKKE på festivalen): ${personalFavs.join(', ')}`);
+    if (hasGenres) parts.push(`Foretrukne genrer: ${genreList}`);
+    if (hasPersonal && !hasFavs && !hasGenres) {
+      introText = `${parts.join('\n')}\nAnbefal bands der ligner disse kunstnere i lyd, stil og genre.`;
+    } else if (parts.length > 0) {
+      introText = `${parts.join('\n')}\nAnbefal bands der matcher ovenstående præferencer (inkl. nært beslægtede subgenrer).`;
+    } else { introText = ''; }
+  }
+
+  const promptLang = LANG === 'en' ? `Copenhell 2026 metal/rock concert recommender.
+${introText}
+
+Bands to choose from (USE EXACT NAMES FROM THIS LIST):
+${remainingWithDays}
+
+RULES:
+1. Only recommend bands you KNOW and that match the selected genres (incl. subgenres and related music)
+2. Think BROADLY — a band doesn't need to be 100% within the genre, just overlap or appeal to the same audience
+3. Aim for 10-20 recommendations — the more relevant the better
+4. 2-3 sentences in English per band, NEVER invent facts
+5. The "band" field MUST be copied EXACTLY from the list
+JSON array, NO other text: [{"rank":1,"band":"EXACT NAME","reason":"description","match":"95%"}]`
+  : `Copenhell 2026 metal/rock koncertanbefaler.
+${introText}
+
+Bands at vælge fra (BRUG PRÆCIS DISSE NAVNE):
+${remainingWithDays}
+
+REGLER:
+1. Anbefal bands du KENDER og som matcher de valgte genrer (inkl. subgenrer og beslægtet musik)
+2. Tænk BREDT — et band behøver ikke være 100% inden for genren, bare der er overlap eller appeal til samme publikum
+3. Giv GERNE 10-20 anbefalinger — jo flere relevante, jo bedre
+4. 2-3 sætninger dansk per band, OPFIND ALDRIG fakta
+5. "band" feltet SKAL kopieres PRÆCIST fra listen
+JSON array, INGEN anden tekst: [{"rank":1,"band":"PRÆCIST NAVN","reason":"beskrivelse","match":"95%"}]`;
+
+  const prompt = promptLang;
+
+  async function callGroq(m, retries) {
+    if (retries === undefined) retries = 2;
+    const mt = m.includes('gpt-oss') ? 4000 : 8000;
+    const body = { model: m, messages: [{ role: 'user', content: prompt }], temperature: 0.4, max_tokens: mt };
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) {
+      const e = await r.json(); const msg = e.error?.message || '';
+      if ((msg.includes('Rate limit') || msg.includes('too large') || msg.includes('Request too large')) && m !== 'llama-3.3-70b-versatile') {
+        btn.textContent = '⚡ Skifter til Llama 3.3 70B...';
+        await new Promise(ok => setTimeout(ok, 500));
+        return callGroq('llama-3.3-70b-versatile', 1);
+      }
+      if (msg.includes('Rate limit') && retries > 0) {
+        const w = msg.match(/try again in ([\d.]+)s/i);
+        const delay = w ? Math.ceil(parseFloat(w[1]) * 1000) + 500 : 15000;
+        btn.textContent = `⏳ Rate limited — venter ${Math.ceil(delay/1000)}s...`;
+        await new Promise(ok => setTimeout(ok, delay));
+        return callGroq(m, retries - 1);
+      }
+      throw new Error(msg || 'API fejl');
+    }
+    return r.json();
+  }
+
+  try {
+    const data = await callGroq(model);
+    let raw = data.choices[0].message.content.trim();
+    raw = raw.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+    let clean = raw.replace(/```json\s?/g, '').replace(/```/g, '').trim();
+    let recs;
+    try { recs = JSON.parse(clean); } catch (e1) {
+      const arrMatch = clean.match(/\[[\s\S]*\]/);
+      if (arrMatch) clean = arrMatch[0];
+      clean = clean.replace(/,\s*([}\]])/g, '$1').replace(/\n/g, ' ');
+      if (!clean.endsWith(']')) { const lb = clean.lastIndexOf('}'); if (lb > 0) clean = clean.substring(0, lb + 1) + ']'; }
+      clean = clean.replace(/,\s*([}\]])/g, '$1');
+      try { recs = JSON.parse(clean); } catch { throw new Error('AI returnerede ugyldigt svar. Prøv igen.'); }
+    }
+    if (!Array.isArray(recs) || recs.length === 0) throw new Error('AI returnerede tomt svar. Prøv igen.');
+    displayRecommendations(recs);
+  } catch (err) {
+    console.error('Groq fejl:', err);
+    alert('Fejl: ' + err.message);
+  } finally {
+    btn.classList.remove('loading');
+    btn.textContent = t('recBtn');
+  }
 }
 
-function displayRecommendations(recs){
-  recs=recs.filter(r=>{const m=matchBand(r.band);if(!m)return false;r._matchedName=m;return!selected.has(m)});
-  recs.forEach((r,i)=>r.rank=i+1);
-  recommended.clear();recs.forEach(r=>{if(r._matchedName)recommended.set(r._matchedName,r.rank)});renderDays();
-  const res=document.getElementById('results'),list=document.getElementById('resultsList');res.classList.remove('hidden');list.innerHTML='';
-  recs.forEach((r,i)=>{
-    const bk=r._matchedName,info=bk?LINEUP[bk]:null,dayObj=info?DAYS_CONFIG.find(d=>d.key===info.day):null;
-    const slug=info?info._slug:'';const url=slug?`https://www.roskilde-festival.dk/program/musik/${slug}/`:'#';
-    const item=document.createElement('div');item.className=`result-item ${i<10?'top-10':'top-20'}`;item.style.animationDelay=`${i*.05}s`;
-    item.innerHTML=`<div class="result-rank">${r.rank}</div><div class="result-content"><div class="result-name"><a href="${url}" target="_blank">${bk||r.band}</a> <a href="${getSpotifyUrl(bk||r.band)}" target="_blank" class="spotify-link" style="display:inline-flex;vertical-align:middle;margin-left:.3rem">${SPOTIFY_SVG}</a></div>${dayObj?`<div class="result-day-stage"><span class="day-label day-${info.day}">${dayObj.name}</span>${info.stage?' · '+info.stage:''}</div>`:''}<div class="result-reason">${r.reason}</div><div class="result-match">${r.match} match</div></div>`;
+
+function displayRecommendations(recs) {
+  // Filter out already-selected favorites
+  recs = recs.filter(r => {
+    const match = Object.keys(LINEUP).find(b => b.toUpperCase() === r.band.toUpperCase());
+    return !match || !selected.has(match);
+  });
+  // Re-rank after filtering
+  recs.forEach((r, i) => r.rank = i + 1);
+
+  recommended.clear();
+  recs.forEach(r => {
+    const match = Object.keys(LINEUP).find(
+      b => b.toUpperCase() === r.band.toUpperCase()
+    );
+    if (match) recommended.set(match, r.rank);
+  });
+
+  renderDays();
+
+  const results = document.getElementById('results');
+  const list = document.getElementById('resultsList');
+  results.classList.remove('hidden');
+  list.innerHTML = '';
+
+  recs.forEach((r, i) => {
+    const bandKey = Object.keys(LINEUP).find(
+      b => b.toUpperCase() === r.band.toUpperCase()
+    );
+    const info = bandKey ? LINEUP[bandKey] : null;
+    const dayObj = info ? DAYS_CONFIG.find(d => d.key === info.day) : null;
+
+    // Build copenhell artist URL from band name
+    const chSlug = r.band.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // remove accents
+      .replace(/[^a-z0-9]+/g, '-')                       // non-alphanum → dash
+      .replace(/^-|-$/g, '');                             // trim dashes
+    const copenhellUrl = `https://copenhell.dk/artist/${chSlug}/`;
+
+    const item = document.createElement('div');
+    item.className = `result-item ${i < 10 ? 'top-10' : 'top-20'}`;
+    item.style.animationDelay = `${i * 0.05}s`;
+    item.innerHTML = `
+      <div class="result-rank">${r.rank}</div>
+      <div class="result-content">
+        <div class="result-name">
+          <a href="${copenhellUrl}" target="_blank" rel="noopener" title="Læs mere på copenhell.dk">${r.band}</a>
+          <a href="${getSpotifyUrl(r.band)}" 
+             target="_blank" rel="noopener" class="spotify-link" style="display:inline-flex;vertical-align:middle;margin-left:0.4rem;"
+             title="Find på Spotify">${SPOTIFY_SVG}</a>
+        </div>
+        ${dayObj ? `<div class="result-day-stage">
+          <span class="day-label day-${info.day}">${dayObj.name}</span>
+          ${info.stage ? ` · ${info.stage}` : ''}
+        </div>` : ''}
+        <div class="result-reason">${r.reason}</div>
+        <div class="result-match">${r.match} match</div>
+      </div>
+    `;
     list.appendChild(item);
   });
-  document.getElementById('clearRecBtn').classList.remove('hidden');res.scrollIntoView({behavior:'smooth',block:'start'});
-}
 
-async function getRecommendations(){
-  let apiKey='';try{apiKey=localStorage.getItem('groq_api_key')||''}catch(e){}
-  apiKey=apiKey||document.getElementById('apiKey').value.trim();
-  if(!apiKey){document.getElementById('apiBox').setAttribute('open','');document.getElementById('apiStatus').textContent='✗ Indtast Groq API nøgle';document.getElementById('apiStatus').style.color='#c23c2c';return}
-  const fav=Array.from(selected),rem=Object.keys(LINEUP).filter(b=>!selected.has(b));
-  const personalRaw=(document.getElementById('personalFavs')||{}).value||'';
-  const personalFavs=personalRaw?personalRaw.split(',').map(s=>s.trim()).filter(s=>s).slice(0,3):[];
-  if(!fav.length&&!selectedGenres.size&&!personalFavs.length)return;
-  const model=document.getElementById('modelSelect').value;
-  const isSmall=model.includes('gpt-oss')||model==='compound-beta';
-  const btn=document.getElementById('recBtn');btn.classList.add('loading');
-  btn.textContent=model==='compound-beta'?'🔍 AI søger på nettet...':'🎵 AI analyserer din musiksmag...';
-  const rl=isSmall?rem.join(', '):rem.map(b=>{const i=LINEUP[b],d=DAYS_CONFIG.find(x=>x.key===i.day);return`• ${b}${d?' ('+d.name+')':''}${i.stage?' — '+i.stage:''}`}).join('\n');
-  const hasFavs=fav.length>0,hasGenres=selectedGenres.size>0,hasPersonal=personalFavs.length>0;
-  const genreList=Array.from(selectedGenres).join(', ');
-  const parts=[];
-  if(hasFavs)parts.push(`Favoritter fra Roskilde: ${fav.join(', ')}`);
-  if(hasPersonal)parts.push(`Yndlingskunstnere generelt: ${personalFavs.join(', ')}`);
-  if(hasGenres)parts.push(`Genrer: ${genreList}`);
-  let introText=parts.join('\n')+'\nAnbefal kunstnere der matcher (inkl. beslægtede subgenrer).';
-  const prompt=`Roskilde Festival 2026 koncertanbefaler.\n${introText}\n\nKunstnere at vælge fra (BRUG PRÆCIS DISSE NAVNE):\n${rl}\n\nREGLER:\n1. Anbefal kunstnere du KENDER og som matcher (inkl. subgenrer)\n2. Tænk BREDT — gerne 10-20 anbefalinger\n3. 2-3 sætninger dansk, OPFIND ALDRIG fakta\n4. "band" SKAL kopieres PRÆCIST fra listen\nJSON array: [{"rank":1,"band":"NAVN","reason":"beskrivelse","match":"95%"}]`;
-  async function callGroq(m,retries){
-    if(retries===undefined)retries=2;const mt=m.includes('gpt-oss')?4000:8000;
-    const body={model:m,messages:[{role:'user',content:prompt}],temperature:0.4,max_tokens:mt};
-    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},body:JSON.stringify(body)});
-    if(!r.ok){const e=await r.json();const msg=e.error?.message||'';
-      if((msg.includes('Rate limit')||msg.includes('too large'))&&m!=='llama-3.3-70b-versatile'){btn.textContent='⚡ Skifter til Llama 3.3...';await new Promise(ok=>setTimeout(ok,500));return callGroq('llama-3.3-70b-versatile',1)}
-      if(msg.includes('Rate limit')&&retries>0){const w=msg.match(/try again in ([\d.]+)s/i);const delay=w?Math.ceil(parseFloat(w[1])*1000)+500:15000;btn.textContent=`⏳ Venter ${Math.ceil(delay/1000)}s...`;await new Promise(ok=>setTimeout(ok,delay));return callGroq(m,retries-1)}
-      throw new Error(msg||'API fejl')}return r.json()}
-  try{
-    const data=await callGroq(model);let raw=data.choices[0].message.content.trim();
-    raw=raw.replace(/<think>[\s\S]*?<\/think>/g,'').trim();
-    let clean=raw.replace(/```json\s?/g,'').replace(/```/g,'').trim();
-    let recs;try{recs=JSON.parse(clean)}catch(e){const m=clean.match(/\[[\s\S]*\]/);if(m)clean=m[0];clean=clean.replace(/,\s*([}\]])/g,'$1').replace(/\n/g,' ');if(!clean.endsWith(']')){const lb=clean.lastIndexOf('}');if(lb>0)clean=clean.substring(0,lb+1)+']'}clean=clean.replace(/,\s*([}\]])/g,'$1');try{recs=JSON.parse(clean)}catch{throw new Error('Ugyldigt AI-svar. Prøv igen.')}}
-    if(!Array.isArray(recs)||!recs.length)throw new Error('Tomt svar. Prøv igen.');
-    displayRecommendations(recs);
-  }catch(err){alert('Fejl: '+err.message)}finally{btn.classList.remove('loading');btn.textContent='🎪 Find anbefalinger baseret på mine favoritter'}
+  document.getElementById('clearRecBtn').classList.remove('hidden');
+  results.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ═══════════════════════════════════════════════════════
-// INIT (same pattern as Copenhell)
+// BOOT
 // ═══════════════════════════════════════════════════════
-async function init(){
-  let sk;try{sk=localStorage.getItem('groq_api_key')}catch(e){}
-  if(sk){document.getElementById('apiKey').value=sk;document.getElementById('apiStatus').textContent='✓ Nøgle gemt';document.getElementById('apiStatus').style.color='#3ddc84';document.getElementById('apiBox').removeAttribute('open')}
-  let savedModel;try{savedModel=localStorage.getItem('groq_model')}catch(e){}
-  if(savedModel)document.getElementById('modelSelect').value=savedModel;
-  document.getElementById('modelSelect').addEventListener('change',function(){try{localStorage.setItem('groq_model',this.value)}catch(e){}});
-
-  const src=document.getElementById('dataSource');
-  src.textContent='Henter program...';src.className='data-source updating';
-
-  // Build LINEUP from hardcoded data (like Copenhell)
-  LINEUP={};
-  for(const[name,info]of Object.entries(CACHED_LINEUP)){
-    LINEUP[name]={...info};
+async function init() {
+  // Restore language
+  try{const sl=localStorage.getItem('ch_lang');if(sl)setLang(sl)}catch(e){}
+  // Load API key
+  const savedKey = localStorage.getItem('groq_api_key');
+  if (savedKey) {
+    document.getElementById('apiKey').value = savedKey;
+    document.getElementById('apiStatus').textContent = t('keySaved');
+    document.getElementById('apiStatus').style.color = '#3ddc84';
+    document.getElementById('apiBox').removeAttribute('open');
   }
-  dataIsLive=true;
-  src.textContent=`✓ ${Object.keys(LINEUP).length} kunstnere`;
-  src.className='data-source live';
+  // Restore saved model
+  const savedModel = localStorage.getItem('groq_model');
+  if (savedModel) document.getElementById('modelSelect').value = savedModel;
+  document.getElementById('modelSelect').addEventListener('change', function() {
+    localStorage.setItem('groq_model', this.value);
+    const hints = {
+      'openai/gpt-oss-120b': 'OpenAI\'s åbne model — bedst til korrekte beskrivelser',
+      'llama-3.3-70b-versatile': 'Hurtig men kan hallucinere om ukendte bands',
+      'compound-beta': 'Søger på nettet — langsom, rammer ofte rate limit',
+      'llama-3.1-8b-instant': 'Ultra-hurtig men lavere kvalitet'
+    };
+    document.getElementById('modelHint').textContent = hints[this.value] || '';
+  });
 
-  // Render immediately from hardcoded data
-  renderDays();updateCounter();
-  const pc=document.getElementById('planCount'),ps=document.getElementById('planShare');
-  if(pc&&dayPlan.size>0)pc.textContent=`📅 Min dagsplan: ${dayPlan.size} kunstnere`;
+  // Try to fetch live lineup
+  const src = document.getElementById('dataSource');
+  src.textContent = LANG==='en'?'🔄 Updating program from copenhell.dk...':'🔄 Vent lidt... opdaterer program fra copenhell.dk';
+  src.className = 'data-source updating';
+  const cachedCount = Object.keys(CACHED_LINEUP).length;
+  const live = await fetchLiveLineup();
+
+  if (live && Object.keys(live).length >= 20) {
+    // Start with cached data, then overlay live data (live takes priority)
+    LINEUP = {};
+    // First add all cached bands
+    for (const [name, info] of Object.entries(CACHED_LINEUP)) {
+      LINEUP[name] = { ...info };
+    }
+    // Then overlay/add live scraped bands (case-insensitive merge)
+    let newBands = 0;
+    for (const [name, info] of Object.entries(live)) {
+      const existing = Object.keys(LINEUP).find(k => k.toUpperCase() === name.toUpperCase());
+      if (existing) {
+        // Update with live data if it has more info
+        if (info.day) LINEUP[existing].day = info.day;
+        if (info.stage) LINEUP[existing].stage = info.stage;
+        if (info._slug) LINEUP[existing]._slug = info._slug;
+      } else {
+        LINEUP[name] = info;
+        newBands++;
+      }
+    }
+    dataIsLive = true;
+    const total = Object.keys(LINEUP).length;
+    src.textContent = newBands > 0 
+      ? `✓ ${total} bands — ${newBands} nye fundet!`
+      : `✓ ${total} bands — programmet er opdateret`;
+    src.className = 'data-source live';
+  } else {
+    LINEUP = {...CACHED_LINEUP};
+    dataIsLive = false;
+    src.textContent = `⚠ Cached data (maj 2026) — ${Object.keys(LINEUP).length} bands`;
+    src.className = 'data-source cached';
+  }
+
+  renderDays();
+  updateCounter();
+
+  // Initialize plan counter
+  const pc=document.getElementById('planCount');
+  const ps=document.getElementById('planShare');
+  if(pc&&dayPlan.size>0)pc.textContent=`📅 ${t('mySchedule')}: ${dayPlan.size} ${t('bands')}`;
   if(ps&&dayPlan.size>0)ps.style.display='block';
 
-  // Event listeners
-  document.querySelectorAll('.genre-chip').forEach(chip=>{
-    chip.addEventListener('click',()=>{const g=chip.dataset.genre;if(selectedGenres.has(g)){selectedGenres.delete(g);chip.classList.remove('active')}else{selectedGenres.add(g);chip.classList.add('active')}updateCounter()});
+  // Genre chip click handlers
+  document.querySelectorAll('.genre-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const genre = chip.dataset.genre;
+      if (selectedGenres.has(genre)) {
+        selectedGenres.delete(genre);
+        chip.classList.remove('active');
+      } else {
+        selectedGenres.add(genre);
+        chip.classList.add('active');
+      }
+      updateCounter();
+    });
   });
-  if(document.getElementById('personalFavs'))document.getElementById('personalFavs').addEventListener('input',()=>updateCounter());
 
-  // Background enrichment (adds play times — non-blocking)
+  // Personal favorites input
+  document.getElementById('personalFavs').addEventListener('input', () => updateCounter());
+
+  // Step 2: progressively enrich with play times from individual artist pages
   enrichArtistData();
 }
+
 init();
 </script>
 </body>
