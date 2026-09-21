@@ -1,61 +1,57 @@
-# Copenhell 2026 — AI Band Anbefaler
+# ROS 2026 — AI Kunstner Anbefaler
 
-💀 AI-drevet anbefalingsværktøj til Copenhell 2026.
+🎪 AI-drevet anbefalingsværktøj til Roskilde Festival 2026.
 
-**Live:** [jaisper.github.io/CopenHell](https://jaisper.github.io/CopenHell/)
+**Live:** [jaisper.github.io/Roskilde](https://jaisper.github.io/Roskilde/)
 
 ## Features
 
-- 💀 **85+ bands** — komplet lineup inkl. Boneyard bands
-- 📅 **Dag-opdeling** — Onsdag til Lørdag (24-27 juni)
-- 🎤 **4 scener** — Helvíti, Hades, Pandæmonium, Gehenna (+ Boneyard)
-- 🕐 **Tidsplan-visning** — toggle mellem listevisning og tidslinje-grid
-  - Helvíti-bands: 90 min bokse, øvrige scener: 60 min
-  - Sticky scene-headers og tid-kolonne
+- 🎵 **178 kunstnere** — komplet lineup inkl. First Days (28-30 juni) og Final Days (1-4 juli)
+- 📅 **Dag-opdeling** — Søndag/Mandag/Tirsdag (First Days) + Onsdag til Lørdag (Final Days)
+- 🎤 **7 scener** — Orange, Arena, Gloria, Eos, Fauna, Lagune, Platform
+- 🕐 **Tidsplan-visning** — toggle mellem listevisning og tidslinje-grid med sticky headers
 - 🤖 **AI-anbefalinger** — op til 20 personlige anbefalinger baseret på:
-  - Valgte favorit-bands fra programmet
-  - Foretrukne genrer (Heavy Metal (Trad), Hard Rock, Thrash, Dødsmetal, Black, Doom, Power, Glam, Gothic, Alternativ, Progressiv, Speed Metal)
+  - Valgte favorit-kunstnere fra programmet
+  - Foretrukne genrer (Pop, Rock, R&B, Indie Rock, Hip-hop/Rap, Elektronisk, Punk, Heavy, Singer-songwriter, Folk/Traditional, Latin, Global/Afro, Eksperimentel)
   - Egne favorit-kunstnere (fritekst, max 3)
-- 🎧 **Spotify-links** — direkte søgning for hvert band
-- 🔗 **Band-links** — direkte til copenhell.dk kunstnerside
+- 🎧 **Spotify-links** — direkte søgning for hver kunstner
+- 🔗 **Kunstner-links** — direkte til roskilde-festival.dk kunstnerside
 - 📱 **Responsivt** — tilpasset desktop, iPad og mobil
-- ⏰ **Spilletider** — hentes fra danske kunstnersider (korrekt 24h format)
-- 🟡 **AI-farver** — guld ramme på top 1-10, grøn på 11-20 anbefalinger
-- 🔄 **Live scraping** — opdaterer automatisk fra copenhell.dk ved sideload, merger med hardcoded data
+- ⏰ **Spilletider** — vises i guld, sorteret efter starttid. Hentes progressivt fra kunstnersider
+- 🟢 **AI-farver** — grøn ramme på top 1-10, guld på 11-20 anbefalinger
+- 💾 **Offline-klar** — komplet hardcoded lineup, enrichment kun for spilletider
 
 ## AI Modeller (via Groq)
 
-|Model          |Beskrivelse                                 |
-|---------------|--------------------------------------------|
-|🧠 GPT-OSS 120B |Anbefalet — bedst til korrekte beskrivelser |
-|⚡ Llama 3.3 70B|Hurtig, kan hallucinere om ukendte bands    |
-|🔍 Compound Beta|Web search — langsom, rammer ofte rate limit|
-|💨 Llama 3.1 8B |Ultra-hurtig, lavere kvalitet               |
+| Model | Beskrivelse |
+|-------|-------------|
+| 🧠 GPT-OSS 120B | Anbefalet — bedst til korrekte beskrivelser |
+| ⚡ Llama 3.3 70B | Hurtig, kan hallucinere om ukendte kunstnere |
+| 🔍 Compound Beta | Web search — langsom, rammer ofte rate limit |
+| 💨 Llama 3.1 8B | Ultra-hurtig, lavere kvalitet |
 
 Auto-fallback: GPT-OSS → Llama 3.3 ved rate limit/token overflow.
 
 ## Arkitektur
 
 - **Single-file HTML** — ingen build process, ingen dependencies
-- **CACHED_LINEUP** — 85 bands hardcoded med dag, scene og slug
-- **Live scraping** — henter programside fra copenhell.dk via CORS proxy, merger med cache
-- **Enrichment** — henter spilletider fra danske kunstnersider (`copenhell.dk/artist/`) i baggrunden
-- **sessionStorage cache** — spilletider gemmes pr. session
+- **CACHED_LINEUP** — 178 kunstnere hardcoded med dag, scene og slug
+- **Enrichment** — baggrunds-process der henter spilletider fra kunstnersider via CORS proxy
+- **localStorage cache** — spilletider gemmes lokalt, hentes kun én gang
 - **Groq API** — gratis AI via brugerens egen API-nøgle
 - **GitHub Pages** — deployment via Actions workflow
-- **GitHub Actions monitor** — daglig scraping der sender email ved nye bands
 
 ## Brug
 
-1. Åbn [jaisper.github.io/CopenHell](https://jaisper.github.io/CopenHell/)
-1. Vælg favorit-bands (💀 ikon) og/eller genrer
-1. (Valgfrit) Tilføj egne favorit-kunstnere i fritekstfeltet
-1. Indtast Groq API-nøgle (⚙ AI Indstillinger)
-1. Tryk “Find anbefalinger”
-1. Brug 🕐 Tidsplan knappen for tidslinje-visning
+1. Åbn [jaisper.github.io/Roskilde](https://jaisper.github.io/Roskilde/)
+2. Vælg favorit-kunstnere (🎵 ikon) og/eller genrer
+3. (Valgfrit) Tilføj egne favorit-kunstnere i fritekstfeltet
+4. Indtast Groq API-nøgle (⚙ AI Indstillinger)
+5. Tryk "Find anbefalinger"
+6. Brug 🕐 Tidsplan knappen for tidslinje-visning
 
 ## Opdatering
 
-Programdata opdateres automatisk via live scraping fra copenhell.dk.
-Hardcoded fallback i `CACHED_LINEUP` opdateres manuelt ved behov.
-Spilletider hentes fra `copenhell.dk/artist/{slug}/` (danske sider, 24h format).
+Programdata er hardcoded i `CACHED_LINEUP`. Ved ændringer:
+1. Opdater `CACHED_LINEUP` i `index.html`
+2. Brug "↻ Tving opdatering" linket for at rydde lokal cache
